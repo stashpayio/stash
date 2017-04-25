@@ -168,6 +168,7 @@ BITCOIN_CORE_H = \
   core_io.h \
   core_memusage.h \
   cuckoocache.h \
+  deprecation.h \
   privatesend.h \
   privatesend-client.h \
   privatesend-server.h \
@@ -182,7 +183,7 @@ BITCOIN_CORE_H = \
   governance-votedb.h \
   flat-database.h \
   hdchain.h \
-  httprpc.h \
+  httprpc.h \    
   httpserver.h \
   indirectmap.h \
   init.h \
@@ -287,6 +288,7 @@ libstash_server_a_SOURCES = \
   blockencodings.cpp \
   chain.cpp \
   checkpoints.cpp \
+  deprecation.cpp \
   dsnotificationinterface.cpp \
   httprpc.cpp \
   httpserver.cpp \
