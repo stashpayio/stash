@@ -171,11 +171,9 @@ std::string CTxOut::ToString() const
     return strprintf("CTxOut(nValue=%d.%08d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
 }
 
-CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION),  nExpiryHeight(0), nLockTime(0) {}
+CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), nLockTime(0) {}
 
-CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
-		vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
-        vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig) {}
+CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig), vExtraPayload(tx.vExtraPayload) {}
 
 uint256 CMutableTransaction::GetHash() const
 {
@@ -185,12 +183,14 @@ uint256 CMutableTransaction::GetHash() const
 std::string CMutableTransaction::ToString() const
 {
     std::string str;
-    str += strprintf("CMutableTransaction(hash=%s, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%u)\n",
+    str += strprintf("CMutableTransaction(hash=%s, ver=%d, type=%d, vin.size=%u, vout.size=%u, nLockTime=%u, vExtraPayload.size=%d)\n",
         GetHash().ToString().substr(0,10),
         nVersion,
+        nType,
         vin.size(),
         vout.size(),
-        nLockTime);
+        nLockTime,
+        vExtraPayload.size());
     for (unsigned int i = 0; i < vin.size(); i++)
         str += "    " + vin[i].ToString() + "\n";
     for (unsigned int i = 0; i < vout.size(); i++)
@@ -203,11 +203,12 @@ void CTransaction::UpdateHash() const
     *const_cast<uint256*>(&hash) = SerializeHash(*this);
 }
 
-CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig() { }
+CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig() { }
 
-CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight),
 															vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
-															vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig){
+															vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig),
+                                                            vExtraPayload(tx.vExtraPayload) {
     UpdateHash();
 }
 
@@ -215,15 +216,17 @@ CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion
 // For developer testing only.
 CTransaction::CTransaction(
     const CMutableTransaction &tx,
-    bool evilDeveloperFlag) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
+    bool evilDeveloperFlag) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight),
                               vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
-                              vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig)
+                              vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig),
+                              vExtraPayload(tx.vExtraPayload)
 {
     assert(evilDeveloperFlag);
 }
 
 CTransaction& CTransaction::operator=(const CTransaction &tx) {
-    *const_cast<int*>(&nVersion) = tx.nVersion;
+    *const_cast<int16_t*>(&nVersion) = tx.nVersion;
+    *const_cast<int16_t*>(&nType) = tx.nType;
     *const_cast<std::vector<CTxIn>*>(&vin) = tx.vin;
     *const_cast<std::vector<CTxOut>*>(&vout) = tx.vout;
     *const_cast<unsigned int*>(&nLockTime) = tx.nLockTime;
@@ -304,13 +307,15 @@ unsigned int CTransaction::GetTotalSize() const
 std::string CTransaction::ToString() const
 {
     std::string str;
-    str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%u, nExpiryHeight=%u)\n",
+    str += strprintf("CTransaction(hash=%s, ver=%d, type=%d, vin.size=%u, vout.size=%u, nLockTime=%u, nExpiryHeight=%u, vExtraPayload.size=%d)\n",    
         GetHash().ToString().substr(0,10),
         nVersion,
+        nType,
         vin.size(),
         vout.size(),
         nLockTime,
-		nExpiryHeight);
+	    nExpiryHeight,
+        vExtraPayload.size());
     for (unsigned int i = 0; i < vin.size(); i++)
         str += "    " + vin[i].ToString() + "\n";
     for (unsigned int i = 0; i < vout.size(); i++)
