@@ -9,6 +9,7 @@
 #endif
 
 #include "net.h"
+#include "util.h"
 
 #include "addrman.h"
 #include "chainparams.h"
@@ -815,6 +816,12 @@ size_t CConnman::SocketSendData(CNode *pnode)
     while (it != pnode->vSendMsg.end()) {
         const CSerializeData &data = *it;
         assert(data.size() > pnode->nSendOffset);
+
+#ifndef  DONT_DUMP    // DTG
+        if ( pnode->nSendOffset == 0) {
+            LogOutgoingMsg(&data[0],data.size());
+        }
+#endif
         int nBytes = send(pnode->hSocket, &data[pnode->nSendOffset], data.size() - pnode->nSendOffset, MSG_NOSIGNAL | MSG_DONTWAIT);
         if (nBytes > 0) {
             pnode->nLastSend = GetSystemTimeInSeconds();
@@ -1692,9 +1699,9 @@ void CConnman::ThreadOpenConnections()
         //  * Increase the number of connectable addresses in the tried table.
         //
         // Method:
-        //  * Choose a random address from new and attempt to connect to it if we can connect 
+        //  * Choose a random address from new and attempt to connect to it if we can connect
         //    successfully it is added to tried.
-        //  * Start attempting feeler connections only after node finishes making outbound 
+        //  * Start attempting feeler connections only after node finishes making outbound
         //    connections.
         //  * Only make a feeler connection once every few minutes.
         //
@@ -1891,8 +1898,8 @@ bool CConnman::OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGran
         return false;
     }
     if (!fNetworkActive) {
-        return false;
-    }	
+        return false; 
+    }
     if (!pszDest) {
         if (IsLocal(addrConnect) ||
             FindNode((CNetAddr)addrConnect) || IsBanned(addrConnect) ||

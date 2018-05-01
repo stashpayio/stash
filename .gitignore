@@ -132,3 +132,6 @@ dash-cli
 dashd
 dash-qt
 make
+
+.settings
+

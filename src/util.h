@@ -30,6 +30,7 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/thread/exceptions.hpp>
 
+
 // Debugging macros
 
 // Uncomment the following line to enable debugging messages
@@ -38,7 +39,7 @@
 #ifdef ENABLE_DASH_DEBUG
 #define DBG( x ) x
 #else
-#define DBG( x ) 
+#define DBG( x )
 #endif
 
 //Dash only features
@@ -298,6 +299,12 @@ std::string IntVersionToString(uint32_t nVersion);
  * or "Invalid version" if can't cast the given value
  */
 std::string SafeIntVersionToString(uint32_t nVersion);
+
+
+class CNetMessage;
+
+void LogIncomingMsg(CNetMessage& msg);
+void LogOutgoingMsg(const char* data, size_t length);
 
 
 #endif // BITCOIN_UTIL_H

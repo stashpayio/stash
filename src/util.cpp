@@ -17,6 +17,8 @@
 #include "sync.h"
 #include "utilstrencodings.h"
 #include "utiltime.h"
+#include "protocol.h"
+#include "net.h"
 
 #include <stdarg.h>
 
@@ -519,7 +521,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Windows < Vista: C:\Documents and Settings\Username\Application Data\DashCore
     // Windows >= Vista: C:\Users\Username\AppData\Roaming\DashCore
     // Mac: ~/Library/Application Support/DashCore
-    // Unix: ~/.dashcore
+    // Unix: ~/.stashcore-genesis
 #ifdef WIN32
     // Windows
     return GetSpecialFolderPath(CSIDL_APPDATA) / "DashCore";
@@ -535,7 +537,7 @@ boost::filesystem::path GetDefaultDataDir()
     return pathRet / "Library/Application Support/DashCore";
 #else
     // Unix
-    return pathRet / ".dashcore";
+    return pathRet / ".stashcore-genesis";
 #endif
 #endif
 }
@@ -759,7 +761,7 @@ void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
     // Windows-specific version
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(file));
     LARGE_INTEGER nFileSize;
-    int64_t nEndPos = (int64_t)offset + length;
+    int64_t nEndPos = (int64_t)offset + length;const
     nFileSize.u.LowPart = nEndPos & 0xFFFFFFFF;
     nFileSize.u.HighPart = nEndPos >> 32;
     SetFilePointerEx(hFile, nFileSize, 0, FILE_BEGIN);
@@ -1003,3 +1005,54 @@ std::string SafeIntVersionToString(uint32_t nVersion)
     }
 }
 
+void _dumpBuffer(const char* buffer, size_t length) {
+	size_t offset = 0;
+	while (offset < length) {
+		LogPrintf("%06ld: ", offset);
+		for (size_t i = offset; i < offset+16; i++) {
+			if (i < length) {
+				unsigned char ch = buffer[i];
+				LogPrintf("%02x", ch);
+			} else {
+				LogPrintf("  ");
+			}
+		}
+		LogPrintf(" ");
+		for (size_t i = offset; i < offset+16; i++) {
+			if (i < length) {
+				unsigned char ch = buffer[i];
+				if ((ch >= 32) && (ch <= 127)) {
+					LogPrintf("%c", ch);
+				} else {
+					LogPrintf(".");
+				}
+			} else {
+				LogPrintf(" ");
+			}
+		}
+		LogPrintf("\n");
+		offset += 16;
+	}
+}
+
+#define NAME_OFFSET 4
+#define HEADER_SIZE 24
+
+void LogIncomingMsg(CNetMessage& msg) {
+   const char* hdrData = msg.hdrbuf.data();
+   printf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
+   LogPrintf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
+   _dumpBuffer(hdrData,HEADER_SIZE);
+   LogPrintf("\n");
+   _dumpBuffer(msg.vRecv.data(),msg.vRecv.size());
+   LogPrintf("\n");
+}
+
+void LogOutgoingMsg(const char* data, size_t length) {
+  printf("\n<<< %s\n",&data[NAME_OFFSET]);
+  LogPrintf("\n<<< %s\n",&data[NAME_OFFSET]);
+  _dumpBuffer(&data[0],HEADER_SIZE);
+  LogPrintf("\n");
+  _dumpBuffer(&data[HEADER_SIZE],length-HEADER_SIZE);
+  LogPrintf("\n");
+}
