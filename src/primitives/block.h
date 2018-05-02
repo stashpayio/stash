@@ -21,12 +21,21 @@ class CBlockHeader
 {
 public:
     // header
+    static const int32_t STASH_VERSION = 9;
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    uint256  nLongNonce;
+
+    size_t HEADER_SIZE() const {
+      if (nVersion == STASH_VERSION) {
+        return 4+32+32+4+4+32;
+      }
+      return 4+32+32+4+4+4;
+    }
 
     CBlockHeader()
     {
@@ -43,7 +52,11 @@ public:
         READWRITE(hashMerkleRoot);
         READWRITE(nTime);
         READWRITE(nBits);
-        READWRITE(nNonce);
+        if (nVersion == STASH_VERSION) {
+          READWRITE(nLongNonce);
+        } else {
+          READWRITE(nNonce);
+        }
     }
 
     void SetNull()
@@ -54,6 +67,7 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        nLongNonce = 0;
     }
 
     bool IsNull() const
