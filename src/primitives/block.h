@@ -28,14 +28,6 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
-    uint256  nLongNonce;
-
-    size_t HEADER_SIZE() const {
-      if (nVersion == STASH_VERSION) {
-        return 4+32+32+4+4+32;
-      }
-      return 4+32+32+4+4+4;
-    }
 
     CBlockHeader()
     {
@@ -52,11 +44,7 @@ public:
         READWRITE(hashMerkleRoot);
         READWRITE(nTime);
         READWRITE(nBits);
-        if (nVersion == STASH_VERSION) {
-          READWRITE(nLongNonce);
-        } else {
-          READWRITE(nNonce);
-        }
+        READWRITE(nNonce);
     }
 
     void SetNull()
@@ -67,7 +55,6 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
-        nLongNonce = 0;
     }
 
     bool IsNull() const
@@ -94,6 +81,7 @@ public:
     mutable CTxOut txoutMasternode; // masternode payment
     mutable std::vector<CTxOut> voutSuperblock; // superblock payment
     mutable bool fChecked;
+    mutable std::vector<uint256> vMerkleTree;
 
     CBlock()
     {
@@ -121,6 +109,7 @@ public:
         txoutMasternode = CTxOut();
         voutSuperblock.clear();
         fChecked = false;
+        vMerkleTree.clear();
     }
 
     CBlockHeader GetBlockHeader() const
@@ -134,6 +123,14 @@ public:
         block.nNonce         = nNonce;
         return block;
     }
+
+    // Build the in-memory merkle tree for this block and return the merkle root.
+    // If non-NULL, *mutated is set to whether mutation was detected in the merkle
+    // tree (a duplication of transactions in the block leading to an identical
+    // merkle root).
+    uint256 BuildMerkleTree(bool* mutated = NULL) const;
+    std::vector<uint256> GetMerkleBranch(int nIndex) const;
+    static uint256 CheckMerkleBranch(uint256 hash, const std::vector<uint256>& vMerkleBranch, int nIndex);
 
     std::string ToString() const;
 };
@@ -171,6 +168,10 @@ struct CBlockLocator
     bool IsNull() const
     {
         return vHave.empty();
+    }
+
+    friend bool operator==(const CBlockLocator& a, const CBlockLocator& b) {
+        return (a.vHave == b.vHave);
     }
 };
 
