@@ -82,7 +82,7 @@ if BUILD_BITCOIN_UTILS
   bin_PROGRAMS += dash-cli dash-tx
 endif
 
-.PHONY: FORCE check-symbols check-security
+.PHONY: FORCE collate-libsnark check-symbols check-security
 # dash core #
 BITCOIN_CORE_H = \
   addrdb.h \
@@ -456,7 +456,7 @@ if ENABLE_WALLET
 dashd_LDADD += libbitcoin_wallet.a
 endif
 
-dashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+dashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(LIBSNARK) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 
 # dash-cli binary #
 dash_cli_SOURCES = dash-cli.cpp
