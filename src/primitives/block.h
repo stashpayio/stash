@@ -21,7 +21,6 @@ class CBlockHeader
 {
 public:
     // header
-    static const int32_t STASH_VERSION = 9;
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
