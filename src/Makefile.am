@@ -31,6 +31,7 @@ LIBBITCOIN_CRYPTO=crypto/libbitcoin_crypto.a
 LIBBITCOINQT=qt/libbitcoinqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 LIBSNARK=snark/libsnark.a
+LIBZCASH=libzcash.a
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
@@ -54,7 +55,8 @@ EXTRA_LIBRARIES += \
   libbitcoin_util.a \
   libbitcoin_common.a \
   libbitcoin_server.a \
-  libbitcoin_cli.a
+  libbitcoin_cli.a \
+	libzcash.a
 if ENABLE_WALLET
 BITCOIN_INCLUDES += $(BDB_CPPFLAGS)
 EXTRA_LIBRARIES += libbitcoin_wallet.a
@@ -81,6 +83,17 @@ endif
 if BUILD_BITCOIN_UTILS
   bin_PROGRAMS += dash-cli dash-tx
 endif
+
+LIBZCASH_H = \
+  zcash/IncrementalMerkleTree.hpp \
+  zcash/NoteEncryption.hpp \
+  zcash/Address.hpp \
+  zcash/JoinSplit.hpp \
+  zcash/Note.hpp \
+  zcash/prf.h \
+  zcash/Proof.hpp \
+  zcash/util.h \
+  zcash/Zcash.h
 
 .PHONY: FORCE collate-libsnark check-symbols check-security
 # dash core #
@@ -281,7 +294,8 @@ libbitcoin_server_a_SOURCES = \
   validation.cpp \
   validationinterface.cpp \
   versionbits.cpp \
-  $(BITCOIN_CORE_H)
+  $(BITCOIN_CORE_H) \
+  $(LIBZCASH_H)
 
 if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libbitcoin_zmq.a
@@ -311,7 +325,8 @@ libbitcoin_wallet_a_SOURCES = \
   wallet/wallet_ismine.cpp \
   wallet/walletdb.cpp \
   policy/rbf.cpp \
-  $(BITCOIN_CORE_H)
+  $(BITCOIN_CORE_H)  \
+  $(LIBZCASH_H)
 
 # crypto primitives library
 crypto_libbitcoin_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES) $(PIC_FLAGS)
@@ -388,7 +403,8 @@ libbitcoin_common_a_SOURCES = \
   script/script_error.cpp \
   script/sign.cpp \
   script/standard.cpp \
-  $(BITCOIN_CORE_H)
+  $(BITCOIN_CORE_H)  \
+  $(LIBZCASH_H)
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
@@ -412,7 +428,8 @@ libbitcoin_util_a_SOURCES = \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \
-  $(BITCOIN_CORE_H)
+  $(BITCOIN_CORE_H)  \
+  $(LIBZCASH_H)
 
 if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
@@ -423,7 +440,8 @@ libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
   rpc/client.cpp \
-  $(BITCOIN_CORE_H)
+  $(BITCOIN_CORE_H)  \
+  $(LIBZCASH_H)
 
 nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
@@ -444,6 +462,8 @@ dashd_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
+	$(LIBZCASH) \
+  $(LIBSNARK) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
@@ -456,7 +476,17 @@ if ENABLE_WALLET
 dashd_LDADD += libbitcoin_wallet.a
 endif
 
-dashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(LIBSNARK) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+dashd_LDADD += \
+	$(BOOST_LIBS) \
+	$(BDB_LIBS) \
+	$(SSL_LIBS) \
+	$(CRYPTO_LIBS) \
+	$(LIBSNARK) \
+	$(MINIUPNPC_LIBS) \
+	$(EVENT_PTHREADS_LIBS) \
+	$(EVENT_LIBS) \
+	$(LIBBITCOIN_CRYPTO) \
+  $(LIBZCASH_LIBS)
 
 # dash-cli binary #
 dash_cli_SOURCES = dash-cli.cpp
@@ -471,7 +501,16 @@ endif
 dash_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBBITCOIN_UTIL)
+  $(LIBBITCOIN_UTIL) \
+  $(BOOST_LIBS) \
+  $(SSL_LIBS) \
+  $(CRYPTO_LIBS) \
+  $(EVENT_LIBS) \
+  $(LIBZCASH) \
+  $(LIBSNARK) \
+  $(LIBBITCOIN_CRYPTO) \
+  $(LIBZCASH_LIBS)
+
 dash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
@@ -490,12 +529,40 @@ dash_tx_LDADD = \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBSECP256K1)
+  $(LIBSECP256K1)  \
+  $(LIBZCASH) \
+  $(LIBSNARK) \
+  $(LIBBITCOIN_CRYPTO) \
+  $(LIBZCASH_LIBS)
 
 dash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# dashconsensus library #
+# zcash protocol primitives #
+libzcash_a_SOURCES = \
+  zcash/IncrementalMerkleTree.cpp \
+  zcash/NoteEncryption.cpp \
+  zcash/Address.cpp \
+  zcash/JoinSplit.cpp \
+  zcash/Proof.cpp \
+  zcash/Note.cpp \
+  zcash/prf.cpp \
+  zcash/util.cpp \
+  zcash/circuit/commitment.tcc \
+  zcash/circuit/gadget.tcc \
+  zcash/circuit/merkle.tcc \
+  zcash/circuit/note.tcc \
+  zcash/circuit/prfs.tcc \
+  zcash/circuit/utils.tcc
+
+libzcash_a_CPPFLAGS = -fPIC -DBINARY_OUTPUT -DCURVE_ALT_BN128 -DBOOST_SPIRIT_THREADSAFE -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS $(HARDENED_CPPFLAGS) $(HARDENED_CXXFLAGS) $(HARDENED_LDFLAGS) -pipe $(SAN_LDFLAGS) -O1 -g -Wstack-protector $(SAN_CXXFLAGS) -fstack-protector-all -fPIE -fvisibility=hidden -DSTATIC $(BITCOIN_INCLUDES)
+
+libzcash_a_CXXFLAGS = $(SAN_CXXFLAGS) $(HARDENED_CXXFLAGS) -fwrapv -fno-strict-aliasing
+
+libzcash_a_LDFLAGS = $(SAN_LDFLAGS) $(HARDENED_LDFLAGS)
+
+libzcash_a_CPPFLAGS += -DMONTGOMERY_OUTPUT# dashconsensus library #
+
 if BUILD_BITCOIN_LIBS
 include_HEADERS = script/dashconsensus.h
 libdashconsensus_la_SOURCES = \

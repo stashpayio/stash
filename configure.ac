@@ -601,6 +601,7 @@ fi
 if test x$use_boost = xyes; then
 
 dnl Check for boost libs
+dnl We need Boost >= 1.62 to fix a potential security bug (https://github.com/zcash/zcash/issues/1241) ???????
 AX_BOOST_BASE
 AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
@@ -749,7 +750,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[
   #endif
   ]])],
   [boost_sleep=yes; AC_DEFINE(HAVE_WORKING_BOOST_SLEEP, 1, [Define this symbol if boost sleep works])],
-  [boost_sleep=no])
+  [boost_sleep=no])OPENMP
 LIBS="$TEMP_LIBS"
 CPPFLAGS="$TEMP_CPPFLAGS"
 fi
@@ -759,7 +760,7 @@ if test x$boost_sleep != xyes; then
 fi
 
 fi
-
+OPENMP
 if test x$use_pkgconfig = xyes; then
 
   if test x"$PKG_CONFIG" = "x"; then
