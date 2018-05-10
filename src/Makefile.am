@@ -32,6 +32,7 @@ LIBBITCOINQT=qt/libbitcoinqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 LIBSNARK=snark/libsnark.a
 LIBZCASH=libzcash.a
+LIBZCASH_LIBS= $(GMPXX_LIBS) $(GMP_LIBS) -lsodium
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
@@ -40,6 +41,9 @@ LIBSNARK_CXXFLAGS = -fPIC -DBINARY_OUTPUT -DNO_PT_COMPRESSION=1 -fstack-protecto
 LIBSNARK_CONFIG_FLAGS = CURVE=ALT_BN128 NO_PROCPS=1 NO_DOCS=1 STATIC=1 NO_SUPERCOP=1 FEATUREFLAGS=-DMONTGOMERY_OUTPUT NO_COPY_DEPINST=1 NO_COMPILE_LIBGTEST=1
 if HAVE_OPENMP
 LIBSNARK_CONFIG_FLAGS += MULTICORE=1
+endif
+if TARGET_DARWIN
+LIBSNARK_CONFIG_FLAGS += PLATFORM=darwin
 endif
 
 $(LIBSNARK): $(wildcard snark/src/*)
@@ -56,7 +60,7 @@ EXTRA_LIBRARIES += \
   libbitcoin_common.a \
   libbitcoin_server.a \
   libbitcoin_cli.a \
-	libzcash.a
+  libzcash.a
 if ENABLE_WALLET
 BITCOIN_INCLUDES += $(BDB_CPPFLAGS)
 EXTRA_LIBRARIES += libbitcoin_wallet.a
@@ -463,11 +467,10 @@ dashd_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
-	$(LIBZCASH) \
-  $(LIBSNARK) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
+
 
 if ENABLE_ZMQ
 dashd_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
@@ -482,12 +485,13 @@ dashd_LDADD += \
 	$(BDB_LIBS) \
 	$(SSL_LIBS) \
 	$(CRYPTO_LIBS) \
-	$(LIBSNARK) \
 	$(MINIUPNPC_LIBS) \
 	$(EVENT_PTHREADS_LIBS) \
 	$(EVENT_LIBS) \
+	$(LIBZCASH) \
+	$(LIBSNARK) \
 	$(LIBBITCOIN_CRYPTO) \
-  $(LIBZCASH_LIBS)
+	$(LIBZCASH_LIBS)
 
 # dash-cli binary #
 dash_cli_SOURCES = dash-cli.cpp
@@ -507,12 +511,10 @@ dash_cli_LDADD = \
   $(SSL_LIBS) \
   $(CRYPTO_LIBS) \
   $(EVENT_LIBS) \
-  $(LIBZCASH) \
-  $(LIBSNARK) \
+	$(LIBZCASH) \
+	$(LIBSNARK) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBZCASH_LIBS)
-
-dash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+	$(LIBZCASH_LIBS)
 #
 
 # dash-tx binary #
@@ -529,17 +531,20 @@ dash_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)  \
-  $(LIBZCASH) \
-  $(LIBSNARK) \
+	$(BOOST_LIBS) \
+	$(CRYPTO_LIBS) \
+	$(LIBZCASH) \
+	$(LIBSNARK) \
   $(LIBBITCOIN_CRYPTO) \
-  $(LIBZCASH_LIBS)
+	$(LIBZCASH_LIBS)
 
-dash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # zcash protocol primitives #
+libzcash_a_CPPFLAGS = -fPIC -DBINARY_OUTPUT -DCURVE_ALT_BN128 -DBOOST_SPIRIT_THREADSAFE -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS $(HARDENED_CPPFLAGS) $(HARDENED_CXXFLAGS) $(HARDENED_LDFLAGS) -pipe $(SAN_LDFLAGS) -O1 -g -Wstack-protector $(SAN_CXXFLAGS) -fstack-protector-all -fPIE -fvisibility=hidden -DSTATIC $(BITCOIN_INCLUDES)
+libzcash_a_CXXFLAGS = $(SAN_CXXFLAGS) $(HARDENED_CXXFLAGS) -fwrapv -fno-strict-aliasing
+libzcash_a_CPPFLAGS += -DMONTGOMERY_OUTPUT
 libzcash_a_SOURCES = \
   zcash/IncrementalMerkleTree.cpp \
   zcash/NoteEncryption.cpp \
@@ -555,14 +560,6 @@ libzcash_a_SOURCES = \
   zcash/circuit/note.tcc \
   zcash/circuit/prfs.tcc \
   zcash/circuit/utils.tcc
-
-libzcash_a_CPPFLAGS = -fPIC -DBINARY_OUTPUT -DCURVE_ALT_BN128 -DBOOST_SPIRIT_THREADSAFE -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS $(HARDENED_CPPFLAGS) $(HARDENED_CXXFLAGS) $(HARDENED_LDFLAGS) -pipe $(SAN_LDFLAGS) -O1 -g -Wstack-protector $(SAN_CXXFLAGS) -fstack-protector-all -fPIE -fvisibility=hidden -DSTATIC $(BITCOIN_INCLUDES)
-
-libzcash_a_CXXFLAGS = $(SAN_CXXFLAGS) $(HARDENED_CXXFLAGS) -fwrapv -fno-strict-aliasing
-
-libzcash_a_LDFLAGS = $(SAN_LDFLAGS) $(HARDENED_LDFLAGS)
-
-libzcash_a_CPPFLAGS += -DMONTGOMERY_OUTPUT# dashconsensus library #
 
 if BUILD_BITCOIN_LIBS
 include_HEADERS = script/dashconsensus.h

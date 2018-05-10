@@ -7,9 +7,145 @@
 #define BITCOIN_PRIMITIVES_TRANSACTION_H
 
 #include "amount.h"
+#include "random.h"
 #include "script/script.h"
 #include "serialize.h"
 #include "uint256.h"
+
+#include "consensus/consensus.h"
+#include <boost/array.hpp>
+
+#include "zcash/NoteEncryption.hpp"
+#include "zcash/Zcash.h"
+#include "zcash/JoinSplit.hpp"
+#include "zcash/Proof.hpp"
+
+#include <functional>
+
+class JSDescription
+{
+public:
+    // These values 'enter from' and 'exit to' the value
+    // pool, respectively.
+    CAmount vpub_old;
+    CAmount vpub_new;
+
+    // JoinSplits are always anchored to a root in the note
+    // commitment tree at some point in the blockchain
+    // history or in the history of the current
+    // transaction.
+    uint256 anchor;
+
+    // Nullifiers are used to prevent double-spends. They
+    // are derived from the secrets placed in the note
+    // and the secret spend-authority key known by the
+    // spender.
+    boost::array<uint256, ZC_NUM_JS_INPUTS> nullifiers;
+
+    // Note commitments are introduced into the commitment
+    // tree, blinding the public about the values and
+    // destinations involved in the JoinSplit. The presence of
+    // a commitment in the note commitment tree is required
+    // to spend it.
+    boost::array<uint256, ZC_NUM_JS_OUTPUTS> commitments;
+
+    // Ephemeral key
+    uint256 ephemeralKey;
+
+    // Ciphertexts
+    // These contain trapdoors, values and other information
+    // that the recipient needs, including a memo field. It
+    // is encrypted using the scheme implemented in crypto/NoteEncryption.cpp
+    boost::array<ZCNoteEncryption::Ciphertext, ZC_NUM_JS_OUTPUTS> ciphertexts = {{ {{0}} }};
+
+    // Random seed
+    uint256 randomSeed;
+
+    // MACs
+    // The verification of the JoinSplit requires these MACs
+    // to be provided as an input.
+    boost::array<uint256, ZC_NUM_JS_INPUTS> macs;
+
+    // JoinSplit proof
+    // This is a zk-SNARK which ensures that this JoinSplit is valid.
+    libzcash::ZCProof proof;
+
+    JSDescription(): vpub_old(0), vpub_new(0) { }
+
+    JSDescription(ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& rt,
+            const boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof = true, // Set to false in some tests
+            uint256 *esk = nullptr // payment disclosure
+    );
+
+    static JSDescription Randomized(
+            ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& rt,
+            boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            boost::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
+            boost::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof = true, // Set to false in some tests
+            uint256 *esk = nullptr, // payment disclosure
+            std::function<int(int)> gen = GetRandInt
+    );
+
+    // Verifies that the JoinSplit proof is correct.
+    bool Verify(
+        ZCJoinSplit& params,
+        libzcash::ProofVerifier& verifier,
+        const uint256& pubKeyHash
+    ) const;
+
+    // Returns the calculated h_sig
+    uint256 h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) const;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(vpub_old);
+        READWRITE(vpub_new);
+        READWRITE(anchor);
+        READWRITE(nullifiers);
+        READWRITE(commitments);
+        READWRITE(ephemeralKey);
+        READWRITE(randomSeed);
+        READWRITE(macs);
+        READWRITE(proof);
+        READWRITE(ciphertexts);
+    }
+
+    friend bool operator==(const JSDescription& a, const JSDescription& b)
+    {
+        return (
+            a.vpub_old == b.vpub_old &&
+            a.vpub_new == b.vpub_new &&
+            a.anchor == b.anchor &&
+            a.nullifiers == b.nullifiers &&
+            a.commitments == b.commitments &&
+            a.ephemeralKey == b.ephemeralKey &&
+            a.ciphertexts == b.ciphertexts &&
+            a.randomSeed == b.randomSeed &&
+            a.macs == b.macs &&
+            a.proof == b.proof
+            );
+    }
+
+    friend bool operator!=(const JSDescription& a, const JSDescription& b)
+    {
+        return !(a == b);
+    }
+};
+
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
@@ -104,6 +240,11 @@ public:
         READWRITE(prevout);
         READWRITE(*(CScriptBase*)(&scriptSig));
         READWRITE(nSequence);
+    }
+
+    bool IsFinal() const
+    {
+        return (nSequence == std::numeric_limits<uint32_t>::max());
     }
 
     friend bool operator==(const CTxIn& a, const CTxIn& b)
@@ -213,7 +354,15 @@ private:
     const uint256 hash;
     void UpdateHash() const;
 
+protected:
+    /** Developer testing only.  Set evilDeveloperFlag to true.
+     * Convert a CMutableTransaction into a CTransaction without invoking UpdateHash()
+     */
+    CTransaction(const CMutableTransaction &tx, bool evilDeveloperFlag);
+
 public:
+    typedef boost::array<unsigned char, 64> joinsplit_sig_t;
+
     // Default transaction version.
     static const int32_t CURRENT_VERSION=1;
 
@@ -222,6 +371,8 @@ public:
     // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
     // MAX_STANDARD_VERSION will be equal.
     static const int32_t MAX_STANDARD_VERSION=2;
+
+    static const int32_t ZCASH_VERSION=4;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -232,6 +383,11 @@ public:
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
     const uint32_t nLockTime;
+
+    const uint32_t nExpiryHeight;
+    const std::vector<JSDescription> vjoinsplit;
+    const uint256 joinSplitPubKey;
+    const joinsplit_sig_t joinSplitSig = {{0}};
 
     /** Construct a CTransaction that qualifies as IsNull() */
     CTransaction();
@@ -250,6 +406,14 @@ public:
         READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
         READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
+        if (nVersion >= ZCASH_VERSION) {
+            READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
+            if (vjoinsplit.size() > 0) {
+                READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
+                READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
+            }
+        }
+
         if (ser_action.ForRead())
             UpdateHash();
     }
@@ -266,6 +430,9 @@ public:
     CAmount GetValueOut() const;
     // GetValueIn() is a method on CCoinsViewCache, because
     // inputs must be known to compute value in.
+
+    // Return sum of JoinSplit vpub_new
+    CAmount GetJoinSplitValueIn() const;
 
     // Compute priority, given priority of inputs and (optionally) tx size
     double ComputePriority(double dPriorityInputs, unsigned int nTxSize=0) const;
@@ -305,6 +472,10 @@ struct CMutableTransaction
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
+    uint32_t nExpiryHeight;
+    std::vector<JSDescription> vjoinsplit;
+    uint256 joinSplitPubKey;
+    CTransaction::joinsplit_sig_t joinSplitSig = {{0}};
 
     CMutableTransaction();
     CMutableTransaction(const CTransaction& tx);
@@ -318,6 +489,13 @@ struct CMutableTransaction
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
+        if (nVersion >= CTransaction::ZCASH_VERSION) {
+            READWRITE(vjoinsplit);
+            if (vjoinsplit.size() > 0) {
+                READWRITE(joinSplitPubKey);
+                READWRITE(joinSplitSig);
+            }
+        }
     }
 
     /** Compute the hash of this CMutableTransaction. This is computed on the
