@@ -179,7 +179,7 @@ enum opcodetype
 
 
     // template matching params
-    OP_SMALLINTEGER = 0xfa,
+	OP_SMALLINTEGER = 0xfa,
     OP_PUBKEYS = 0xfb,
     OP_PUBKEYHASH = 0xfd,
     OP_PUBKEY = 0xfe,
@@ -637,6 +637,8 @@ public:
     {
         return (size() > 0 && *begin() == OP_RETURN) || (size() > MAX_SCRIPT_SIZE);
     }
+
+    std::string ToString() const;
 
     void clear()
     {
