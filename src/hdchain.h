@@ -29,6 +29,8 @@ class CHDChain
 {
 private:
     static const int CURRENT_VERSION = 1;
+    static const int ZCASH_VERSION=4;
+
     int nVersion;
 
     uint256 id;
