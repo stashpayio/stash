@@ -21,6 +21,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "key.h"
+//#include "metrics.h"
 #include "validation.h"
 #include "miner.h"
 #include "netbase.h"
@@ -85,6 +86,8 @@
 #include <boost/thread.hpp>
 #include <openssl/crypto.h>
 
+#include <libsnark/common/profiling.hpp>
+
 #if ENABLE_ZMQ
 #include "zmq/zmqnotificationinterface.h"
 #endif
@@ -92,6 +95,8 @@
 using namespace std;
 
 extern void ThreadSendAlert(CConnman& connman);
+
+ZCJoinSplit* pzcashParams = NULL;
 
 #ifdef ENABLE_WALLET
 CWallet* pwalletMain = NULL;
@@ -326,6 +331,8 @@ void Shutdown()
     delete pwalletMain;
     pwalletMain = NULL;
 #endif
+    delete pzcashParams;
+    pzcashParams = NULL;
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
@@ -799,6 +806,35 @@ bool InitSanityCheck(void)
         return false;
 
     return true;
+}
+
+static void ZC_LoadParams()
+{
+    struct timeval tv_start, tv_end;
+    float elapsed;
+
+    boost::filesystem::path pk_path = ZC_GetParamsDir() / "sprout-proving.key";
+    boost::filesystem::path vk_path = ZC_GetParamsDir() / "sprout-verifying.key";
+
+    if (!(boost::filesystem::exists(pk_path) && boost::filesystem::exists(vk_path))) {
+        uiInterface.ThreadSafeMessageBox(strprintf(
+            _("Cannot find the Zcash network parameters in the following directory:\n"
+              "%s\n"
+              "Please run 'zcash-fetch-params' or './zcutil/fetch-params.sh' and then restart."),
+                ZC_GetParamsDir()),
+            "", CClientUIInterface::MSG_ERROR);
+        StartShutdown();
+        return;
+    }
+
+    LogPrintf("Loading verifying key from %s\n", vk_path.string().c_str());
+    gettimeofday(&tv_start, 0);
+
+    pzcashParams = ZCJoinSplit::Prepared(vk_path.string(), pk_path.string());
+
+    gettimeofday(&tv_end, 0);
+    elapsed = float(tv_end.tv_sec-tv_start.tv_sec) + (tv_end.tv_usec-tv_start.tv_usec)/float(1000000);
+    LogPrintf("Loaded verifying key in %fs seconds.\n", elapsed);
 }
 
 bool AppInitServers(boost::thread_group& threadGroup)
@@ -1291,6 +1327,27 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, &scheduler);
     threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
+
+/* DTG
+
+    // Count uptime
+    MarkStartTime();
+
+    if ((chainparams.NetworkIDString() != "regtest") &&
+            GetBoolArg("-showmetrics", isatty(STDOUT_FILENO)) &&
+            !fPrintToConsole && !GetBoolArg("-daemon", false)) {
+        // Start the persistent metrics interface
+        ConnectMetricsScreen();
+        threadGroup.create_thread(&ThreadShowMetricsScreen);
+    }
+*/
+     // These must be disabled for now, they are buggy and we probably don't
+     // want any of libsnark's profiling in production anyway.
+     libsnark::inhibit_profiling_info = true;
+     libsnark::inhibit_profiling_counters = true;
+
+     // Initialize Zcash circuit parameters
+     ZC_LoadParams();
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections

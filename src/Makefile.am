@@ -97,6 +97,7 @@ LIBZCASH_H = \
   zcash/prf.h \
   zcash/Proof.hpp \
   zcash/util.h \
+  zcash/metrics.h \
   zcash/Zcash.h
 
 .PHONY: FORCE collate-libsnark check-symbols check-security

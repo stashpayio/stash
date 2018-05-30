@@ -20,6 +20,7 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "support/allocators/zeroafterfree.h"
+#include "zcash/Address.hpp"
 
 #include <string>
 #include <vector>
@@ -84,7 +85,7 @@ protected:
 
 public:
     bool SetString(const char* psz, unsigned int nVersionBytes = 1);
-    bool SetString(const std::string& str);
+    bool SetString(const std::string& str, unsigned int nVersionBytes = 1);
     std::string ToString() const;
     int CompareTo(const CBase58Data& b58) const;
 
@@ -93,6 +94,50 @@ public:
     bool operator>=(const CBase58Data& b58) const { return CompareTo(b58) >= 0; }
     bool operator< (const CBase58Data& b58) const { return CompareTo(b58) <  0; }
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
+};
+
+template<class DATA_TYPE, CChainParams::Base58Type PREFIX, size_t SER_SIZE>
+class CZCEncoding : public CBase58Data {
+protected:
+    virtual std::string PrependName(const std::string& s) const = 0;
+
+public:
+    bool Set(const DATA_TYPE& addr);
+
+    DATA_TYPE Get() const;
+};
+
+class CZCPaymentAddress : public CZCEncoding<libzcash::PaymentAddress, CChainParams::ZCPAYMENT_ADDRRESS, libzcash::SerializedPaymentAddressSize> {
+protected:
+    std::string PrependName(const std::string& s) const { return "payment address" + s; }
+
+public:
+    CZCPaymentAddress() {}
+
+    CZCPaymentAddress(const std::string& strAddress) { SetString(strAddress.c_str(), 2); }
+    CZCPaymentAddress(const libzcash::PaymentAddress& addr) { Set(addr); }
+};
+
+class CZCViewingKey : public CZCEncoding<libzcash::ViewingKey, CChainParams::ZCVIEWING_KEY, libzcash::SerializedViewingKeySize> {
+protected:
+    std::string PrependName(const std::string& s) const { return "viewing key" + s; }
+
+public:
+    CZCViewingKey() {}
+
+    CZCViewingKey(const std::string& strViewingKey) { SetString(strViewingKey.c_str(), 3); }
+    CZCViewingKey(const libzcash::ViewingKey& vk) { Set(vk); }
+};
+
+class CZCSpendingKey : public CZCEncoding<libzcash::SpendingKey, CChainParams::ZCSPENDING_KEY, libzcash::SerializedSpendingKeySize> {
+protected:
+    std::string PrependName(const std::string& s) const { return "spending key" + s; }
+
+public:
+    CZCSpendingKey() {}
+
+    CZCSpendingKey(const std::string& strAddress) { SetString(strAddress.c_str(), 2); }
+    CZCSpendingKey(const libzcash::SpendingKey& addr) { Set(addr); }
 };
 
 /** base58-encoded Dash addresses.
@@ -108,6 +153,8 @@ public:
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
+    bool SetString(const char* pszSecret);
+    bool SetString(const std::string& strSecret);
 
     CBitcoinAddress() {}
     CBitcoinAddress(const CTxDestination &dest) { Set(dest); }

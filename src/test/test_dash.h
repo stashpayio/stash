@@ -9,6 +9,8 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include "zcash/JoinSplit.hpp"
+
 
 /** Basic testing setup.
  * This just configures logging and chain parameters.
@@ -87,4 +89,8 @@ struct TestMemPoolEntryHelper
     TestMemPoolEntryHelper &SpendsCoinbase(bool _flag) { spendsCoinbase = _flag; return *this; }
     TestMemPoolEntryHelper &SigOps(unsigned int _sigops) { sigOpCount = _sigops; return *this; }
 };
+
+// zCash Parameters
+extern ZCJoinSplit* pzcashParams;
+
 #endif

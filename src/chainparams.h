@@ -10,6 +10,7 @@
 #include "consensus/params.h"
 #include "primitives/block.h"
 #include "protocol.h"
+#include "checkpoints.h"
 
 #include <vector>
 
@@ -21,15 +22,6 @@ struct CDNSSeedData {
 struct SeedSpec6 {
     uint8_t addr[16];
     uint16_t port;
-};
-
-typedef std::map<int, uint256> MapCheckpoints;
-
-struct CCheckpointData {
-    MapCheckpoints mapCheckpoints;
-    int64_t nTimeLastCheckpoint;
-    int64_t nTransactionsLastCheckpoint;
-    double fTransactionsPerDay;
 };
 
 /**
@@ -48,6 +40,10 @@ public:
         SECRET_KEY,     // BIP16
         EXT_PUBLIC_KEY, // BIP32
         EXT_SECRET_KEY, // BIP32
+
+        ZCPAYMENT_ADDRRESS,
+        ZCSPENDING_KEY,
+        ZCVIEWING_KEY,
 
         MAX_BASE58_TYPES
     };
@@ -77,7 +73,7 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     int ExtCoinType() const { return nExtCoinType; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
-    const CCheckpointData& Checkpoints() const { return checkpointData; }
+    const Checkpoints::CCheckpointData& Checkpoints() const { return checkpointData; }
     int PoolMaxTransactions() const { return nPoolMaxTransactions; }
     int FulfilledRequestExpireTime() const { return nFulfilledRequestExpireTime; }
     std::string SporkPubKey() const { return strSporkPubKey; }
@@ -103,7 +99,7 @@ protected:
     bool fRequireStandard;
     bool fMineBlocksOnDemand;
     bool fTestnetToBeDeprecatedFieldRPC;
-    CCheckpointData checkpointData;
+    Checkpoints::CCheckpointData checkpointData;
     int nPoolMaxTransactions;
     int nFulfilledRequestExpireTime;
     std::string strSporkPubKey;

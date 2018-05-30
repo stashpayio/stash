@@ -139,7 +139,7 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1524538158, 3928800, 0x1e0ffff0, 1, 50 * COIN);        
+        genesis = CreateGenesisBlock(1524538158, 3928800, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating genesis block\n");
@@ -155,8 +155,8 @@ public:
         consensus.hashGenesisBlock = genesis.GetHash();
 
         assert(consensus.hashGenesisBlock == uint256S("0x00000d6dea93edfd44ebdf21e860a4bbc1f9018b4a5246512ba101c77f1a41fb"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));        
-        
+        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
+
         vSeeds.push_back(CDNSSeedData("stashpay.io", "dnsseed.stashpay.org"));
         //vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
         //vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
@@ -188,7 +188,7 @@ public:
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
         strSporkPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
 
-        checkpointData = (CCheckpointData) {
+        checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
             (  0, uint256S("0x")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
@@ -315,7 +315,7 @@ public:
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
         strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
 
-        checkpointData = (CCheckpointData) {
+        checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
             (    0, uint256S("0x")),
             0, // * UNIX timestamp of last checkpoint block
@@ -416,7 +416,7 @@ public:
 
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        checkpointData = (CCheckpointData){
+        checkpointData = (Checkpoints::CCheckpointData){
             boost::assign::map_list_of
             ( 0, uint256S("0x")),
             0,

@@ -387,6 +387,15 @@ public:
 
 
     unsigned int GetReceiveFloodSize() const;
+
+/* DTG
+    mutable CCriticalSection cs_vNodes; // DTG Is there a better way of using this externally?
+
+    size_t numberOfVNodes() const {
+    	return vNodes.size();
+    }
+*/
+
 private:
     struct ListenSocket {
         SOCKET socket;
@@ -472,8 +481,8 @@ private:
     std::vector<std::string> vAddedNodes;
     CCriticalSection cs_vAddedNodes;
     std::vector<CNode*> vNodes;
-    std::list<CNode*> vNodesDisconnected;
     mutable CCriticalSection cs_vNodes;
+    std::list<CNode*> vNodesDisconnected;
     std::atomic<NodeId> nLastNodeId;
 
     /** Services this instance offers */

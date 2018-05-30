@@ -10,6 +10,8 @@
 #include "wallet/db.h"
 #include "hdchain.h"
 #include "key.h"
+#include "keystore.h"
+#include "zcash/Address.hpp"
 
 #include <list>
 #include <stdint.h>
@@ -107,6 +109,8 @@ public:
 
     bool WriteDefaultKey(const CPubKey& vchPubKey);
 
+    bool WriteWitnessCacheSize(int64_t nWitnessCacheSize);
+
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
     bool ErasePool(int64_t nPool);
@@ -138,6 +142,16 @@ public:
     bool WriteHDChain(const CHDChain& chain);
     bool WriteCryptedHDChain(const CHDChain& chain);
     bool WriteHDPubKey(const CHDPubKey& hdPubKey, const CKeyMetadata& keyMeta);
+
+    /// Write spending key to wallet database, where key is payment address and value is spending key.
+    bool WriteZKey(const libzcash::PaymentAddress& addr, const libzcash::SpendingKey& key, const CKeyMetadata &keyMeta);
+    bool WriteCryptedZKey(const libzcash::PaymentAddress & addr,
+                          const libzcash::ReceivingKey & rk,
+                          const std::vector<unsigned char>& vchCryptedSecret,
+                          const CKeyMetadata &keyMeta);
+
+    bool WriteViewingKey(const libzcash::ViewingKey &vk);
+    bool EraseViewingKey(const libzcash::ViewingKey &vk);
 
 private:
     CWalletDB(const CWalletDB&);

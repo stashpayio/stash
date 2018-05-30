@@ -20,6 +20,7 @@
 #include "utiltime.h"
 #include "amount.h"
 
+#include <atomic>
 #include <exception>
 #include <map>
 #include <stdint.h>
@@ -135,6 +136,8 @@ static inline bool error(const char* format)
     return false;
 }
 
+const boost::filesystem::path &ZC_GetParamsDir();
+
 void PrintExceptionContinue(const std::exception *pex, const char* pszThread);
 void ParseParameters(int argc, const char*const argv[]);
 void FileCommit(FILE *fileout);
@@ -161,6 +164,14 @@ boost::filesystem::path GetTempPath();
 void OpenDebugLog();
 void ShrinkDebugFile();
 void runCommand(const std::string& strCommand);
+const boost::filesystem::path GetExportDir();
+
+/** Returns privacy notice (for -version, -help and metrics screen) */
+std::string PrivacyInfo();
+
+/** Returns licensing information (for -version) */
+std::string LicenseInfo();
+
 
 inline bool IsSwitchChar(char c)
 {
