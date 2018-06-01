@@ -30,6 +30,8 @@
 
 #include <univalue.h>
 
+#include "zcash/Address.hpp"
+
 using namespace std;
 
 /**
@@ -338,6 +340,68 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
             ret.push_back(Pair("hdkeypath", pwalletMain->mapHdPubKeys[keyID].GetKeyPath()));
             ret.push_back(Pair("hdchainid", hdChainCurrent.GetID().GetHex()));
         }
+#endif
+    }
+    return ret;
+}
+
+UniValue z_validateaddress(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "z_validateaddress \"zaddr\"\n"
+            "\nReturn information about the given z address.\n"
+            "\nArguments:\n"
+            "1. \"zaddr\"     (string, required) The z address to validate\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"isvalid\" : true|false,      (boolean) If the address is valid or not. If not, this is the only property returned.\n"
+            "  \"address\" : \"zaddr\",         (string) The z address validated\n"
+            "  \"ismine\" : true|false,       (boolean) If the address is yours or not\n"
+            "  \"payingkey\" : \"hex\",         (string) The hex value of the paying key, a_pk\n"
+            "  \"transmissionkey\" : \"hex\",   (string) The hex value of the transmission key, pk_enc\n"
+
+            "}\n"
+            "\nExamples:\n"
+            + HelpExampleCli("z_validateaddress", "\"zcWsmqT4X2V4jgxbgiCzyrAfRT1vi1F4sn7M5Pkh66izzw8Uk7LBGAH3DtcSMJeUb2pi3W4SQF8LMKkU2cUuVP68yAGcomL\"")
+            + HelpExampleRpc("z_validateaddress", "\"zcWsmqT4X2V4jgxbgiCzyrAfRT1vi1F4sn7M5Pkh66izzw8Uk7LBGAH3DtcSMJeUb2pi3W4SQF8LMKkU2cUuVP68yAGcomL\"")
+        );
+
+
+#ifdef ENABLE_WALLET
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+#else
+    LOCK(cs_main);
+#endif
+
+    bool isValid = false;
+    bool isMine = false;
+    std::string payingKey, transmissionKey;
+
+    string strAddress = params[0].get_str();
+    try {
+        CZCPaymentAddress address(strAddress);
+        libzcash::PaymentAddress addr = address.Get();
+
+#ifdef ENABLE_WALLET
+        isMine = pwalletMain->HaveSpendingKey(addr);
+#endif
+        payingKey = addr.a_pk.GetHex();
+        transmissionKey = addr.pk_enc.GetHex();
+        isValid = true;
+    } catch (std::runtime_error e) {
+        // address is invalid, nop here as isValid is false.
+    }
+
+    UniValue ret(UniValue::VOBJ);
+    ret.push_back(Pair("isvalid", isValid));
+    if (isValid)
+    {
+        ret.push_back(Pair("address", strAddress));
+        ret.push_back(Pair("payingkey", payingKey));
+        ret.push_back(Pair("transmissionkey", transmissionKey));
+#ifdef ENABLE_WALLET
+        ret.push_back(Pair("ismine", isMine));
 #endif
     }
     return ret;

@@ -97,7 +97,6 @@ LIBZCASH_H = \
   zcash/prf.h \
   zcash/Proof.hpp \
   zcash/util.h \
-  zcash/metrics.h \
   zcash/Zcash.h
 
 .PHONY: FORCE collate-libsnark check-symbols check-security
@@ -111,6 +110,8 @@ BITCOIN_CORE_H = \
   alert.h \
   amount.h \
   arith_uint256.h \
+  asyncrpcoperation.h  \
+  asyncrpcqueue.h \
   base58.h \
   bip39.h \
   bip39_english.h \
@@ -176,6 +177,8 @@ BITCOIN_CORE_H = \
   netbase.h \
   netfulfilledman.h \
   noui.h \
+  paymentdisclosure.h \
+  paymentdisclosuredb.h \
   policy/fees.h \
   policy/policy.h \
   policy/rbf.h \
@@ -190,6 +193,8 @@ BITCOIN_CORE_H = \
   rpc/client.h \
   rpc/protocol.h \
   rpc/server.h \
+  rpc/asyncrpcoperation.h \
+  rpc/asyncrpcqueue.h.h \
   scheduler.h \
   script/interpreter.h \
   script/script.h \
@@ -226,6 +231,8 @@ BITCOIN_CORE_H = \
   versionbits.h \
   wallet/crypter.h \
   wallet/db.h \
+  wallet/asyncrpcoperation_sendmany.h \
+  wallet/asyncrpcoperation_shieldcoinbase.h \
   wallet/wallet.h \
   wallet/wallet_ismine.h \
   wallet/walletdb.h \
@@ -233,7 +240,6 @@ BITCOIN_CORE_H = \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
   zmq/zmqpublishnotifier.h
-
 
 obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
@@ -249,6 +255,8 @@ libbitcoin_server_a_SOURCES = \
   addrman.cpp \
   addrdb.cpp \
   alert.cpp \
+  asyncrpcoperation.h  \
+  asyncrpcqueue.h \
   bloom.cpp \
   chain.cpp \
   checkpoints.cpp \
@@ -276,6 +284,8 @@ libbitcoin_server_a_SOURCES = \
   netfulfilledman.cpp \
   net_processing.cpp \
   noui.cpp \
+  paymentdisclosure.cpp \
+  paymentdisclosuredb.cpp \
   policy/fees.cpp \
   policy/policy.cpp \
   pow.cpp \
@@ -290,6 +300,8 @@ libbitcoin_server_a_SOURCES = \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
   rpc/server.cpp \
+  rpc/asyncrpcoperation.cpp \
+  rpc/asyncrpcqueue.cpp \
   script/sigcache.cpp \
   sendalert.cpp \
   spork.cpp \
@@ -325,6 +337,11 @@ libbitcoin_wallet_a_SOURCES = \
   privatesend-util.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
+  wallet/asyncrpcoperation_sendmany.cpp \
+  wallet/asyncrpcoperation_shieldcoinbase.cpp \
+  paymentdisclosure.cpp \
+  paymentdisclosuredb.cpp \
+  wallet/rpcdisclosure.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \

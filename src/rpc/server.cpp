@@ -13,6 +13,8 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#include "rpc/asyncrpcqueue.h"
+#include <memory>
 
 #include <univalue.h>
 
@@ -334,6 +336,7 @@ static const CRPCCommand vRPCCommands[] =
     { "util",               "estimatepriority",       &estimatepriority,       true  },
     { "util",               "estimatesmartfee",       &estimatesmartfee,       true  },
     { "util",               "estimatesmartpriority",  &estimatesmartpriority,  true  },
+    { "util",               "z_validateaddress",      &z_validateaddress,      true  }, /* uses wallet if enabled */
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        true  },
@@ -404,6 +407,32 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "walletlock",             &walletlock,             true  },
     { "wallet",             "walletpassphrasechange", &walletpassphrasechange, true  },
     { "wallet",             "walletpassphrase",       &walletpassphrase,       true  },
+// DTG:    { "wallet",             "zcbenchmark",            &zc_benchmark,           true  },
+    { "wallet",             "zcrawkeygen",            &zc_raw_keygen,          true  },
+    { "wallet",             "zcrawjoinsplit",         &zc_raw_joinsplit,       true  },
+    { "wallet",             "zcrawreceive",           &zc_raw_receive,         true  },
+    { "wallet",             "zcsamplejoinsplit",      &zc_sample_joinsplit,    true  },
+    { "wallet",             "z_listreceivedbyaddress",&z_listreceivedbyaddress,false },
+    { "wallet",             "z_getbalance",           &z_getbalance,           false },
+    { "wallet",             "z_gettotalbalance",      &z_gettotalbalance,      false },
+    { "wallet",             "z_sendmany",             &z_sendmany,             false },
+    { "wallet",             "z_shieldcoinbase",       &z_shieldcoinbase,       false },
+    { "wallet",             "z_getoperationstatus",   &z_getoperationstatus,   true  },
+    { "wallet",             "z_getoperationresult",   &z_getoperationresult,   true  },
+    { "wallet",             "z_listoperationids",     &z_listoperationids,     true  },
+    { "wallet",             "z_getnewaddress",        &z_getnewaddress,        true  },
+    { "wallet",             "z_listaddresses",        &z_listaddresses,        true  },
+    { "wallet",             "z_exportkey",            &z_exportkey,            true  },
+    { "wallet",             "z_importkey",            &z_importkey,            true  },
+    { "wallet",             "z_exportviewingkey",     &z_exportviewingkey,     true  },
+    { "wallet",             "z_importviewingkey",     &z_importviewingkey,     true  },
+    { "wallet",             "z_exportwallet",         &z_exportwallet,         true  },
+    { "wallet",             "z_importwallet",         &z_importwallet,         true  },
+
+    // TODO: rearrange into another category
+    { "disclosure",         "z_getpaymentdisclosure", &z_getpaymentdisclosure, true  },
+    { "disclosure",         "z_validatepaymentdisclosure", &z_validatepaymentdisclosure, true },
+
 #endif // ENABLE_WALLET
 };
 
@@ -432,6 +461,22 @@ bool StartRPC()
     LogPrint("rpc", "Starting RPC\n");
     fRPCRunning = true;
     g_rpcSignals.Started();
+
+    // Launch one async rpc worker.  The ability to launch multiple workers is not recommended at present and thus the option is disabled.
+    getAsyncRPCQueue()->addWorker();
+/*
+    int n = GetArg("-rpcasyncthreads", 1);
+    if (n<1) {
+        LogPrintf("ERROR: Invalid value %d for -rpcasyncthreads.  Must be at least 1.\n", n);
+        strerr = strprintf(_("An error occurred while setting up the Async RPC threads, invalid parameter value of %d (must be at least 1)."), n);
+        uiInterface.ThreadSafeMessageBox(strerr, "", CClientUIInterface::MSG_ERROR);
+        StartShutdown();
+        return;
+    }
+    for (int i = 0; i < n; i++)
+        getAsyncRPCQueue()->addWorker();
+*/
+
     return true;
 }
 
@@ -447,6 +492,10 @@ void StopRPC()
     LogPrint("rpc", "Stopping RPC\n");
     deadlineTimers.clear();
     g_rpcSignals.Stopped();
+
+    // Tells async queue to cancel all operations and shutdown.
+    LogPrintf("%s: waiting for async rpc workers to stop\n", __func__);
+    getAsyncRPCQueue()->closeAndWait();
 }
 
 bool IsRPCRunning()
@@ -612,3 +661,9 @@ void RPCRunLater(const std::string& name, boost::function<void(void)> func, int6
 }
 
 const CRPCTable tableRPC;
+
+// Return async rpc queue
+std::shared_ptr<AsyncRPCQueue> getAsyncRPCQueue()
+{
+    return AsyncRPCQueue::sharedInstance();
+}

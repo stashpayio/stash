@@ -61,6 +61,61 @@ void ScriptPubKeyToJSON(const CScript& scriptPubKey, UniValue& out, bool fInclud
     out.push_back(Pair("addresses", a));
 }
 
+UniValue TxJoinSplitToJSON(const CTransaction& tx) {
+    UniValue vjoinsplit(UniValue::VARR);
+    for (unsigned int i = 0; i < tx.vjoinsplit.size(); i++) {
+        const JSDescription& jsdescription = tx.vjoinsplit[i];
+        UniValue joinsplit(UniValue::VOBJ);
+
+        joinsplit.push_back(Pair("vpub_old", ValueFromAmount(jsdescription.vpub_old)));
+        joinsplit.push_back(Pair("vpub_new", ValueFromAmount(jsdescription.vpub_new)));
+
+        joinsplit.push_back(Pair("anchor", jsdescription.anchor.GetHex()));
+
+        {
+            UniValue nullifiers(UniValue::VARR);
+            BOOST_FOREACH(const uint256 nf, jsdescription.nullifiers) {
+                nullifiers.push_back(nf.GetHex());
+            }
+            joinsplit.push_back(Pair("nullifiers", nullifiers));
+        }
+
+        {
+            UniValue commitments(UniValue::VARR);
+            BOOST_FOREACH(const uint256 commitment, jsdescription.commitments) {
+                commitments.push_back(commitment.GetHex());
+            }
+            joinsplit.push_back(Pair("commitments", commitments));
+        }
+
+        joinsplit.push_back(Pair("onetimePubKey", jsdescription.ephemeralKey.GetHex()));
+        joinsplit.push_back(Pair("randomSeed", jsdescription.randomSeed.GetHex()));
+
+        {
+            UniValue macs(UniValue::VARR);
+            BOOST_FOREACH(const uint256 mac, jsdescription.macs) {
+                macs.push_back(mac.GetHex());
+            }
+            joinsplit.push_back(Pair("macs", macs));
+        }
+
+        CDataStream ssProof(SER_NETWORK, PROTOCOL_VERSION);
+        ssProof << jsdescription.proof;
+        joinsplit.push_back(Pair("proof", HexStr(ssProof.begin(), ssProof.end())));
+
+        {
+            UniValue ciphertexts(UniValue::VARR);
+            for (const ZCNoteEncryption::Ciphertext ct : jsdescription.ciphertexts) {
+                ciphertexts.push_back(HexStr(ct.begin(), ct.end()));
+            }
+            joinsplit.push_back(Pair("ciphertexts", ciphertexts));
+        }
+
+        vjoinsplit.push_back(joinsplit);
+    }
+    return vjoinsplit;
+}
+
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 {
     uint256 txid = tx.GetHash();
@@ -122,6 +177,9 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
         vout.push_back(out);
     }
     entry.push_back(Pair("vout", vout));
+
+    UniValue vjoinsplit = TxJoinSplitToJSON(tx);
+    entry.push_back(Pair("vjoinsplit", vjoinsplit));
 
     if (!hashBlock.IsNull()) {
         entry.push_back(Pair("blockhash", hashBlock.GetHex()));
@@ -193,6 +251,33 @@ UniValue getrawtransaction(const UniValue& params, bool fHelp)
             "           ,...\n"
             "         ]\n"
             "       }\n"
+            "     }\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"vjoinsplit\" : [        (array of json objects, only for version >= 2)\n"
+            "     {\n"
+            "       \"vpub_old\" : x.xxx,         (numeric) public input value in " + CURRENCY_UNIT + "\n"
+            "       \"vpub_new\" : x.xxx,         (numeric) public output value in " + CURRENCY_UNIT + "\n"
+            "       \"anchor\" : \"hex\",         (string) the anchor\n"
+            "       \"nullifiers\" : [            (json array of string)\n"
+            "         \"hex\"                     (string) input note nullifier\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"commitments\" : [           (json array of string)\n"
+            "         \"hex\"                     (string) output note commitment\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"onetimePubKey\" : \"hex\",  (string) the onetime public key used to encrypt the ciphertexts\n"
+            "       \"randomSeed\" : \"hex\",     (string) the random seed\n"
+            "       \"macs\" : [                  (json array of string)\n"
+            "         \"hex\"                     (string) input note MAC\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"proof\" : \"hex\",          (string) the zero-knowledge proof\n"
+            "       \"ciphertexts\" : [           (json array of string)\n"
+            "         \"hex\"                     (string) output note ciphertext\n"
+            "         ,...\n"
+            "       ]\n"
             "     }\n"
             "     ,...\n"
             "  ],\n"
@@ -503,6 +588,33 @@ UniValue decoderawtransaction(const UniValue& params, bool fHelp)
             "     }\n"
             "     ,...\n"
             "  ],\n"
+            "  \"vjoinsplit\" : [        (array of json objects, only for version >= 2)\n"
+            "     {\n"
+            "       \"vpub_old\" : x.xxx,         (numeric) public input value in " + CURRENCY_UNIT + "\n"
+            "       \"vpub_new\" : x.xxx,         (numeric) public output value in " + CURRENCY_UNIT + "\n"
+            "       \"anchor\" : \"hex\",         (string) the anchor\n"
+            "       \"nullifiers\" : [            (json array of string)\n"
+            "         \"hex\"                     (string) input note nullifier\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"commitments\" : [           (json array of string)\n"
+            "         \"hex\"                     (string) output note commitment\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"onetimePubKey\" : \"hex\",  (string) the onetime public key used to encrypt the ciphertexts\n"
+            "       \"randomSeed\" : \"hex\",     (string) the random seed\n"
+            "       \"macs\" : [                  (json array of string)\n"
+            "         \"hex\"                     (string) input note MAC\n"
+            "         ,...\n"
+            "       ],\n"
+            "       \"proof\" : \"hex\",          (string) the zero-knowledge proof\n"
+            "       \"ciphertexts\" : [           (json array of string)\n"
+            "         \"hex\"                     (string) output note ciphertext\n"
+            "         ,...\n"
+            "       ]\n"
+            "     }\n"
+            "     ,...\n"
+            "  ],\n"
             "}\n"
 
             "\nExamples:\n"
@@ -549,6 +661,7 @@ UniValue decodescript(const UniValue& params, bool fHelp)
             + HelpExampleRpc("decodescript", "\"hexstring\"")
         );
 
+    LOCK(cs_main);
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR));
 
     UniValue r(UniValue::VOBJ);

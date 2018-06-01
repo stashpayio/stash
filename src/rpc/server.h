@@ -14,11 +14,13 @@
 #include <map>
 #include <stdint.h>
 #include <string>
+#include <memory>
 
 #include <boost/function.hpp>
 
 #include <univalue.h>
 
+class AsyncRPCQueue;
 class CRPCCommand;
 
 namespace RPCServer
@@ -45,6 +47,9 @@ public:
 
 /** Query whether RPC is running */
 bool IsRPCRunning();
+
+/** Get the async queue*/
+std::shared_ptr<AsyncRPCQueue> getAsyncRPCQueue();
 
 /**
  * Set the RPC warmup status.  When this is done, all RPC calls will error out
@@ -165,6 +170,7 @@ extern int64_t nWalletUnlockTime;
 extern CAmount AmountFromValue(const UniValue& value);
 extern UniValue ValueFromAmount(const CAmount& amount);
 extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
+extern double GetNetworkDifficulty(const CBlockIndex* blockindex = NULL);
 extern std::string HelpRequiringPassphrase();
 extern std::string HelpExampleCli(const std::string& methodname, const std::string& args);
 extern std::string HelpExampleRpc(const std::string& methodname, const std::string& args);
@@ -253,6 +259,11 @@ extern UniValue getblockchaininfo(const UniValue& params, bool fHelp);
 extern UniValue getnetworkinfo(const UniValue& params, bool fHelp);
 extern UniValue setmocktime(const UniValue& params, bool fHelp);
 extern UniValue resendwallettransactions(const UniValue& params, bool fHelp);
+// DTG: extern UniValue zc_benchmark(const UniValue& params, bool fHelp);
+extern UniValue zc_raw_keygen(const UniValue& params, bool fHelp);
+extern UniValue zc_raw_joinsplit(const UniValue& params, bool fHelp);
+extern UniValue zc_raw_receive(const UniValue& params, bool fHelp);
+extern UniValue zc_sample_joinsplit(const UniValue& params, bool fHelp);
 
 extern UniValue getrawtransaction(const UniValue& params, bool fHelp); // in rpc/rawtransaction.cpp
 extern UniValue listunspent(const UniValue& params, bool fHelp);
@@ -298,6 +309,26 @@ extern UniValue invalidateblock(const UniValue& params, bool fHelp);
 extern UniValue reconsiderblock(const UniValue& params, bool fHelp);
 extern UniValue getspentinfo(const UniValue& params, bool fHelp);
 extern UniValue sentinelping(const UniValue& params, bool fHelp);
+
+extern UniValue z_exportkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_importkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_exportviewingkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_importviewingkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_getnewaddress(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_listaddresses(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_exportwallet(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_importwallet(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue z_listreceivedbyaddress(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_getbalance(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_gettotalbalance(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_sendmany(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_shieldcoinbase(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_getoperationstatus(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_getoperationresult(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_listoperationids(const UniValue& params, bool fHelp); // in rpcwallet.cpp
+extern UniValue z_validateaddress(const UniValue& params, bool fHelp); // in rpcmisc.cpp
+extern UniValue z_getpaymentdisclosure(const UniValue& params, bool fHelp); // in rpcdisclosure.cpp
+extern UniValue z_validatepaymentdisclosure(const UniValue &params, bool fHelp); // in rpcdisclosure.cpp
 
 bool StartRPC();
 void InterruptRPC();

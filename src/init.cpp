@@ -1054,6 +1054,19 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     // ********************************************************* Step 2: parameter interactions
     const CChainParams& chainparams = Params();
 
+    // Set this early so that experimental features are correctly enabled/disabled
+    fExperimentalMode = GetBoolArg("-experimentalfeatures", false);
+
+    // Fail early if user has set experimental options without the global flag
+    if (!fExperimentalMode) {
+        if (mapArgs.count("-developerencryptwallet")) {
+            return InitError(_("Wallet encryption requires -experimentalfeatures."));
+        }
+        else if (mapArgs.count("-paymentdisclosure")) {
+            return InitError(_("Payment disclosure requires -experimentalfeatures."));
+        }
+    }
+
     // also see: InitParameterInteraction()
 
     // if using block pruning, then disable txindex
@@ -1260,6 +1273,11 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // Initialize fast PRNG
     seed_insecure_rand(false);
+
+    // Initialize libsodium
+    if (init_and_check_sodium() == -1) {
+        return false;
+    }
 
     // Initialize elliptic curve code
     ECC_Start();
