@@ -173,6 +173,13 @@ public:
         // Dash BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
+        // guarantees the first 2 characters, when base58 encoded, are "zc"
+        base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0x9A};
+        // guarantees the first 4 characters, when base58 encoded, are "ZiVK"
+        base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAB,0xD3};
+        // guarantees the first 2 characters, when base58 encoded, are "SK"
+        base58Prefixes[ZCSPENDING_KEY]     = {0xAB,0x36};
+
         // Dash BIP44 coin type is '5'
         nExtCoinType = 5;
 
@@ -299,6 +306,13 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
+
+        // guarantees the first 2 characters, when base58 encoded, are "zt"
+         base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
+         // guarantees the first 4 characters, when base58 encoded, are "ZiVt"
+         base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
+         // guarantees the first 2 characters, when base58 encoded, are "ST"
+         base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
 
         // Testnet Dash BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;

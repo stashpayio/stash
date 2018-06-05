@@ -252,6 +252,7 @@ bool CBitcoinAddress::IsValid() const
     return IsValid(Params());
 }
 
+#ifdef DTG
 bool CBitcoinAddress::SetString(const char* pszAddress)
 {
     return CBase58Data::SetString(pszAddress, 2);
@@ -261,6 +262,7 @@ bool CBitcoinAddress::SetString(const std::string& strAddress)
 {
     return SetString(strAddress.c_str());
 }
+#endif
 
 bool CBitcoinAddress::IsValid(const CChainParams& params) const
 {
@@ -407,4 +409,3 @@ template bool CZCEncoding<libzcash::SpendingKey,
 template libzcash::SpendingKey CZCEncoding<libzcash::SpendingKey,
                                            CChainParams::ZCSPENDING_KEY,
                                            libzcash::SerializedSpendingKeySize>::Get() const;
-
