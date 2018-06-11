@@ -139,7 +139,7 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1524538158, 3928800, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1528690251, 638664, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating genesis block\n");
@@ -154,10 +154,12 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x00000d6dea93edfd44ebdf21e860a4bbc1f9018b4a5246512ba101c77f1a41fb"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000592fb8349baf7fe9db4c0143ce044d8ca66ec3e106a4c185b69f7556f57"));
         assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
 
-        vSeeds.push_back(CDNSSeedData("stashpay.io", "dnsseed.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
         //vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
         //vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
         //vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
@@ -215,8 +217,8 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210240;
-        consensus.nMasternodePaymentsStartBlock = 4010; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 4030;
+        consensus.nMasternodePaymentsStartBlock = 250; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nMasternodePaymentsIncreaseBlock = 270;
         consensus.nMasternodePaymentsIncreasePeriod = 10;
         consensus.nInstantSendKeepLock = 6;
         consensus.nBudgetPaymentsStartBlock = 4100;
@@ -259,22 +261,25 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000924e924a21715"); // 37900
+        //consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000924e924a21715"); // 37900
+        consensus.nMinimumChainWork = uint256S("0x0"); // 37900
 
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x0000000004f5aef732d572ff514af99a995702c92e4452c7af10858231668b1f"); // 37900
 
-        pchMessageStart[0] = 0xee;
+        pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
-        pchMessageStart[2] = 0x0a;
+        pchMessageStart[2] = 0xfa;
         pchMessageStart[3] = 0xf7;
         vAlertPubKey = ParseHex("04517d8a699cb43d3938d7b24faaff7cda448ca4ea267723ba614784de661949bf632d6304316b244646dea079735b9a6fc4af804efb4752075b9fe2245e14e412");
         nDefaultPort = 19999;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
+        nMaxTipAge = 16000 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1524538158, 3928800, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1528690251, 638664, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating test genesis block\n");
@@ -288,12 +293,14 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000d6dea93edfd44ebdf21e860a4bbc1f9018b4a5246512ba101c77f1a41fb"));
-        assert(genesis.hashMerkleRoot == uint256S("c633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000592fb8349baf7fe9db4c0143ce044d8ca66ec3e106a4c185b69f7556f57"));
+        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("dashdot.io",  "testnet-seed.dashdot.io"));
+        vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
         //vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
 
         // Testnet Dash addresses start with 'y'
