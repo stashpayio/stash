@@ -1109,7 +1109,7 @@ void _dumpBuffer(const char* buffer, size_t length) {
 
 void LogIncomingMsg(CNetMessage& msg) {
    const char* hdrData = &msg.hdrbuf[0];
-   printf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
+   //printf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
    LogPrintf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
    _dumpBuffer(hdrData,HEADER_SIZE);
    LogPrintf("\n");
@@ -1118,7 +1118,7 @@ void LogIncomingMsg(CNetMessage& msg) {
 }
 
 void LogOutgoingMsg(const char* data, size_t length) {
-  printf("\n<<< %s\n",&data[NAME_OFFSET]);
+  //printf("\n<<< %s\n",&data[NAME_OFFSET]);
   LogPrintf("\n<<< %s\n",&data[NAME_OFFSET]);
   _dumpBuffer(&data[0],HEADER_SIZE);
   LogPrintf("\n");

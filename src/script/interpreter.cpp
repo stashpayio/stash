@@ -1104,21 +1104,19 @@ public:
         ::Serialize(s, txTo.nLockTime, nType, nVersion);
 
         // Serialize vjoinsplit
-        if (txTo.nVersion >= CTransaction::ZCASH_VERSION) {
-            //
-            // SIGHASH_* functions will hash portions of
-            // the transaction for use in signatures. This
-            // keeps the JoinSplit cryptographically bound
-            // to the transaction.
-            //
-            ::Serialize(s, txTo.vjoinsplit, nType, nVersion);
-            if (txTo.vjoinsplit.size() > 0) {
-                ::Serialize(s, txTo.joinSplitPubKey, nType, nVersion);
+        //
+        // SIGHASH_* functions will hash portions of
+        // the transaction for use in signatures. This
+        // keeps the JoinSplit cryptographically bound
+        // to the transaction.
+        //
+        ::Serialize(s, txTo.vjoinsplit, nType, nVersion);
+          if (txTo.vjoinsplit.size() > 0) {
+              ::Serialize(s, txTo.joinSplitPubKey, nType, nVersion);
 
-                CTransaction::joinsplit_sig_t nullSig = {};
-                ::Serialize(s, nullSig, nType, nVersion);
-            }
-        }
+              CTransaction::joinsplit_sig_t nullSig = {};
+              ::Serialize(s, nullSig, nType, nVersion);
+          }
     }
 };
 

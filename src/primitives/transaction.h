@@ -372,8 +372,6 @@ public:
     // MAX_STANDARD_VERSION will be equal.
     static const int32_t MAX_STANDARD_VERSION=2;
 
-    static const int32_t ZCASH_VERSION=4;
-
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
     // actually immutable; deserialization and assignment are implemented,
@@ -406,13 +404,12 @@ public:
         READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
         READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
-        if (nVersion >= ZCASH_VERSION) {
-            READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
-            if (vjoinsplit.size() > 0) {
-                READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
-                READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
-            }
+        READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
+        if (vjoinsplit.size() > 0) {
+            READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
+            READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
         }
+
 
         if (ser_action.ForRead())
             UpdateHash();
@@ -489,12 +486,10 @@ struct CMutableTransaction
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        if (nVersion >= CTransaction::ZCASH_VERSION) {
-            READWRITE(vjoinsplit);
-            if (vjoinsplit.size() > 0) {
-                READWRITE(joinSplitPubKey);
-                READWRITE(joinSplitSig);
-            }
+        READWRITE(vjoinsplit);
+        if (vjoinsplit.size() > 0) {
+            READWRITE(joinSplitPubKey);
+            READWRITE(joinSplitSig);
         }
     }
 
