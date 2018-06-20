@@ -36,7 +36,11 @@ uint256 CCoinsViewBacked::GetBestBlock() const { return base->GetBestBlock(); }
 uint256 CCoinsViewBacked::GetBestAnchor() const { return base->GetBestAnchor(); }
 void CCoinsViewBacked::SetBackend(CCoinsView &viewIn) { base = &viewIn; }
 bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return base->BatchWrite(mapCoins, hashBlock); }
-bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins,const uint256 &hashBlock, const uint256 &hashAnchor,CAnchorsMap &mapAnchors,CNullifiersMap &mapNullifiers) {
+bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins,
+	                                const uint256 &hashBlock,
+																	const uint256 &hashAnchor,
+																	CAnchorsMap &mapAnchors,
+																	CNullifiersMap &mapNullifiers) {
 	return base->BatchWrite(mapCoins, hashBlock,hashAnchor,mapAnchors,mapNullifiers);
 }
 CCoinsViewCursor *CCoinsViewBacked::Cursor() const { return base->Cursor(); }
@@ -247,7 +251,9 @@ uint256 CCoinsViewCache::GetBestBlock() const {
 }
 
 uint256 CCoinsViewCache::GetBestAnchor() const {
-	return uint256(); // TODO DTG
+	if (hashAnchor.IsNull())
+			hashAnchor = base->GetBestAnchor();
+	return hashAnchor;
 }
 
 
@@ -311,7 +317,11 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     return true;
 }
 
-bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins,const uint256 &hashBlockIn, const uint256 &hashAnchorIn,CAnchorsMap &mapAnchors,CNullifiersMap &mapNullifiers) {
+bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins,
+	                               const uint256 &hashBlockIn,
+																 const uint256 &hashAnchorIn,
+																 CAnchorsMap &mapAnchors,
+																 CNullifiersMap &mapNullifiers) {
 	bool res = this->BatchWrite(mapCoins,hashBlockIn);
 
     for (CAnchorsMap::iterator child_it = mapAnchors.begin(); child_it != mapAnchors.end();)
@@ -365,8 +375,10 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins,const uint256 &hashBlockIn,
 
 
 bool CCoinsViewCache::Flush() {
-    bool fOk = base->BatchWrite(cacheCoins, hashBlock);
+    bool fOk = base->BatchWrite(cacheCoins, hashBlock, hashAnchor, cacheAnchors, cacheNullifiers);
     cacheCoins.clear();
+		cacheAnchors.clear();
+    cacheNullifiers.clear();
     cachedCoinsUsage = 0;
     return fOk;
 }
@@ -393,8 +405,45 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
     for (unsigned int i = 0; i < tx.vin.size(); i++)
         nResult += AccessCoin(tx.vin[i].prevout).out.nValue;
 
+    nResult += tx.GetJoinSplitValueIn();
+
     return nResult;
 }
+
+bool CCoinsViewCache::HaveJoinSplitRequirements(const CTransaction& tx) const
+{
+    boost::unordered_map<uint256, ZCIncrementalMerkleTree,SaltedHasher> intermediates;
+
+    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit)
+    {
+        BOOST_FOREACH(const uint256& nullifier, joinsplit.nullifiers)
+        {
+            if (GetNullifier(nullifier)) {
+                // If the nullifier is set, this transaction
+                // double-spends!
+                return false;
+            }
+        }
+
+        ZCIncrementalMerkleTree tree;
+        auto it = intermediates.find(joinsplit.anchor);
+        if (it != intermediates.end()) {
+            tree = it->second;
+        } else if (!GetAnchorAt(joinsplit.anchor, tree)) {
+            return false;
+        }
+
+        BOOST_FOREACH(const uint256& commitment, joinsplit.commitments)
+        {
+            tree.append(commitment);
+        }
+
+        intermediates.insert(std::make_pair(tree.root(), tree));
+    }
+
+    return true;
+}
+
 
 bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
 {

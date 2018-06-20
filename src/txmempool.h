@@ -453,6 +453,7 @@ private:
 
 public:
     std::map<COutPoint, CInPoint> mapNextTx;
+    std::map<uint256, const CTransaction*> mapNullifiers;
     std::map<uint256, std::pair<double, CAmount> > mapDeltas;
 
     /** Create a new CTxMemPool.
@@ -484,6 +485,7 @@ public:
                          std::vector<std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> > &results);
     bool removeAddressIndex(const uint256 txhash);
 
+    void removeWithAnchor(const uint256 &invalidRoot);
     void addSpentIndex(const CTxMemPoolEntry &entry, const CCoinsViewCache &view);
     bool getSpentIndex(CSpentIndexKey &key, CSpentIndexValue &value);
     bool removeSpentIndex(const uint256 txhash);
@@ -664,6 +666,7 @@ protected:
 public:
     CCoinsViewMemPool(CCoinsView *baseIn, CTxMemPool &mempoolIn);
     bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
+    bool GetNullifier(const uint256 &txid) const override;
 };
 
 // We want to sort transactions by coin age priority

@@ -60,7 +60,7 @@ struct CoinEntry {
 
 }
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true)
 {
 }
 
@@ -158,8 +158,11 @@ void static BatchWriteHashBestAnchor(CDBBatch &batch, const uint256 &hash) {
     batch.Write(DB_BEST_ANCHOR, hash);
 }
 
-bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins,const uint256 &hashBlock,
-                 const uint256 &hashAnchor,CAnchorsMap &mapAnchors,CNullifiersMap &mapNullifiers) {
+bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins,
+                              const uint256 &hashBlock,
+                              const uint256 &hashAnchor,
+                              CAnchorsMap &mapAnchors,
+                              CNullifiersMap &mapNullifiers) {
 	CDBBatch batch(db);
 	this->_BatchWrite(mapCoins,hashBlock,batch);
 
@@ -453,6 +456,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nFile          = diskindex.nFile;
                 pindexNew->nDataPos       = diskindex.nDataPos;
                 pindexNew->nUndoPos       = diskindex.nUndoPos;
+                pindexNew->hashAnchor     = diskindex.hashAnchor;
                 pindexNew->nVersion       = diskindex.nVersion;
                 pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
                 pindexNew->nTime          = diskindex.nTime;
@@ -460,7 +464,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
-
+                pindexNew->nSproutValue   = diskindex.nSproutValue;
+                
                 if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
                     return error("%s: CheckProofOfWork failed: %s", __func__, pindexNew->ToString());
 

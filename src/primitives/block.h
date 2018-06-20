@@ -80,7 +80,7 @@ public:
     mutable CTxOut txoutMasternode; // masternode payment
     mutable std::vector<CTxOut> voutSuperblock; // superblock payment
     mutable bool fChecked;
-    mutable std::vector<uint256> vMerkleTree;
+ // DTG   mutable std::vector<uint256> vMerkleTree;
 
     CBlock()
     {
@@ -108,7 +108,7 @@ public:
         txoutMasternode = CTxOut();
         voutSuperblock.clear();
         fChecked = false;
-        vMerkleTree.clear();
+ // DTG           vMerkleTree.clear();
     }
 
     CBlockHeader GetBlockHeader() const
@@ -123,6 +123,7 @@ public:
         return block;
     }
 
+#ifdef DTG
     // Build the in-memory merkle tree for this block and return the merkle root.
     // If non-NULL, *mutated is set to whether mutation was detected in the merkle
     // tree (a duplication of transactions in the block leading to an identical
@@ -130,6 +131,7 @@ public:
     uint256 BuildMerkleTree(bool* mutated = NULL) const;
     std::vector<uint256> GetMerkleBranch(int nIndex) const;
     static uint256 CheckMerkleBranch(uint256 hash, const std::vector<uint256>& vMerkleBranch, int nIndex);
+#endif
 
     std::string ToString() const;
 };

@@ -393,6 +393,13 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
         mapNextTx[tx.vin[i].prevout] = CInPoint(&tx, i);
         setParentTransactions.insert(tx.vin[i].prevout.hash);
     }
+
+    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+        BOOST_FOREACH(const uint256 &nf, joinsplit.nullifiers) {
+            mapNullifiers[nf] = &tx;
+        }
+    }
+
     // Don't bother worrying about child transactions of this one.
     // Normal case of a new transaction arriving is that there can't be any
     // children, because such children would be orphans.
@@ -677,6 +684,32 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
     }
 }
 
+void CTxMemPool::removeWithAnchor(const uint256 &invalidRoot)
+{
+    // If a block is disconnected from the tip, and the root changed,
+    // we must invalidate transactions from the mempool which spend
+    // from that root -- almost as though they were spending coinbases
+    // which are no longer valid to spend due to coinbase maturity.
+    LOCK(cs);
+    list<CTransaction> transactionsToRemove;
+
+    for (CTxMemPool::indexed_transaction_set::nth_index<0>::type::iterator it = mapTx.get<0>().begin(); it != mapTx.get<0>().end(); it++) {
+        // DTG for (std::map<uint256, CTxMemPoolEntry>::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
+        const CTransaction& tx = it-> GetTx();
+        BOOST_FOREACH(const JSDescription& joinsplit, tx.vjoinsplit) {
+            if (joinsplit.anchor == invalidRoot) {
+                transactionsToRemove.push_back(tx);
+                break;
+            }
+        }
+    }
+
+    BOOST_FOREACH(const CTransaction& tx, transactionsToRemove) {
+        list<CTransaction> removed;
+        remove(tx, removed, true);
+    }
+}
+
 void CTxMemPool::removeConflicts(const CTransaction &tx, std::list<CTransaction>& removed)
 {
     // Remove transactions which depend on inputs of tx, recursively
@@ -690,6 +723,19 @@ void CTxMemPool::removeConflicts(const CTransaction &tx, std::list<CTransaction>
             {
                 remove(txConflict, removed, true);
                 ClearPrioritisation(txConflict.GetHash());
+            }
+        }
+    }
+
+    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+        BOOST_FOREACH(const uint256 &nf, joinsplit.nullifiers) {
+            std::map<uint256, const CTransaction*>::iterator it = mapNullifiers.find(nf);
+            if (it != mapNullifiers.end()) {
+                const CTransaction &txConflict = *it->second;
+                if (txConflict != tx)
+                {
+                    remove(txConflict, removed, true);
+                }
             }
         }
     }
@@ -789,6 +835,30 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
             assert(it3->second.n == i);
             i++;
         }
+
+        boost::unordered_map<uint256, ZCIncrementalMerkleTree, SaltedHasher> intermediates;
+
+        BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+            BOOST_FOREACH(const uint256 &nf, joinsplit.nullifiers) {
+                assert(!pcoins->GetNullifier(nf));
+            }
+
+            ZCIncrementalMerkleTree tree;
+            auto it = intermediates.find(joinsplit.anchor);
+            if (it != intermediates.end()) {
+                tree = it->second;
+            } else {
+                assert(pcoins->GetAnchorAt(joinsplit.anchor, tree));
+            }
+
+            BOOST_FOREACH(const uint256& commitment, joinsplit.commitments)
+            {
+                tree.append(commitment);
+            }
+
+            intermediates.insert(std::make_pair(tree.root(), tree));
+        }
+
         assert(setParentCheck == GetMemPoolParents(it));
         // Check children against mapNextTx
         CTxMemPool::setEntries setChildrenCheck;
@@ -838,13 +908,22 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
     }
     for (std::map<COutPoint, CInPoint>::const_iterator it = mapNextTx.begin(); it != mapNextTx.end(); it++) {
         uint256 hash = it->second.ptx->GetHash();
-        indexed_transaction_set::const_iterator it2 = mapTx.find(hash);
-        const CTransaction& tx = it2->GetTx();
+        indexed_transaction_set::nth_index<0>::type::iterator it2= mapTx.find(hash);
+        const CTransaction& tx =it2->GetTx();
         assert(it2 != mapTx.end());
         assert(&tx == it->second.ptx);
         assert(tx.vin.size() > it->second.n);
         assert(it->first == it->second.ptx->vin[it->second.n].prevout);
     }
+
+    for (std::map<uint256, const CTransaction*>::const_iterator it = mapNullifiers.begin(); it != mapNullifiers.end(); it++) {
+        uint256 hash = it->second->GetHash();
+        indexed_transaction_set::nth_index<0>::type::iterator it2= mapTx.find(hash);
+        const CTransaction& tx = it2->GetTx();
+        assert(it2 != mapTx.end());
+        assert(&tx == it->second);
+    }
+
 
     assert(totalTxSize == checkTotal);
     assert(innerUsage == cachedInnerUsage);
@@ -974,6 +1053,13 @@ bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 }
 
 CCoinsViewMemPool::CCoinsViewMemPool(CCoinsView *baseIn, CTxMemPool &mempoolIn) : CCoinsViewBacked(baseIn), mempool(mempoolIn) { }
+
+bool CCoinsViewMemPool::GetNullifier(const uint256 &nf) const {
+    if (mempool.mapNullifiers.count(nf))
+        return true;
+
+    return base->GetNullifier(nf);
+}
 
 bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin) const {
     // If an entry in the mempool exists, always return that one, as it's guaranteed to never

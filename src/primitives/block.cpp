@@ -15,6 +15,7 @@ uint256 CBlockHeader::GetHash() const
     return HashX11(BEGIN(nVersion), END(nNonce));
 }
 
+#ifdef DTG
 uint256 CBlock::BuildMerkleTree(bool* fMutated) const
 {
     /* WARNING! If you're reading this because you're learning about crypto
@@ -108,6 +109,7 @@ uint256 CBlock::CheckMerkleBranch(uint256 hash, const std::vector<uint256>& vMer
     }
     return hash;
 }
+#endif
 
 std::string CBlock::ToString() const
 {
@@ -123,9 +125,9 @@ std::string CBlock::ToString() const
     {
         s << "  " << vtx[i].ToString() << "\n";
     }
-    s << "  vMerkleTree: ";
-    for (unsigned int i = 0; i < vMerkleTree.size(); i++)
-        s << " " << vMerkleTree[i].ToString();
-    s << "\n";
+// DTG    s << "  vMerkleTree: ";
+// DTG    for (unsigned int i = 0; i < vMerkleTree.size(); i++)
+// DTG        s << " " << vMerkleTree[i].ToString();
+// DTG    s << "\n";
     return s.str();
 }

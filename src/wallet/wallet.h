@@ -525,10 +525,7 @@ public:
         READWRITE(nTimeReceived);
         READWRITE(fFromMe);
         READWRITE(fSpent);
-
-        if (nVersion >= CTransaction::ZCASH_VERSION) {
-        	READWRITE(mapNoteData);
-        }
+        READWRITE(mapNoteData);
 
 
         if (ser_action.ForRead())

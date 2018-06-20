@@ -139,7 +139,7 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1528690251, 638664, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1528690251, 73338, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating genesis block\n");
@@ -154,8 +154,8 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x00000592fb8349baf7fe9db4c0143ce044d8ca66ec3e106a4c185b69f7556f57"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000010d820f28129758dfb1998d320b675dbd0c680554d85a35ee1ee041673"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
@@ -279,7 +279,7 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1528690251, 638664, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1528690251, 73338, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating test genesis block\n");
@@ -293,8 +293,8 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000592fb8349baf7fe9db4c0143ce044d8ca66ec3e106a4c185b69f7556f57"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000010d820f28129758dfb1998d320b675dbd0c680554d85a35ee1ee041673"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -409,7 +409,7 @@ public:
         nDefaultPort = 19994;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1524538158, 6, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(15245386,1021417, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating regtest genesis block\n");
@@ -423,8 +423,8 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x382d3bbc287d87657a624dc311d12fb19bf7743209b877d7838598954e1b008c"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc633ecbef02a84fdc76d84912c30cb29a1de023811fb0c5f8055ca5a89593dc4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000148ef1f58eb7cc94f4690c40f093e40c416049aabf32b468811dfe40d6e"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();  //! Regtest mode doesn't have any DNS seeds.
