@@ -6,6 +6,8 @@
 
 #include "validation.h"
 
+#include "sodium.h"
+
 #include "alert.h"
 #include "arith_uint256.h"
 #include "chainparams.h"
@@ -472,14 +474,17 @@ int GetUTXOConfirmations(const COutPoint& outpoint)
     return (nPrevoutHeight > -1 && chainActive.Tip()) ? chainActive.Height() - nPrevoutHeight + 1 : -1;
 }
 
-
 bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 {
     // Basic checks that don't depend on any context
-    if (tx.vin.empty())
+
+    // Transactions can contain empty `vin` and `vout` so long as
+    // `vjoinsplit` is non-empty.
+    if (tx.vin.empty() && tx.vjoinsplit.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
-    if (tx.vout.empty())
+    if (tx.vout.empty() && tx.vjoinsplit.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
+
     // Size limits
     if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_LEGACY_BLOCK_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-txns-oversize");
@@ -497,6 +502,59 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-txouttotal-toolarge");
     }
 
+    // Ensure that joinsplit values are well-formed
+    BOOST_FOREACH(const JSDescription& joinsplit, tx.vjoinsplit)
+    {
+        if (joinsplit.vpub_old < 0) {
+            return state.DoS(100, error("CheckTransaction(): joinsplit.vpub_old negative"),
+                             REJECT_INVALID, "bad-txns-vpub_old-negative");
+        }
+
+        if (joinsplit.vpub_new < 0) {
+            return state.DoS(100, error("CheckTransaction(): joinsplit.vpub_new negative"),
+                             REJECT_INVALID, "bad-txns-vpub_new-negative");
+        }
+
+        if (joinsplit.vpub_old > MAX_MONEY) {
+            return state.DoS(100, error("CheckTransaction(): joinsplit.vpub_old too high"),
+                             REJECT_INVALID, "bad-txns-vpub_old-toolarge");
+        }
+
+        if (joinsplit.vpub_new > MAX_MONEY) {
+            return state.DoS(100, error("CheckTransaction(): joinsplit.vpub_new too high"),
+                             REJECT_INVALID, "bad-txns-vpub_new-toolarge");
+        }
+
+        if (joinsplit.vpub_new != 0 && joinsplit.vpub_old != 0) {
+            return state.DoS(100, error("CheckTransaction(): joinsplit.vpub_new and joinsplit.vpub_old both nonzero"),
+                             REJECT_INVALID, "bad-txns-vpubs-both-nonzero");
+        }
+
+        nValueOut += joinsplit.vpub_old;
+        if (!MoneyRange(nValueOut)) {
+            return state.DoS(100, error("CheckTransaction(): txout total out of range"),
+                             REJECT_INVALID, "bad-txns-txouttotal-toolarge");
+        }
+    }
+
+
+    // Ensure input values do not exceed MAX_MONEY
+    // We have not resolved the txin values at this stage,
+    // but we do know what the joinsplits claim to add
+    // to the value pool.
+    {
+        CAmount nValueIn = 0;
+        for (std::vector<JSDescription>::const_iterator it(tx.vjoinsplit.begin()); it != tx.vjoinsplit.end(); ++it)
+        {
+            nValueIn += it->vpub_new;
+
+            if (!MoneyRange(it->vpub_new) || !MoneyRange(nValueIn)) {
+                return state.DoS(100, error("CheckTransaction(): txin total out of range"),
+                                 REJECT_INVALID, "bad-txns-txintotal-toolarge");
+            }
+        }
+    }
+
     // Check for duplicate inputs
     set<COutPoint> vInOutPoints;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
@@ -505,6 +563,21 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
         vInOutPoints.insert(txin.prevout);
     }
+
+    // Check for duplicate joinsplit nullifiers in this transaction
+    set<uint256> vJoinSplitNullifiers;
+    BOOST_FOREACH(const JSDescription& joinsplit, tx.vjoinsplit)
+    {
+        BOOST_FOREACH(const uint256& nf, joinsplit.nullifiers)
+        {
+            if (vJoinSplitNullifiers.count(nf))
+                return state.DoS(100, error("CheckTransaction(): duplicate nullifiers"),
+                             REJECT_INVALID, "bad-joinsplits-nullifiers-duplicate");
+
+            vJoinSplitNullifiers.insert(nf);
+        }
+    }
+
 
     if (tx.IsCoinBase())
     {
@@ -516,9 +589,54 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
         BOOST_FOREACH(const CTxIn& txin, tx.vin)
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+
+        if (tx.vjoinsplit.size() > 0) {
+            // Empty output script.
+            CScript scriptCode;
+            uint256 dataToBeSigned;
+            try {
+                dataToBeSigned = SignatureHash(scriptCode, tx, NOT_AN_INPUT, SIGHASH_ALL);
+            } catch (std::logic_error ex) {
+                return state.DoS(100, error("CheckTransaction(): error computing signature hash"),
+                                 REJECT_INVALID, "error-computing-signature-hash");
+            }
+
+            BOOST_STATIC_ASSERT(crypto_sign_PUBLICKEYBYTES == 32);
+
+            // We rely on libsodium to check that the signature is canonical.
+            // https://github.com/jedisct1/libsodium/commit/62911edb7ff2275cccd74bf1c8aefcc4d76924e0
+            if (crypto_sign_verify_detached(&tx.joinSplitSig[0],
+                                            dataToBeSigned.begin(), 32,
+                                            tx.joinSplitPubKey.begin()
+                                           ) != 0) {
+                return state.DoS(100, error("CheckTransaction(): invalid joinsplit signature"),
+                                 REJECT_INVALID, "bad-txns-invalid-joinsplit-signature");
+            }
+        }
     }
 
     return true;
+}
+
+bool CheckTransaction(const CTransaction& tx, CValidationState &state, libzcash::ProofVerifier& verifier)
+{
+    // DTG    // Don't count coinbase transactions because mining skews the count
+	// DTG    if (!tx.IsCoinBase()) {
+	// DTG        transactionsValidated.increment();
+	// DTG    }
+
+    if (!CheckTransaction(tx, state)) {
+        return false;
+    } else {
+        // Ensure that zk-SNARKs verify
+        BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+            if (!joinsplit.Verify(*pzcashParams, verifier, tx.joinSplitPubKey)) {
+                return state.DoS(100, error("CheckTransaction(): joinsplit does not verify"),
+                                    REJECT_INVALID, "bad-txns-joinsplit-verification-failed");
+            }
+        }
+        return true;
+    }
 }
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
