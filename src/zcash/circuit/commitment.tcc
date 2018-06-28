@@ -16,14 +16,14 @@ public:
         pb_variable_array<FieldT>& rho,
         pb_variable_array<FieldT>& r,
         std::shared_ptr<digest_variable<FieldT>> result
-    ) : gadget<FieldT>(pb) {
+    ) : gadget<FieldT>(pb,"DTG") {
         pb_variable_array<FieldT> leading_byte =
             from_bits({1, 0, 1, 1, 0, 0, 0, 0}, ZERO);
 
         pb_variable_array<FieldT> first_of_rho(rho.begin(), rho.begin()+184);
         pb_variable_array<FieldT> last_of_rho(rho.begin()+184, rho.end());
 
-        intermediate_hash.reset(new digest_variable<FieldT>(pb, 256, ""));
+        intermediate_hash.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
 
         // final padding
         pb_variable_array<FieldT> length_padding =
@@ -61,13 +61,13 @@ public:
             a_pk,
             v,
             first_of_rho
-        }, ""));
+        }, "DTG"));
 
         block2.reset(new block_variable<FieldT>(pb, {
             last_of_rho,
             r,
             length_padding
-        }, ""));
+        }, "DTG"));
 
         pb_linear_combination_array<FieldT> IV = SHA256_default_IV(pb);
 
@@ -76,7 +76,7 @@ public:
             IV,
             block1->bits,
             *intermediate_hash,
-        ""));
+        "DTG"));
 
         pb_linear_combination_array<FieldT> IV2(intermediate_hash->bits);
 
@@ -85,7 +85,7 @@ public:
             IV2,
             block2->bits,
             *result,
-        ""));
+        "DTG"));
     }
 
     void generate_r1cs_constraints() {
