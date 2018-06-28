@@ -135,11 +135,11 @@ public:
         pchMessageStart[3] = 0xb0;
         vAlertPubKey = ParseHex("048240a8748a80a286b270ba126705ced4f2ce5a7847b3610ea3c06513150dade2a8512ed5ea86320824683fc0818f0ac019214973e677acd1244f6d0571fc5103");
         nDefaultPort = 9999;
-        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin    
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1528690251, 73338, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating genesis block\n");
@@ -154,15 +154,12 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x00000010d820f28129758dfb1998d320b675dbd0c680554d85a35ee1ee041673"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
-        //vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
-        //vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
-        //vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
 
         // Dash addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
@@ -274,12 +271,12 @@ public:
         vAlertPubKey = ParseHex("04517d8a699cb43d3938d7b24faaff7cda448ca4ea267723ba614784de661949bf632d6304316b244646dea079735b9a6fc4af804efb4752075b9fe2245e14e412");
         nDefaultPort = 19999;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
-        nMaxTipAge = 16000 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        //nMaxTipAge = 16000 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
 
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1528690251, 73338, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating test genesis block\n");
@@ -293,7 +290,7 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000010d820f28129758dfb1998d320b675dbd0c680554d85a35ee1ee041673"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
@@ -301,7 +298,6 @@ public:
         vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
-        //vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
 
         // Testnet Dash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -409,7 +405,7 @@ public:
         nDefaultPort = 19994;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(15245386,1021417, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating regtest genesis block\n");
@@ -423,7 +419,7 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000148ef1f58eb7cc94f4690c40f093e40c416049aabf32b468811dfe40d6e"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.
