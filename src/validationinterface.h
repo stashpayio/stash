@@ -8,6 +8,8 @@
 
 #include <boost/signals2/signal.hpp>
 #include <boost/shared_ptr.hpp>
+#include "zcash/IncrementalMerkleTree.hpp"
+
 
 class CBlock;
 struct CBlockLocator;
@@ -34,6 +36,8 @@ protected:
     virtual void NotifyHeaderTip(const CBlockIndex *pindexNew, bool fInitialDownload) {}
     virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
     virtual void SyncTransaction(const CTransaction &tx, const CBlock *pblock) {}
+    virtual void EraseFromWallet(const uint256 &hash) {}
+    virtual void ChainTip(const CBlockIndex *pindex, const CBlock *pblock, ZCIncrementalMerkleTree tree, bool added) {}
     virtual void NotifyTransactionLock(const CTransaction &tx) {}
     virtual void SetBestChain(const CBlockLocator &locator) {}
     virtual bool UpdatedTransaction(const uint256 &hash) { return false;}
@@ -56,6 +60,10 @@ struct CMainSignals {
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
     /** Notifies listeners of updated transaction data (transaction, and optionally the block it is found in. */
     boost::signals2::signal<void (const CTransaction &, const CBlock *)> SyncTransaction;
+    /** Notifies listeners of an erased transaction (currently disabled, requires transaction replacement). */
+    boost::signals2::signal<void (const uint256 &)> EraseTransaction;
+    /** Notifies listeners of a change to the tip of the active block chain. */
+    boost::signals2::signal<void (const CBlockIndex *, const CBlock *, ZCIncrementalMerkleTree, bool)> ChainTip;
     /** Notifies listeners of an updated transaction lock without new data. */
     boost::signals2::signal<void (const CTransaction &)> NotifyTransactionLock;
     /** Notifies listeners of an updated transaction without new data (for now: a coinbase potentially becoming visible). */

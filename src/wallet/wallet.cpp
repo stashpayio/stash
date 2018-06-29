@@ -1805,10 +1805,18 @@ void CWallet::GetNoteWitnesses(std::vector<JSOutPoint> notes,
 {
     {
         LOCK(cs_wallet);
+        /*DTG*/ debugMapWallet("GetNoteWitnesses");
         witnesses.resize(notes.size());
         boost::optional<uint256> rt;
         int i = 0;
         for (JSOutPoint note : notes) {
+
+        	// DTG
+        	auto tmp = mapWallet[note.hash];
+        	printf("1. %lu\n",mapWallet.count(note.hash));
+        	printf("2. %lu\n",mapWallet[note.hash].mapNoteData.count(note));
+        	printf("3. %lu\n",mapWallet[note.hash].mapNoteData[note].witnesses.size());
+
             if (mapWallet.count(note.hash) &&
                     mapWallet[note.hash].mapNoteData.count(note) &&
                     mapWallet[note.hash].mapNoteData[note].witnesses.size() > 0) {
@@ -4383,6 +4391,7 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 {
+    /*DTG*/debugMapWallet();
     if (!fFileBacked)
         return DB_LOAD_OK;
     fFirstRunRet = false;
@@ -4417,7 +4426,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     fFirstRunRet = !vchDefaultKey.IsValid();
 
     uiInterface.LoadWallet(this);
-
+    /*DTG*/debugMapWallet();
     return DB_LOAD_OK;
 }
 
@@ -5307,3 +5316,37 @@ void CWallet::GetFilteredNotes(std::vector<CNotePlaintextEntry> & outEntries, st
         }
     }
 }
+
+//DTG
+void CWallet::debugMapWallet(const char* title) {
+    printf("%s : CWallet::mapWallet\n",title);
+    int index = 0; 
+    printf("==================\n");
+
+    for (std::pair<const uint256, CWalletTx>& item: mapWallet) {
+        if (item.second.vjoinsplit.size() > 0) {
+	    printf("%4d : %s: (%ld,%ld)\n",index,item.first.GetHex().c_str(),
+					item.second.vjoinsplit[0].vpub_old,
+					item.second.vjoinsplit[0].vpub_new);
+	    item.second.debugMapNoteData();
+	}
+        index++;
+    }
+    printf("=== %d ===============\n",index);
+}
+
+void CWalletTx::debugMapNoteData() {
+    for (std::pair<const JSOutPoint, CNoteData>& item: mapNoteData) {
+    	printf("    (%s,%ld,%d):\n",item.first.hash.GetHex().c_str(),item.first.js,item.first.n);
+	printf("        Payment address: %s\n",item.second.address.GetHash().GetHex().c_str());
+	if (item.second.nullifier) {
+	    printf("        Nullifier: %s\n",item.second.nullifier->GetHex().c_str());
+	} else {
+	    printf("        No Nullifier\n");
+	}
+    	printf("        Witnesses:\n");
+        for(ZCIncrementalWitness witness : item.second.witnesses) {
+            printf("            %s\n",witness.root().GetHex().c_str());
+	}
+    }
+};

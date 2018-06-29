@@ -1588,6 +1588,10 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
         if (!inputs.HaveInputs(tx))
             return state.Invalid(false, 0, "", "Inputs unavailable");
 
+        // are the JoinSplit's requirements met?
+        if (!inputs.HaveJoinSplitRequirements(tx))
+        	return state.Invalid(error("CheckInputs(): %s JoinSplit requirements not met", tx.GetHash().ToString()));
+
         CAmount nValueIn = 0;
         CAmount nFees = 0;
         for (unsigned int i = 0; i < tx.vin.size(); i++)
@@ -1604,6 +1608,20 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
                         strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
             }
 
+#ifdef DTG
+            Do we want this feature?
+            // Ensure that coinbases cannot be spent to transparent outputs
+                // Disabled on regtest
+                if (fCoinbaseEnforcedProtectionEnabled &&
+                    consensusParams.fCoinbaseMustBeProtected &&
+                    !tx.vout.empty()) {
+                    return state.Invalid(
+                        error("CheckInputs(): tried to spend coinbase with transparent outputs"),
+                        REJECT_INVALID, "bad-txns-coinbase-spend-has-transparent-outputs");
+                }
+            }
+#endif
+
             // Check for negative or overflow input values
             nValueIn += coin.out.nValue;
             if (!MoneyRange(coin.out.nValue) || !MoneyRange(nValueIn))
@@ -1614,6 +1632,16 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
         if (nValueIn < tx.GetValueOut())
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
                 strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())));
+
+        nValueIn += tx.GetJoinSplitValueIn();
+        if (!MoneyRange(nValueIn))
+            return state.DoS(100, error("CheckInputs(): vpub_old values out of range"),
+                             REJECT_INVALID, "bad-txns-inputvalues-outofrange");
+
+        if (nValueIn < tx.GetValueOut())
+            return state.DoS(100, error("CheckInputs(): %s value in (%s) < value out (%s)",
+                                        tx.GetHash().ToString(), FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())),
+                             REJECT_INVALID, "bad-txns-in-belowout");
 
         // Tally transaction fees
         CAmount nTxFee = nValueIn - tx.GetValueOut();
@@ -2704,6 +2732,8 @@ bool static DisconnectTip(CValidationState& state, const Consensus::Params& cons
     BOOST_FOREACH(const CTransaction &tx, block.vtx) {
         GetMainSignals().SyncTransaction(tx, NULL);
     }
+    // Update cached incremental witnesses
+    GetMainSignals().ChainTip(pindexDelete, &block, newTree, false);
     return true;
 }
 
@@ -2771,6 +2801,8 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     BOOST_FOREACH(const CTransaction &tx, pblock->vtx) {
         GetMainSignals().SyncTransaction(tx, pblock);
     }
+    // Update cached incremental witnesses
+    GetMainSignals().ChainTip(pindexNew, pblock, oldTree, true);
 
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint("bench", "  - Connect postprocess: %.2fms [%.2fs]\n", (nTime6 - nTime5) * 0.001, nTimePostConnect * 0.000001);
