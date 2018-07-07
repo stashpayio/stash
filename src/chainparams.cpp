@@ -276,7 +276,7 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1530905250, 1289075, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating test genesis block\n");
@@ -290,7 +290,7 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000a20a6b338f3a811c19fd4ade39073b665c25d30ec2877478d452b859ca6"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
