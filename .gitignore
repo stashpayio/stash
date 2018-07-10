@@ -133,5 +133,8 @@ dashd
 dash-qt
 make
 
+# IDE related
 .settings
+.vscode
+*.bbb
 
