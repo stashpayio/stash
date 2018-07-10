@@ -51,6 +51,9 @@
 #include <boost/math/distributions/poisson.hpp>
 #include <boost/thread.hpp>
 
+#include "wallet/asyncrpcoperation_sendmany.h"
+#include "wallet/asyncrpcoperation_shieldcoinbase.h"
+
 using namespace std;
 
 #if defined(NDEBUG)
@@ -480,7 +483,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
     // Transactions can contain empty `vin` and `vout` so long as
     // `vjoinsplit` is non-empty.
-    if (tx.vin.empty() && tx.vjoinsplit.empty())
+     if (tx.vin.empty() && tx.vjoinsplit.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
     if (tx.vout.empty() && tx.vjoinsplit.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
@@ -581,6 +584,10 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
     if (tx.IsCoinBase())
     {
+        // There should be no joinsplits in a coinbase transaction
+        if (tx.vjoinsplit.size() > 0)
+            return state.DoS(100, false, REJECT_INVALID, "bad-cb-has-joinsplits");
+
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
     }
@@ -620,11 +627,6 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
 bool CheckTransaction(const CTransaction& tx, CValidationState &state, libzcash::ProofVerifier& verifier)
 {
-    // DTG    // Don't count coinbase transactions because mining skews the count
-	// DTG    if (!tx.IsCoinBase()) {
-	// DTG        transactionsValidated.increment();
-	// DTG    }
-
     if (!CheckTransaction(tx, state)) {
         return false;
     } else {
@@ -670,6 +672,35 @@ std::string FormatStateMessage(const CValidationState &state)
         state.GetRejectCode());
 }
 
+CAmount GetMinRelayFee(const CTransaction& tx, unsigned int nBytes, bool fAllowFree)
+{
+    {
+        LOCK(mempool.cs);
+        uint256 hash = tx.GetHash();
+        double dPriorityDelta = 0;
+        CAmount nFeeDelta = 0;
+        mempool.ApplyDeltas(hash, dPriorityDelta, nFeeDelta);
+        if (dPriorityDelta > 0 || nFeeDelta > 0)
+            return 0;
+    }
+
+    CAmount nMinFee = ::minRelayTxFee.GetFee(nBytes);
+
+    if (fAllowFree)
+    {
+        // There is a free transaction area in blocks created by most miners,
+        // * If we are relaying we allow transactions up to DEFAULT_BLOCK_PRIORITY_SIZE - 1000
+        //   to be considered to fall into this category. We don't want to encourage sending
+        //   multiple transactions instead of one big transaction to avoid fees.
+        if (nBytes < (DEFAULT_BLOCK_PRIORITY_SIZE - 1000))
+            nMinFee = 0;
+    }
+
+    if (!MoneyRange(nMinFee))
+        nMinFee = MAX_MONEY;
+    return nMinFee;
+}
+
 bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool fLimitFree,
                               bool* pfMissingInputs, bool fOverrideMempoolLimit, bool fRejectAbsurdFee,
                               std::vector<COutPoint>& coins_to_uncache, bool fDryRun)
@@ -678,7 +709,19 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
     if (pfMissingInputs)
         *pfMissingInputs = false;
 
-    if (!CheckTransaction(tx, state) || !ContextualCheckTransaction(tx, state, chainActive.Tip()))
+    // Node operator can choose to reject tx by number of transparent inputs
+    static_assert(std::numeric_limits<size_t>::max() >= std::numeric_limits<int64_t>::max(), "size_t too small");
+    size_t limit = (size_t) GetArg("-mempooltxinputlimit", 0);
+    if (limit > 0) {
+        size_t n = tx.vin.size();
+        if (n > limit) {
+            LogPrint("mempool", "Dropping txid %s : too many transparent inputs %zu > limit %zu\n", tx.GetHash().ToString(), n, limit );
+            return false;
+        }
+    }
+
+    auto verifier = libzcash::ProofVerifier::Strict();
+    if (!CheckTransaction(tx, state, verifier) || !ContextualCheckTransaction(tx, state, chainActive.Tip()))
         return false;
 
     // Coinbase is only valid in a block, not as a loose transaction
@@ -693,6 +736,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
     // Don't relay version 2 transactions until CSV is active, and we can be
     // sure that such transactions will be mined (unless we're on
     // -testnet/-regtest).
+    // DTG We need to remove this!
     const CChainParams& chainparams = Params();
     if (fRequireStandard && tx.nVersion >= 2 && VersionBitsTipState(chainparams.GetConsensus(), Consensus::DEPLOYMENT_CSV) != THRESHOLD_ACTIVE) {
         return state.DoS(0, false, REJECT_NONSTANDARD, "premature-version2-tx");
@@ -778,6 +822,14 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
             }
         }
     }
+    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+        BOOST_FOREACH(const uint256 &nf, joinsplit.nullifiers) {
+            if (pool.mapNullifiers.count(nf))
+            {
+                return false;
+            }
+        }
+    }
     }
 
     {
@@ -815,6 +867,14 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
                 return false; // fMissingInputs and !state.IsInvalid() is used to detect this condition, don't set state.Invalid()
             }
         }
+
+        // are the actual inputs available?
+        if (!view.HaveInputs(tx))
+            return state.Invalid(false,REJECT_DUPLICATE, "bad-txns-inputs-spent");
+
+        // are the joinsplit's requirements met?
+        if (!view.HaveJoinSplitRequirements(tx))
+            return state.Invalid(false,REJECT_DUPLICATE, "bad-txns-joinsplit-requirements-not-met");
 
         // Bring the best block into scope
         view.GetBestBlock();
@@ -863,6 +923,16 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
 
         CTxMemPoolEntry entry(tx, nFees, GetTime(), dPriority, chainActive.Height(), pool.HasNoInputsOf(tx), inChainInputValue, fSpendsCoinbase, nSigOps, lp);
         unsigned int nSize = entry.GetTxSize();
+
+        // Accept a tx if it contains joinsplits and has at least the default fee specified by z_sendmany.
+        if (tx.vjoinsplit.size() > 0 && nFees >= ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE) {
+            // In future we will we have more accurate and dynamic computation of fees for tx with joinsplits.
+        } else {
+            // Don't accept it if it can't get into a block
+            CAmount txMinFee = GetMinRelayFee(tx, nSize, true);
+            if (fLimitFree && nFees < txMinFee)
+                return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "insufficient fee");
+        }
 
         // Check that the transaction doesn't have an excessive number of
         // sigops, making it impossible to mine. Since the coinbase transaction
@@ -1555,6 +1625,14 @@ void UpdateCoins(const CTransaction& tx, CValidationState &state, CCoinsViewCach
             assert(is_spent);
         }
     }
+
+    // spend nullifiers
+    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit) {
+        BOOST_FOREACH(const uint256 &nf, joinsplit.nullifiers) {
+            inputs.SetNullifier(nf, true);
+        }
+    }
+
     // add outputs
     AddCoins(inputs, tx, nHeight);
 }
@@ -1590,6 +1668,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
         // are the JoinSplit's requirements met?
         if (!inputs.HaveJoinSplitRequirements(tx))
+        // DTG if (!pcoinsTip->HaveJoinSplitRequirements(tx))
         	return state.Invalid(error("CheckInputs(): %s JoinSplit requirements not met", tx.GetHash().ToString()));
 
         CAmount nValueIn = 0;
@@ -1629,9 +1708,9 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
         }
 
-        if (nValueIn < tx.GetValueOut())
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
-                strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())));
+// DTG        if (nValueIn < tx.GetValueOut())
+// DTG           return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
+// DTG               strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())));
 
         nValueIn += tx.GetJoinSplitValueIn();
         if (!MoneyRange(nValueIn))
@@ -3433,8 +3512,9 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     // END DASH
 
     // Check transactions
+    auto verifier = libzcash::ProofVerifier::Strict();
     BOOST_FOREACH(const CTransaction& tx, block.vtx)
-        if (!CheckTransaction(tx, state))
+        if (!CheckTransaction(tx, state, verifier))
             return error("CheckBlock(): CheckTransaction of %s failed with %s",
                 tx.GetHash().ToString(),
                 FormatStateMessage(state));

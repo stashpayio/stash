@@ -144,6 +144,9 @@ public:
     {
         return !(a == b);
     }
+
+    //DTG
+    void debug(const char* title = "");
 };
 
 
@@ -436,7 +439,7 @@ public:
 
     // Compute modified tx size for priority calculation (optionally given tx size)
     unsigned int CalculateModifiedSize(unsigned int nTxSize=0) const;
-    
+
     /**
      * Get the total transaction size in bytes, including witness data.
      * "Total Size" defined in BIP141 and BIP144.
@@ -460,6 +463,9 @@ public:
     }
 
     std::string ToString() const;
+
+    //DTG
+    void debug(const char* title = "");
 };
 
 /** A mutable version of CTransaction. */

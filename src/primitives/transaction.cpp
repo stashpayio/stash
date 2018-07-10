@@ -97,6 +97,26 @@ uint256 JSDescription::h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) con
 }
 
 
+//DTG
+void JSDescription::debug(const char* title) {
+    printf("%s : JoinSplitt\n",title);
+    printf("==================\n");
+
+    printf("Old: %ld\n",vpub_old);
+    printf("New: %ld\n",vpub_new);
+    printf("Anchor: %s\n",anchor.GetHex().c_str());
+
+    printf("Nullifiers:\n");
+    for (int i = 0; i < ZC_NUM_JS_INPUTS; i++) {
+        printf("    %s\n",nullifiers[i].GetHex().c_str());
+    }
+    printf("Commitments:\n");
+    for (int i = 0; i < ZC_NUM_JS_OUTPUTS; i++) {
+        printf("    %s\n",commitments[i].GetHex().c_str());
+    }
+    printf("==================\n");
+}
+
 std::string COutPoint::ToString() const
 {
     return strprintf("COutPoint(%s, %u)", hash.ToString()/*.substr(0,10)*/, n);
@@ -299,3 +319,16 @@ std::string CTransaction::ToString() const
         str += "    " + vout[i].ToString() + "\n";
     return str;
 }
+
+//DTG
+void CTransaction::debug(const char* title) {
+    printf("%s : Transaction\n",title);
+    printf("==================\n");
+
+    for (auto js : vjoinsplit) {
+    	js.debug();
+    }
+    printf("==================\n");
+}
+
+

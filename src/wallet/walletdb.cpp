@@ -428,10 +428,10 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssValue >> wtx;
             CValidationState state;
             auto verifier = libzcash::ProofVerifier::Strict();
-            if (!(CheckTransaction(wtx, state/* TODO DTG ,verifier*/) && (wtx.GetHash() == hash) && state.IsValid()))
+            if (!(CheckTransaction(wtx, state, verifier) && (wtx.GetHash() == hash) && state.IsValid()))
                 return false;
 
-            // Undo serialize changes in 31600
+            // Undo serialize changes in 31600 //DTG remove this?
             if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
             {
                 if (!ssValue.empty())

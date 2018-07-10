@@ -650,11 +650,14 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
 void CWallet::ChainTip(const CBlockIndex *pindex, const CBlock *pblock,
                        ZCIncrementalMerkleTree tree, bool added)
 {
+    /*DTG*/ debugMapWallet("entering chainTip() ...");
     if (added) {
         IncrementNoteWitnesses(pindex, pblock, tree);
     } else {
         DecrementNoteWitnesses(pindex);
     }
+    /*DTG*/ debugMapWallet("... exiting chainTip()");
+
 }
 
 void CWallet::SetBestChain(const CBlockLocator& loc)
@@ -5320,7 +5323,7 @@ void CWallet::GetFilteredNotes(std::vector<CNotePlaintextEntry> & outEntries, st
 //DTG
 void CWallet::debugMapWallet(const char* title) {
     printf("%s : CWallet::mapWallet\n",title);
-    int index = 0; 
+    int index = 0;
     printf("==================\n");
 
     for (std::pair<const uint256, CWalletTx>& item: mapWallet) {
@@ -5338,15 +5341,16 @@ void CWallet::debugMapWallet(const char* title) {
 void CWalletTx::debugMapNoteData() {
     for (std::pair<const JSOutPoint, CNoteData>& item: mapNoteData) {
     	printf("    (%s,%ld,%d):\n",item.first.hash.GetHex().c_str(),item.first.js,item.first.n);
-	printf("        Payment address: %s\n",item.second.address.GetHash().GetHex().c_str());
-	if (item.second.nullifier) {
-	    printf("        Nullifier: %s\n",item.second.nullifier->GetHex().c_str());
-	} else {
-	    printf("        No Nullifier\n");
+    	printf("        Payment address: %s\n",item.second.address.GetHash().GetHex().c_str());
+		printf("        Witness Height: %d\n",item.second.witnessHeight);
+		if (item.second.nullifier) {
+			printf("        Nullifier: %s\n",item.second.nullifier->GetHex().c_str());
+		} else {
+			printf("        No Nullifier\n");
+		}
+			printf("        Witnesses:\n");
+			for(ZCIncrementalWitness witness : item.second.witnesses) {
+				printf("            %s\n",witness.root().GetHex().c_str());
+		}
 	}
-    	printf("        Witnesses:\n");
-        for(ZCIncrementalWitness witness : item.second.witnesses) {
-            printf("            %s\n",witness.root().GetHex().c_str());
-	}
-    }
 };

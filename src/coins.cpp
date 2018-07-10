@@ -51,7 +51,10 @@ SaltedHasher::SaltedHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max()))
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0) {}
 
 size_t CCoinsViewCache::DynamicMemoryUsage() const {
-    return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
+    return memusage::DynamicUsage(cacheCoins) +
+           memusage::DynamicUsage(cacheAnchors) +
+           memusage::DynamicUsage(cacheNullifiers) +
+					 cachedCoinsUsage;
 }
 
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint) const {
