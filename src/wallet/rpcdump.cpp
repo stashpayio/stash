@@ -395,8 +395,23 @@ UniValue importwallet_impl(const UniValue& params, bool fHelp, bool fImportZKeys
 
     EnsureWalletIsUnlocked();
 
+    boost::filesystem::path exportdir;
+    try {
+        exportdir = GetExportDir();
+    } catch (const std::runtime_error& e) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, e.what());
+    }
+    if (exportdir.empty()) {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Cannot export wallet until the zcashd -exportdir option has been set");
+    }
+    boost::filesystem::path exportfilepath = exportdir / params[0].get_str();
+
+    if (!boost::filesystem::exists(exportfilepath)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Import file " + exportfilepath.string() + " does not exist");
+    }
+
     ifstream file;
-    file.open(params[0].get_str().c_str(), std::ios::in | std::ios::ate);
+    file.open(exportfilepath.string().c_str(), std::ios::in | std::ios::ate);
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
@@ -787,7 +802,7 @@ UniValue dumpwallet_impl(const UniValue& params, bool fHelp, bool fDumpZKeys)
     }
 
     ofstream file;
-    file.open(params[0].get_str().c_str());
+    file.open(exportfilepath.string().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 

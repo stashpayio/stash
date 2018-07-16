@@ -650,15 +650,19 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
 void CWallet::ChainTip(const CBlockIndex *pindex, const CBlock *pblock,
                        ZCIncrementalMerkleTree tree, bool added)
 {
-    /*DTG*/ debugMapWallet("entering chainTip() ...");
+#ifdef DTG
+    debugMapWallet("entering chainTip() ...");
+#endif
     if (added) {
         IncrementNoteWitnesses(pindex, pblock, tree);
     } else {
         DecrementNoteWitnesses(pindex);
     }
-    /*DTG*/ debugMapWallet("... exiting chainTip()");
-
+#ifdef DTG
+    debugMapWallet("... exiting chainTip()");
+#endif
 }
+
 
 void CWallet::SetBestChain(const CBlockLocator& loc)
 {
@@ -1809,18 +1813,20 @@ void CWallet::GetNoteWitnesses(std::vector<JSOutPoint> notes,
 {
     {
         LOCK(cs_wallet);
-        /*DTG*/ debugMapWallet("GetNoteWitnesses");
+#ifdef DTG
+        debugMapWallet("GetNoteWitnesses");
+#endif
         witnesses.resize(notes.size());
         boost::optional<uint256> rt;
         int i = 0;
         for (JSOutPoint note : notes) {
 
-        	// DTG
+#ifdef DTG
         	auto tmp = mapWallet[note.hash];
         	printf("1. %lu\n",mapWallet.count(note.hash));
         	printf("2. %lu\n",mapWallet[note.hash].mapNoteData.count(note));
         	printf("3. %lu\n",mapWallet[note.hash].mapNoteData[note].witnesses.size());
-
+#endif
             if (mapWallet.count(note.hash) &&
                     mapWallet[note.hash].mapNoteData.count(note) &&
                     mapWallet[note.hash].mapNoteData[note].witnesses.size() > 0) {
@@ -4395,7 +4401,9 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 {
-    /*DTG*/debugMapWallet();
+#ifdef DTG
+    debugMapWallet();
+#endif
     if (!fFileBacked)
         return DB_LOAD_OK;
     fFirstRunRet = false;
@@ -4430,7 +4438,9 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     fFirstRunRet = !vchDefaultKey.IsValid();
 
     uiInterface.LoadWallet(this);
-    /*DTG*/debugMapWallet();
+#ifdef DTG
+    debugMapWallet();
+#endif
     return DB_LOAD_OK;
 }
 
@@ -5321,7 +5331,7 @@ void CWallet::GetFilteredNotes(std::vector<CNotePlaintextEntry> & outEntries, st
     }
 }
 
-//DTG
+#ifdef DTG
 void CWallet::debugMapWallet(const char* title) {
     printf("%s : CWallet::mapWallet\n",title);
     int index = 0;
@@ -5355,3 +5365,4 @@ void CWalletTx::debugMapNoteData() {
 		}
 	}
 };
+#endif // DTG

@@ -406,8 +406,9 @@ public:
     mapValue_t mapValue;
     mapNoteData_t mapNoteData;
 
-    //DTG
+#ifdef DTG
     void debugMapNoteData();
+#endif
 
     std::vector<std::pair<std::string, std::string> > vOrderForm;
     unsigned int fTimeReceivedIsTxTime;
@@ -1004,9 +1005,9 @@ public:
 
     std::map<uint256, CWalletTx> mapWallet;
 
-    //DTG
+#ifdef DTG
     void debugMapWallet(const char* title = "_");
-
+#endif
     std::list<CAccountingEntry> laccentries;
 
     typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
