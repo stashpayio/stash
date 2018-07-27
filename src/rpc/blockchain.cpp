@@ -21,7 +21,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "hash.h"
-
+#include "script/standard.h"
 #include <stdint.h>
 
 #include <univalue.h>
@@ -147,7 +147,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     UniValue valuePools(UniValue::VARR);
     valuePools.push_back(ValuePoolDesc("sprout", blockindex->nChainSproutValue, blockindex->nSproutValue));
     result.push_back(Pair("valuePools", valuePools));
-    
+
     if (blockindex->pprev)
         result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
     CBlockIndex *pnext = chainActive.Next(blockindex);
@@ -507,6 +507,220 @@ UniValue getblockheaders(const UniValue& params, bool fHelp)
 
     return arrHeaders;
 }
+
+#ifndef DTG
+
+UniValue dtgBlockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails = false)
+{
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("hash", block.GetHash().GetHex()));
+    int confirmations = -1;
+    // Only report confirmations if the block is on the main chain
+    if (chainActive.Contains(blockindex))
+        confirmations = chainActive.Height() - blockindex->nHeight + 1;
+    result.push_back(Pair("confirmations", confirmations));
+    result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
+    result.push_back(Pair("height", blockindex->nHeight));
+    result.push_back(Pair("version", block.nVersion));
+    result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
+    UniValue txs(UniValue::VARR);
+    BOOST_FOREACH(const CTransaction&tx, block.vtx)
+    {
+        if(txDetails)
+        {
+            UniValue objTx(UniValue::VOBJ);
+            TxToJSON(tx, uint256(), objTx);
+            txs.push_back(objTx);
+        }
+        else
+            txs.push_back(tx.GetHash().GetHex());
+    }
+    result.push_back(Pair("tx", txs));
+    result.push_back(Pair("time", block.GetBlockTime()));
+    result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+    result.push_back(Pair("nonce", (uint64_t)block.nNonce));
+    result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
+    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+    result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
+    result.push_back(Pair("anchor", blockindex->hashAnchorEnd.GetHex()));
+
+    UniValue valuePools(UniValue::VARR);
+    valuePools.push_back(ValuePoolDesc("sprout", blockindex->nChainSproutValue, blockindex->nSproutValue));
+    result.push_back(Pair("valuePools", valuePools));
+
+    if (blockindex->pprev)
+        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
+    CBlockIndex *pnext = chainActive.Next(blockindex);
+    if (pnext)
+        result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+    return result;
+}
+
+UniValue dtg1(const UniValue& params, bool fHelp) {
+    if (fHelp || params.size() < 1 || params.size() > 2) {
+          throw runtime_error("DTG1: No help here!");
+    }
+
+    LOCK(cs_main);
+
+    std::string strHash = params[0].get_str();
+    uint256 hash(uint256S(strHash));
+
+    bool fVerbose = true;
+    if (params.size() > 1)
+        fVerbose = params[1].get_bool();
+
+    if (mapBlockIndex.count(hash) == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
+
+    CBlock block;
+    CBlockIndex* pblockindex = mapBlockIndex[hash];
+
+    if (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Block not available (pruned data)");
+
+    if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
+
+    if (!fVerbose)
+    {
+        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+        ssBlock << block;
+        std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
+        return strHex;
+    }
+
+    return blockToJSON(block, pblockindex,true);
+
+}
+
+UniValue dtg2(const UniValue& params, bool fHelp) {
+  if (fHelp || params.size() > 0) {
+        throw runtime_error("DTG2: No help here!");
+  }
+
+  LOCK(cs_main);
+
+  UniValue txs(UniValue::VARR);
+  for (int height = 0; height < chainActive.Height(); height++) {
+      CBlock block;
+      CBlockIndex* pblockindex = chainActive[height];
+
+      if (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0)
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Block not available (pruned data)");
+
+      if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
+
+      for (auto const& tx: block.vtx) {
+          if (tx.vjoinsplit.size() > 0) {
+            UniValue objTx(UniValue::VOBJ);
+            TxToJSON(tx, uint256(), objTx);
+            txs.push_back(objTx);
+          }
+      }
+  }
+  return txs;
+}
+
+UniValue dtg3(const UniValue& params, bool fHelp) {
+  if (fHelp || params.size() > 0) {
+        throw runtime_error("DTG3: No help here!");
+  }
+
+  LOCK(cs_main);
+
+  std::map<COutPoint,CAmount> outPoints;
+
+  UniValue result(UniValue::VARR);
+  for (int height = 0; height < chainActive.Height(); height++) {
+      CBlock block;
+      CBlockIndex* pblockindex = chainActive[height];
+
+      if (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0)
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Block not available (pruned data)");
+
+      if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
+
+      for (auto const& tx: block.vtx) {
+          // Remove UTXOs used as input
+//          if (!tx.IsCoinBase()) {
+            for (auto const& v: tx.vin) {
+                auto it = outPoints.find(v.prevout);
+                if (it == outPoints.end()) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "CTxIn invalid?");
+                }
+                outPoints.erase(it);
+            }
+//          }
+          // Add new UTXOs
+          const uint256 hash = tx.GetHash();
+          for (uint32_t i = 0; i < tx.vout.size(); i++) {
+                outPoints[COutPoint(hash,i)] = tx.vout[i].nValue;
+          }
+      }
+  }
+
+  CAmount amount = 0L;
+  for (auto const& v: outPoints) {
+      amount += v.second;
+  }
+  result.push_back(amount);
+  return result;
+}
+
+UniValue dtg4(const UniValue& params, bool fHelp) {
+  if (fHelp || params.size() > 0) {
+        throw runtime_error("DTG4: No help here!");
+  }
+
+  LOCK(cs_main);
+
+  int scriptTypes[TX_NULL_DATA+1] = {0};
+  int coinBaseCount = 0;
+
+  UniValue result(UniValue::VARR);
+  for (int height = 0; height < chainActive.Height(); height++) {
+      CBlock block;
+      CBlockIndex* pblockindex = chainActive[height];
+
+      if (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0)
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Block not available (pruned data)");
+
+      if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
+          throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
+
+      for (auto const& tx: block.vtx) {
+          if (tx.IsCoinBase()) {
+            coinBaseCount += 1;
+          }
+          for (auto const& v: tx.vout) {
+              txnouttype type;
+              vector< vector<unsigned char> > solutions;
+              Solver(v.scriptPubKey, type, solutions);
+              assert((type >= TX_NONSTANDARD) && (type <= TX_NULL_DATA));
+              scriptTypes[type] += 1;
+          }
+      }
+  }
+
+  for (int i = 0; i <= TX_NULL_DATA; i++) {
+      printf("%d : %d\n",i,scriptTypes[i]);
+  }
+  printf("Coin bases: %d\n",coinBaseCount);
+  return "See printout";
+}
+
+UniValue dtg5(const UniValue& params, bool fHelp) {
+    throw runtime_error("DTG5: No help here!");
+}
+
+UniValue dtg6(const UniValue& params, bool fHelp) {
+    throw runtime_error("DTG6: No help here!");
+}
+
+#endif
 
 UniValue getblock(const UniValue& params, bool fHelp)
 {

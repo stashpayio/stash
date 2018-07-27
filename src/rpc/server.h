@@ -301,6 +301,12 @@ extern UniValue getblockhash(const UniValue& params, bool fHelp);
 extern UniValue getblockheader(const UniValue& params, bool fHelp);
 extern UniValue getblockheaders(const UniValue& params, bool fHelp);
 extern UniValue getblock(const UniValue& params, bool fHelp);
+extern UniValue dtg1(const UniValue& params, bool fHelp);                       // DTG
+extern UniValue dtg2(const UniValue& params, bool fHelp);                       // DTG
+extern UniValue dtg3(const UniValue& params, bool fHelp);                       // DTG
+extern UniValue dtg4(const UniValue& params, bool fHelp);                       // DTG
+extern UniValue dtg5(const UniValue& params, bool fHelp);                       // DTG
+extern UniValue dtg6(const UniValue& params, bool fHelp);                       // DTG
 extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
 extern UniValue gettxout(const UniValue& params, bool fHelp);
 extern UniValue verifychain(const UniValue& params, bool fHelp);

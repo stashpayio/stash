@@ -24,7 +24,7 @@
 #include <exception>
 #include <map>
 #include <stdint.h>
-#include <string>
+
 #include <vector>
 
 #include <boost/filesystem/path.hpp>
@@ -316,6 +316,7 @@ class CNetMessage;
 
 void LogIncomingMsg(CNetMessage& msg);
 void LogOutgoingMsg(const char* data, size_t length);
-
+void dumpBuffer(const std::string& str);
+void dumpBuffer(const CScript& script);
 
 #endif // BITCOIN_UTIL_H

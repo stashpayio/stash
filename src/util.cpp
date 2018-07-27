@@ -21,6 +21,9 @@
 #include "net.h"
 
 #include <stdarg.h>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #if (defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__))
 #include <pthread.h>
@@ -1074,6 +1077,7 @@ std::string SafeIntVersionToString(uint32_t nVersion)
     }
 }
 
+#ifdef DTG
 void _dumpBuffer(const char* buffer, size_t length) {
 	size_t offset = 0;
 	while (offset < length) {
@@ -1103,6 +1107,39 @@ void _dumpBuffer(const char* buffer, size_t length) {
 		offset += 16;
 	}
 }
+#endif
+
+std::string _dumpBuffer(const char* buffer, size_t length) {
+    std::stringstream str;
+    size_t offset = 0;
+    while (offset < length) {
+        str << setfill('0') << setw(6) << dec <<offset << ": ";
+        for (size_t i = offset; i < offset+16; i++) {
+            if (i < length) {
+                unsigned char ch = buffer[i];
+                str << setfill('0') << setw(2) << hex << (int)ch;
+            } else {
+                str << "  ";
+            }
+        }
+        str << "  ";
+        for (size_t i = offset; i < offset+16; i++) {
+            if (i < length) {
+                unsigned char ch = buffer[i];
+                if ((ch >= 32) && (ch <= 127)) {
+                    str << ch;
+                } else {
+                    str << ".";
+                }
+            } else {
+                str << " ";
+            }
+        }
+        str << endl;
+        offset += 16;
+    }
+    return str.str();
+}
 
 #define NAME_OFFSET 4
 #define HEADER_SIZE 24
@@ -1111,17 +1148,25 @@ void LogIncomingMsg(CNetMessage& msg) {
    const char* hdrData = &msg.hdrbuf[0];
    //printf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
    LogPrintf("\n>>> %s\n",&hdrData[NAME_OFFSET]);
-   _dumpBuffer(hdrData,HEADER_SIZE);
+   LogPrintStr(_dumpBuffer(hdrData,HEADER_SIZE));
    LogPrintf("\n");
-   _dumpBuffer(&msg.vRecv[0],msg.vRecv.size());
+   LogPrintStr(_dumpBuffer(&msg.vRecv[0],msg.vRecv.size()));
    LogPrintf("\n");
 }
 
 void LogOutgoingMsg(const char* data, size_t length) {
   //printf("\n<<< %s\n",&data[NAME_OFFSET]);
   LogPrintf("\n<<< %s\n",&data[NAME_OFFSET]);
-  _dumpBuffer(&data[0],HEADER_SIZE);
+  LogPrintStr(_dumpBuffer(&data[0],HEADER_SIZE));
   LogPrintf("\n");
-  _dumpBuffer(&data[HEADER_SIZE],length-HEADER_SIZE);
+  LogPrintStr(_dumpBuffer(&data[HEADER_SIZE],length-HEADER_SIZE));
   LogPrintf("\n");
+}
+
+void dumpBuffer(const std::string& str) {
+    printf("%s",_dumpBuffer(str.c_str(),str.size()).c_str());
+}
+
+void dumpBuffer(const CScript& script) {
+
 }
