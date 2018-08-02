@@ -78,11 +78,11 @@ UniValue z_getpaymentdisclosure(const UniValue& params, bool fHelp)
     uint256 hash;
     hash.SetHex(txid);
 
-    CTransaction tx;
+    CTransactionRef tx;
     uint256 hashBlock;
 
     // Check txid has been seen
-    if (!GetTransaction(hash, tx,Params().GetConsensus(), hashBlock, true)) {
+    if (!GetTransaction(hash, tx, Params().GetConsensus(), hashBlock, true)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "No information available about transaction");
     }
 
@@ -98,13 +98,13 @@ UniValue z_getpaymentdisclosure(const UniValue& params, bool fHelp)
     const CWalletTx& wtx = pwalletMain->mapWallet[hash];
 
     // Check if shielded tx
-    if (wtx.vjoinsplit.empty()) {
+    if (wtx.tx->vjoinsplit.empty()) {
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction is not a shielded transaction");
     }
 
     // Check js_index
     int js_index = params[1].get_int();
-    if (js_index < 0 || js_index >= wtx.vjoinsplit.size()) {
+    if (js_index < 0 || js_index >= wtx.tx->vjoinsplit.size()) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid js_index");
     }
 
@@ -130,7 +130,7 @@ UniValue z_getpaymentdisclosure(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_DATABASE_ERROR, "Could not find payment disclosure info for the given joinsplit output");
     }
 
-    PaymentDisclosure pd( wtx.joinSplitPubKey, key, info, msg );
+    PaymentDisclosure pd( wtx.tx->joinSplitPubKey, key, info, msg );
     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
     ss << pd;
     string strHex = HexStr(ss.begin(), ss.end());
@@ -206,7 +206,7 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
     }
 
     uint256 hash = pd.payload.txid;
-    CTransaction tx;
+    CTransactionRef tx;
     uint256 hashBlock;
     // Check if we have seen the transaction
     if (!GetTransaction(hash, tx, Params().GetConsensus(), hashBlock, true)) {
@@ -219,7 +219,7 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
     }
 
     // Check if shielded tx
-    if (tx.vjoinsplit.empty()) {
+    if (tx->vjoinsplit.empty()) {
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction is not a shielded transaction");
     }
 
@@ -228,7 +228,7 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
     o.push_back(Pair("txid", pd.payload.txid.ToString()));
 
     // Check js_index
-    if (pd.payload.js >= tx.vjoinsplit.size()) {
+    if (pd.payload.js >= tx->vjoinsplit.size()) {
         errs.push_back("Payment disclosure refers to an invalid joinsplit index");
     }
     o.push_back(Pair("jsIndex", pd.payload.js));
@@ -240,13 +240,13 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
     o.push_back(Pair("version", pd.payload.version));
     o.push_back(Pair("onetimePrivKey", pd.payload.esk.ToString()));
     o.push_back(Pair("message", pd.payload.message));
-    o.push_back(Pair("joinSplitPubKey", tx.joinSplitPubKey.ToString()));
+    o.push_back(Pair("joinSplitPubKey", tx->joinSplitPubKey.ToString()));
 
     // Verify the payment disclosure was signed using the same key as the transaction i.e. the joinSplitPrivKey.
     uint256 dataToBeSigned = SerializeHash(pd.payload, SER_GETHASH, 0);
     bool sigVerified = (crypto_sign_verify_detached(pd.payloadSig.data(),
         dataToBeSigned.begin(), 32,
-        tx.joinSplitPubKey.begin()) == 0);
+        tx->joinSplitPubKey.begin()) == 0);
     o.push_back(Pair("signatureVerified", sigVerified));
     if (!sigVerified) {
         errs.push_back("Payment disclosure signature does not match transaction signature");
@@ -262,8 +262,8 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
 
         try {
             // Decrypt the note to get value and memo field
-            JSDescription jsdesc = tx.vjoinsplit[pd.payload.js];
-            uint256 h_sig = jsdesc.h_sig(*pzcashParams, tx.joinSplitPubKey);
+            JSDescription jsdesc = tx->vjoinsplit[pd.payload.js];
+            uint256 h_sig = jsdesc.h_sig(*pzcashParams, tx->joinSplitPubKey);
 
             ZCPaymentDisclosureNoteDecryption decrypter;
 

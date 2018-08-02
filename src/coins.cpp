@@ -9,6 +9,7 @@
 #include "random.h"
 
 #include <assert.h>
+#include <boost/foreach.hpp>
 
 bool CCoinsView::GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const { return false; }
 bool CCoinsView:: GetNullifier(const uint256 &nullifier) const  { return false; }
@@ -471,7 +472,7 @@ double CCoinsViewCache::GetPriority(const CTransaction &tx, int nHeight, CAmount
         const Coin& coin = AccessCoin(txin.prevout);
         if (coin.IsSpent()) continue;
         if (coin.nHeight <= nHeight) {
-            dResult += coin.out.nValue * (nHeight-coin.nHeight);
+            dResult += (double)coin.out.nValue * (nHeight-coin.nHeight);
             inChainInputValue += coin.out.nValue;
         }
     }

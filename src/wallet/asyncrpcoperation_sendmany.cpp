@@ -22,6 +22,7 @@
 #include "zcash/IncrementalMerkleTree.hpp"
 #include "sodium.h"
 #include "miner.h"
+#include "rpc/register.h"
 
 #include <iostream>
 #include <chrono>
@@ -763,7 +764,7 @@ void AsyncRPCOperation_sendmany::sign_send_raw_transaction(UniValue obj)
 
     UniValue params = UniValue(UniValue::VARR);
     params.push_back(rawtxn);
-    UniValue signResultValue = signrawtransaction(params, false);
+    UniValue signResultValue = signrawtransaction(params);
     UniValue signResultObject = signResultValue.get_obj();
     UniValue completeValue = find_value(signResultObject, "complete");
     bool complete = completeValue.get_bool();
@@ -783,7 +784,7 @@ void AsyncRPCOperation_sendmany::sign_send_raw_transaction(UniValue obj)
         params.clear();
         params.setArray();
         params.push_back(signedtxn);
-        UniValue sendResultValue = sendrawtransaction(params, false);
+        UniValue sendResultValue = sendrawtransaction(params);
         if (sendResultValue.isNull()) {
             throw JSONRPCError(RPC_WALLET_ERROR, "Send raw transaction did not return an error or a txid.");
         }
@@ -835,7 +836,7 @@ bool AsyncRPCOperation_sendmany::find_utxos(bool fAcceptCoinbase=false) {
 
         if (setAddress.size()) {
             CTxDestination address;
-            if (!ExtractDestination(out.tx->vout[out.i].scriptPubKey, address)) {
+            if (!ExtractDestination(out.tx->tx->vout[out.i].scriptPubKey, address)) {
                 continue;
             }
 
@@ -850,8 +851,8 @@ bool AsyncRPCOperation_sendmany::find_utxos(bool fAcceptCoinbase=false) {
             continue;
         }
 
-        CAmount nValue = out.tx->vout[out.i].nValue;
-        SendManyInputUTXO utxo(out.tx->GetHash(), out.i, nValue, isCoinbase);
+        CAmount nValue = out.tx->tx->vout[out.i].nValue;
+        SendManyInputUTXO utxo(out.tx->tx->GetHash(), out.i, nValue, isCoinbase);
         t_inputs_.push_back(utxo);
     }
 

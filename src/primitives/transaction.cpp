@@ -163,11 +163,6 @@ CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
     nRounds = -10;
 }
 
-uint256 CTxOut::GetHash() const
-{
-    return SerializeHash(*this);
-}
-
 std::string CTxOut::ToString() const
 {
     return strprintf("CTxOut(nValue=%d.%08d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
@@ -244,7 +239,7 @@ CAmount CTransaction::GetValueOut() const
     {
         nValueOut += it->nValue;
         if (!MoneyRange(it->nValue) || !MoneyRange(nValueOut))
-            throw std::runtime_error("CTransaction::GetValueOut(): value out of range");
+            throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
     for (std::vector<JSDescription>::const_iterator it(vjoinsplit.begin()); it != vjoinsplit.end(); ++it)
     {
@@ -330,5 +325,3 @@ void CTransaction::debug(const char* title) {
     }
     printf("==================\n");
 }
-
-

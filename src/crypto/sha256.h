@@ -11,6 +11,7 @@
 /** A hasher class for SHA-256. */
 class CSHA256
 {
+
 public:
     static const size_t OUTPUT_SIZE = 32;
 
