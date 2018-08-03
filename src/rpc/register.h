@@ -5,6 +5,8 @@
 #ifndef BITCOIN_RPCREGISTER_H
 #define BITCOIN_RPCREGISTER_H
 
+#include <univalue.h>
+
 /** These are in one header file to avoid creating tons of single-function
  * headers for everything under src/rpc/ */
 class CRPCTable;
