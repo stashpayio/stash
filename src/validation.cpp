@@ -794,17 +794,6 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     if (fRequireStandard && !IsStandardTx(tx, reason))
         return state.DoS(0, false, REJECT_NONSTANDARD, reason);
 
-    // Don't relay version 2 transactions until CSV is active, and we can be
-    // sure that such transactions will be mined (unless we're on
-    // -testnet/-regtest).
-    // DTG We need to remove this!
-    /*
-    const CChainParams& chainparams = Params();
-    if (fRequireStandard && tx.nVersion >= 2 && VersionBitsTipState(chainparams.GetConsensus(), Consensus::DEPLOYMENT_CSV) != THRESHOLD_ACTIVE) {
-        return state.DoS(0, false, REJECT_NONSTANDARD, "premature-version2-tx");
-    }
-    */
-
     // Only accept nLockTime-using transactions that can be mined in the next
     // block; we don't want our mempool filled up with transactions that can't
     // be mined yet.
@@ -1140,12 +1129,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
                 // transactions that would have to be evicted
                 BOOST_FOREACH(CTxMemPool::txiter it, setIterConflicting) {
                     pool.CalculateDescendants(it, allConflicting);
-
-
-
-
-
-  }
+                }
                 BOOST_FOREACH(CTxMemPool::txiter it, allConflicting) {
                     nConflictingFees += it->GetModifiedFee();
                     nConflictingSize += it->GetTxSize();
@@ -2927,7 +2911,8 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         GetMainSignals().SyncTransaction(*tx, pindexDelete->pprev, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
     }
     // Update cached incremental witnesses
-    GetMainSignals().ChainTip(pindexDelete, &block, newTree, false);
+    const std::shared_ptr<const CBlock> pblock(&block);
+    GetMainSignals().ChainTip(pindexDelete, pblock, newTree, false);
     return true;
 }
 
@@ -3001,19 +2986,10 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
     // Update chainActive & related variables.
     UpdateTip(pindexNew,chainparams);
-    // Tell wallet about transactions that went from mempool
-    // to conflicted:
-/* DTG - remove in latest DASH
-    BOOST_FOREACH(const CTransaction &tx, txConflicted) {
-        GetMainSignals().SyncTransaction(tx, NULL);
-    }
-    // ... and about transactions that got confirmed:
-    BOOST_FOREACH(const CTransaction &tx, pblock->vtx) {
-        GetMainSignals().SyncTransaction(tx, pblock);
-    }
+
     // Update cached incremental witnesses
     GetMainSignals().ChainTip(pindexNew, pblock, oldTree, true);
-*/
+
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint("bench", "  - Connect postprocess: %.2fms [%.2fs]\n", (nTime6 - nTime5) * 0.001, nTimePostConnect * 0.000001);
     LogPrint("bench", "- Connect block: %.2fms [%.2fs]\n", (nTime6 - nTime1) * 0.001, nTimeTotal * 0.000001);
@@ -3708,16 +3684,10 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check transactions
     auto verifier = libzcash::ProofVerifier::Strict();
-    BOOST_FOREACH(const auto tx, block.vtx)
-        if (!CheckTransaction(*tx, state, verifier))
-            return error("CheckBlock(): CheckTransaction of %s failed with %s",
-                tx->GetHash().ToString(),
-                FormatStateMessage(state));
-
-// DTG    for (const auto& tx : block.vtx)
-//        if (!CheckTransaction(*tx, state, false))
-//            return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
-//                                 strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
+    for (const auto& tx : block.vtx)
+        if (!CheckTransaction(*tx, state, false))
+            return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
+                                strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
 
     unsigned int nSigOps = 0;
     for (const auto& tx : block.vtx)

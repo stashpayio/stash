@@ -38,7 +38,7 @@ protected:
     virtual void SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock) {}
 // DTG    virtual void SyncTransaction(const CTransaction &tx, const CBlock *pblock) {}
     virtual void EraseFromWallet(const uint256 &hash) {}
-    virtual void ChainTip(const CBlockIndex *pindex, const CBlock *pblock, ZCIncrementalMerkleTree tree, bool added) {}
+    virtual void ChainTip(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock, ZCIncrementalMerkleTree tree, bool added) {}
     virtual void NotifyTransactionLock(const CTransaction &tx) {}
     virtual void SetBestChain(const CBlockLocator &locator) {}
     virtual bool UpdatedTransaction(const uint256 &hash) { return false;}
@@ -76,7 +76,7 @@ struct CMainSignals {
     /** Notifies listeners of an erased transaction (currently disabled, requires transaction replacement). */
     boost::signals2::signal<void (const uint256 &)> EraseTransaction;
     /** Notifies listeners of a change to the tip of the active block chain. */
-    boost::signals2::signal<void (const CBlockIndex *, const CBlock *, ZCIncrementalMerkleTree, bool)> ChainTip;
+    boost::signals2::signal<void (const CBlockIndex*, const std::shared_ptr<const CBlock>& , ZCIncrementalMerkleTree, bool)> ChainTip;
     /** Notifies listeners of an updated transaction lock without new data. */
     boost::signals2::signal<void (const CTransaction &)> NotifyTransactionLock;
     /** Notifies listeners of an updated transaction without new data (for now: a coinbase potentially becoming visible). */

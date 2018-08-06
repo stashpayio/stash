@@ -667,14 +667,14 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
     return false;
 }
 
-void CWallet::ChainTip(const CBlockIndex *pindex, const CBlock *pblock,
+void CWallet::ChainTip(const CBlockIndex *pindex,const std::shared_ptr<const CBlock>& pblock,
                        ZCIncrementalMerkleTree tree, bool added)
 {
 #ifdef DTG
     debugMapWallet("entering chainTip() ...");
 #endif
     if (added) {
-        IncrementNoteWitnesses(pindex, pblock, tree);
+        IncrementNoteWitnesses(pindex, pblock.get(), tree);
     } else {
         DecrementNoteWitnesses(pindex);
     }
