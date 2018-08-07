@@ -380,9 +380,9 @@ UniValue validateaddress(const JSONRPCRequest& request)
     return ret;
 }
 
-UniValue z_validateaddress(const UniValue& params, bool fHelp)
+UniValue z_validateaddress(const JSONRPCRequest& request)
 {
-    if (fHelp || params.size() != 1)
+    if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
             "z_validateaddress \"zaddr\"\n"
             "\nReturn information about the given z address.\n"
@@ -413,7 +413,7 @@ UniValue z_validateaddress(const UniValue& params, bool fHelp)
     bool isMine = false;
     std::string payingKey, transmissionKey;
 
-    string strAddress = params[0].get_str();
+    string strAddress = request.params[0].get_str();
     try {
         CZCPaymentAddress address(strAddress);
         libzcash::PaymentAddress addr = address.Get();
@@ -1204,6 +1204,7 @@ static const CRPCCommand commands[] =
     { "control",            "getinfo",                &getinfo,                true,  {} }, /* uses wallet if enabled */
     { "control",            "getmemoryinfo",          &getmemoryinfo,          true,  {} },
     { "util",               "validateaddress",        &validateaddress,        true,  {"address"} }, /* uses wallet if enabled */
+    { "util",               "z_validateaddress",      &z_validateaddress,      true,  {"address"} }, /* uses wallet if enabled */
     { "util",               "createmultisig",         &createmultisig,         true,  {"nrequired","keys"} },
     { "util",               "verifymessage",          &verifymessage,          true,  {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, true,  {"privkey","message"} },
