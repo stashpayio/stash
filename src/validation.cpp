@@ -2310,7 +2310,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 
     int64_t nTime1 = GetTimeMicros(); nTimeCheck += nTime1 - nTimeStart;
     LogPrint("bench", "    - Sanity checks: %.2fms [%.2fs]\n", 0.001 * (nTime1 - nTimeStart), nTimeCheck * 0.000001);
-
+/*
     // Do not allow blocks that contain transactions which 'overwrite' older transactions,
     // unless those are already completely spent.
     // If such overwrites are allowed, coinbases and transactions depending upon those
@@ -2347,7 +2347,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
             }
         }
     }
-
+*/
     /// DASH: Check superblock start
 
     // make sure old budget is the real one
