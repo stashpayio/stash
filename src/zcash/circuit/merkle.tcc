@@ -13,8 +13,8 @@ public:
         digest_variable<FieldT> leaf,
         digest_variable<FieldT> root,
         pb_variable<FieldT>& enforce
-    ) : gadget<FieldT>(pb,"DTG") {
-        positions.allocate(pb, INCREMENTAL_MERKLE_TREE_DEPTH, "DTG");
+    ) : gadget<FieldT>(pb,"****") {
+        positions.allocate(pb, INCREMENTAL_MERKLE_TREE_DEPTH, "****");
         authvars.reset(new merkle_authentication_path_variable<FieldT, sha256_gadget>(
             pb, INCREMENTAL_MERKLE_TREE_DEPTH, "auth"
         ));
@@ -26,7 +26,7 @@ public:
             root,
             *authvars,
             enforce,
-            "DTG"
+            "****"
         ));
     }
 

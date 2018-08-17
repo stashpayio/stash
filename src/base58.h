@@ -153,10 +153,6 @@ public:
     bool Set(const CTxDestination &dest);
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
-#ifdef DTG
-    bool SetString(const char* pszSecret);
-    bool SetString(const std::string& strSecret);
-#endif
     CBitcoinAddress() {}
     CBitcoinAddress(const CTxDestination &dest) { Set(dest); }
     CBitcoinAddress(const std::string& strAddress) { SetString(strAddress); }

@@ -741,7 +741,6 @@ void CTxMemPool::removeWithAnchor(const uint256 &invalidRoot)
     list<CTransaction> transactionsToRemove;
 
     for (CTxMemPool::indexed_transaction_set::nth_index<0>::type::iterator it = mapTx.get<0>().begin(); it != mapTx.get<0>().end(); it++) {
-        // DTG for (std::map<uint256, CTxMemPoolEntry>::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
         const CTransaction& tx = it-> GetTx();
         BOOST_FOREACH(const JSDescription& joinsplit, tx.vjoinsplit) {
             if (joinsplit.anchor == invalidRoot) {

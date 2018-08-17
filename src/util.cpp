@@ -1088,38 +1088,6 @@ std::string SafeIntVersionToString(uint32_t nVersion)
     }
 }
 
-#ifdef DTG
-void _dumpBuffer(const char* buffer, size_t length) {
-	size_t offset = 0;
-	while (offset < length) {
-		LogPrintf("%06ld: ", offset);
-		for (size_t i = offset; i < offset+16; i++) {
-			if (i < length) {
-				unsigned char ch = buffer[i];
-				LogPrintf("%02x", ch);
-			} else {
-				LogPrintf("  ");
-			}
-		}
-		LogPrintf(" ");
-		for (size_t i = offset; i < offset+16; i++) {
-			if (i < length) {
-				unsigned char ch = buffer[i];
-				if ((ch >= 32) && (ch <= 127)) {
-					LogPrintf("%c", ch);
-				} else {
-					LogPrintf(".");
-				}
-			} else {
-				LogPrintf(" ");
-			}
-		}
-		LogPrintf("\n");
-		offset += 16;
-	}
-}
-#endif
-
 std::string _dumpBuffer(const char* buffer, size_t length) {
     std::stringstream str;
     size_t offset = 0;

@@ -822,7 +822,6 @@ bool AsyncRPCOperation_sendmany::find_utxos(bool fAcceptCoinbase=false) {
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    // DTG:   pwalletMain->AvailableCoins(vecOutputs, false, NULL, true, fAcceptCoinbase);
     pwalletMain->AvailableCoins(vecOutputs, false, NULL);
 
     BOOST_FOREACH(const COutput& out, vecOutputs) {
@@ -1111,7 +1110,7 @@ void AsyncRPCOperation_sendmany::add_taddr_change_output_to_tx(CAmount amount) {
     EnsureWalletIsUnlocked();
     CReserveKey keyChange(pwalletMain);
     CPubKey vchPubKey;
-    bool ret = keyChange.GetReservedKey(vchPubKey, /* DTG */ true);
+    bool ret = keyChange.GetReservedKey(vchPubKey, true);
     if (!ret) {
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Could not generate a taddr to use as a change address"); // should never fail, as we just unlocked
     }

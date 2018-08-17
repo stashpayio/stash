@@ -145,7 +145,6 @@ public:
         return !(a == b);
     }
 
-    //DTG
     void debug(const char* title = "");
 };
 
@@ -467,7 +466,6 @@ public:
 
     std::string ToString() const;
 
-    //DTG
     void debug(const char* title = "");
 };
 

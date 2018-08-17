@@ -4,9 +4,9 @@ public:
     pb_variable_array<FieldT> value;
     std::shared_ptr<digest_variable<FieldT>> r;
 
-    note_gadget(protoboard<FieldT> &pb) : gadget<FieldT>(pb,"DTG") {
-        value.allocate(pb, 64, "DTG");
-        r.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
+    note_gadget(protoboard<FieldT> &pb) : gadget<FieldT>(pb,"****") {
+        value.allocate(pb, 64, "****");
+        r.reset(new digest_variable<FieldT>(pb, 256, "****"));
     }
 
     void generate_r1cs_constraints() {
@@ -50,10 +50,10 @@ public:
         std::shared_ptr<digest_variable<FieldT>> nullifier,
         digest_variable<FieldT> rt
     ) : note_gadget<FieldT>(pb) {
-        a_sk.reset(new digest_variable<FieldT>(pb, 252, "DTG"));
-        a_pk.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
-        rho.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
-        commitment.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
+        a_sk.reset(new digest_variable<FieldT>(pb, 252, "****"));
+        a_pk.reset(new digest_variable<FieldT>(pb, 256, "****"));
+        rho.reset(new digest_variable<FieldT>(pb, 256, "****"));
+        commitment.reset(new digest_variable<FieldT>(pb, 256, "****"));
 
         spend_authority.reset(new PRF_addr_a_pk_gadget<FieldT>(
             pb,
@@ -80,7 +80,7 @@ public:
             commitment
         ));
 
-        value_enforce.allocate(pb,"DTG");
+        value_enforce.allocate(pb,"****");
 
         witness_input.reset(new merkle_tree_gadget<FieldT>(
             pb,
@@ -111,7 +111,7 @@ public:
             packed_addition(this->value),
             (1 - value_enforce),
             0
-        ), "DTG");
+        ), "****");
 
         witness_input->generate_r1cs_constraints();
     }
@@ -183,8 +183,8 @@ public:
         bool nonce,
         std::shared_ptr<digest_variable<FieldT>> commitment
     ) : note_gadget<FieldT>(pb) {
-        rho.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
-        a_pk.reset(new digest_variable<FieldT>(pb, 256, "DTG"));
+        rho.reset(new digest_variable<FieldT>(pb, 256, "****"));
+        a_pk.reset(new digest_variable<FieldT>(pb, 256, "****"));
 
         // Do not allow the caller to choose the same "rho"
         // for any two valid notes in a given view of the

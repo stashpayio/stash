@@ -393,14 +393,6 @@ public:
 
     unsigned int GetReceiveFloodSize() const;
 
-/* DTG
-    mutable CCriticalSection cs_vNodes; // DTG Is there a better way of using this externally?
-
-    size_t numberOfVNodes() const {
-    	return vNodes.size();
-    }
-*/
-
     void WakeMessageHandler();
 private:
     struct ListenSocket {

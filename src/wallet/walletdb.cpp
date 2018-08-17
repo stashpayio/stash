@@ -365,7 +365,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             if (!(CheckTransaction(wtx, state, verifier) && (wtx.GetHash() == hash) && state.IsValid()))
                 return false;
 
-            // Undo serialize changes in 31600 //DTG remove this?
+  /*        
             if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
             {
                 if (!ssValue.empty())
@@ -384,7 +384,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 }
                 wss.vWalletUpgrade.push_back(hash);
             }
-
+*/
             if (wtx.nOrderPos == -1)
                 wss.fAnyUnordered = true;
 

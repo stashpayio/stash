@@ -96,8 +96,6 @@ uint256 JSDescription::h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) con
 	return params.h_sig(randomSeed,nullifiers, pubKeyHash);
 }
 
-
-//DTG
 void JSDescription::debug(const char* title) {
     printf("%s : JoinSplitt\n",title);
     printf("==================\n");
@@ -315,7 +313,6 @@ std::string CTransaction::ToString() const
     return str;
 }
 
-//DTG
 void CTransaction::debug(const char* title) {
     printf("%s : Transaction\n",title);
     printf("==================\n");

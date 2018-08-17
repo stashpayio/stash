@@ -670,17 +670,11 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
 void CWallet::ChainTip(const CBlockIndex *pindex,const std::shared_ptr<const CBlock>& pblock,
                        ZCIncrementalMerkleTree tree, bool added)
 {
-#ifdef DTG
-    debugMapWallet("entering chainTip() ...");
-#endif
     if (added) {
         IncrementNoteWitnesses(pindex, pblock.get(), tree);
     } else {
         DecrementNoteWitnesses(pindex);
     }
-#ifdef DTG
-    debugMapWallet("... exiting chainTip()");
-#endif
 }
 
 
@@ -1985,20 +1979,11 @@ void CWallet::GetNoteWitnesses(std::vector<JSOutPoint> notes,
 {
     {
         LOCK(cs_wallet);
-#ifdef DTG
-        debugMapWallet("GetNoteWitnesses");
-#endif
         witnesses.resize(notes.size());
         boost::optional<uint256> rt;
         int i = 0;
         for (JSOutPoint note : notes) {
 
-#ifdef DTG
-        	auto tmp = mapWallet[note.hash];
-        	printf("1. %lu\n",mapWallet.count(note.hash));
-        	printf("2. %lu\n",mapWallet[note.hash].mapNoteData.count(note));
-        	printf("3. %lu\n",mapWallet[note.hash].mapNoteData[note].witnesses.size());
-#endif
             if (mapWallet.count(note.hash) &&
                     mapWallet[note.hash].mapNoteData.count(note) &&
                     mapWallet[note.hash].mapNoteData[note].witnesses.size() > 0) {
@@ -2521,7 +2506,6 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
         }
     }
 
-    // DTG: Do we really need this?
     if (nDebit > 0) // debit>0 means we signed/sent this transaction
     {
         CAmount nValueOut = tx->GetValueOut();
@@ -4731,9 +4715,6 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 {
-#ifdef DTG
-    debugMapWallet();
-#endif
     if (!fFileBacked)
         return DB_LOAD_OK;
     fFirstRunRet = false;
@@ -4768,9 +4749,6 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     fFirstRunRet = !vchDefaultKey.IsValid();
 
     uiInterface.LoadWallet(this);
-#ifdef DTG
-    debugMapWallet();
-#endif
     return DB_LOAD_OK;
 }
 
@@ -6275,19 +6253,19 @@ void CWallet::GetFilteredNotes(std::vector<CNotePlaintextEntry> & outEntries, st
     }
 }
 
-#ifdef DTG
+
 void CWallet::debugMapWallet(const char* title) {
     printf("%s : CWallet::mapWallet\n",title);
     int index = 0;
     printf("==================\n");
 
     for (std::pair<const uint256, CWalletTx>& item: mapWallet) {
-        if (item.second.vjoinsplit.size() > 0) {
-	    printf("%4d : %s: (%ld,%ld)\n",index,item.first.GetHex().c_str(),
-					item.second.vjoinsplit[0].vpub_old,
-					item.second.vjoinsplit[0].vpub_new);
-	    item.second.debugMapNoteData();
-	}
+        if (item.second.tx->vjoinsplit.size() > 0) {
+	         printf("%4d : %s: (%ld,%ld)\n",index,item.first.GetHex().c_str(),
+					      item.second.tx->vjoinsplit[0].vpub_old,
+					      item.second.tx->vjoinsplit[0].vpub_new);
+	         item.second.debugMapNoteData();
+	      }
         index++;
     }
     printf("=== %d ===============\n",index);
@@ -6295,18 +6273,17 @@ void CWallet::debugMapWallet(const char* title) {
 
 void CWalletTx::debugMapNoteData() {
     for (std::pair<const JSOutPoint, CNoteData>& item: mapNoteData) {
-    	printf("    (%s,%ld,%d):\n",item.first.hash.GetHex().c_str(),item.first.js,item.first.n);
+      printf("    (%s,%ld,%d):\n",item.first.hash.GetHex().c_str(),item.first.js,item.first.n);
     	printf("        Payment address: %s\n",item.second.address.GetHash().GetHex().c_str());
-		printf("        Witness Height: %d\n",item.second.witnessHeight);
-		if (item.second.nullifier) {
-			printf("        Nullifier: %s\n",item.second.nullifier->GetHex().c_str());
-		} else {
-			printf("        No Nullifier\n");
-		}
+		  printf("        Witness Height: %d\n",item.second.witnessHeight);
+      if (item.second.nullifier) {
+			     printf("        Nullifier: %s\n",item.second.nullifier->GetHex().c_str());
+		  } else {
+			     printf("        No Nullifier\n");
+		  }
 			printf("        Witnesses:\n");
 			for(ZCIncrementalWitness witness : item.second.witnesses) {
-				printf("            %s\n",witness.root().GetHex().c_str());
-		}
-	}
+				    printf("            %s\n",witness.root().GetHex().c_str());
+		  }
+    }
 };
-#endif // DTG

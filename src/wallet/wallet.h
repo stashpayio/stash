@@ -346,8 +346,6 @@ private:
   /** Constant used in hashBlock to indicate tx has been abandoned */
     static const uint256 ABANDON_HASH;
 
-// DTG:    int GetDepthInMainChainINTERNAL(const CBlockIndex* &pindexRet) const;
-
 public:
     CTransactionRef tx;
     uint256 hashBlock;
@@ -390,11 +388,8 @@ public:
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        // DTG std::vector<uint256> vMerkleBranch; // For compatibility with older versions.
-        // DTG: Do we need this anymore if new blockchain?
         READWRITE(tx);
         READWRITE(hashBlock);
-        // DTG READWRITE(vMerkleBranch);
         READWRITE(nIndex);
     }
 
@@ -432,10 +427,6 @@ private:
 public:
     mapValue_t mapValue;
     mapNoteData_t mapNoteData;
-
-#ifdef DTG
-    void debugMapNoteData();
-#endif
 
     std::vector<std::pair<std::string, std::string> > vOrderForm;
     unsigned int fTimeReceivedIsTxTime;
@@ -543,8 +534,6 @@ public:
         }
 
         READWRITE(*(CMerkleTx*)this);
-  // DTG      std::vector<CMerkleTx> vUnused; //!< Used to be vtxPrev
-  // DTG      READWRITE(vUnused);
         READWRITE(mapValue);
         READWRITE(vOrderForm);
         READWRITE(fTimeReceivedIsTxTime);
@@ -630,6 +619,8 @@ public:
     bool RelayWalletTransaction(CConnman* connman, const std::string& strCommand="tx");
 
     std::set<uint256> GetConflicts() const;
+
+    void debugMapNoteData();
 };
 
 
@@ -945,8 +936,7 @@ public:
             mapKeyMetadata[keyid] = CKeyMetadata(keypool.nTime);
     }
 
-// DTG    std::set<int64_t> setInternalKeyPool;
-// DTG    std::set<int64_t> setExternalKeyPool;
+
     std::map<libzcash::PaymentAddress, CKeyMetadata> mapZKeyMetadata;
 
     // Map from Key ID (for regular keys) or Script ID (for watch-only keys) to
@@ -1047,10 +1037,6 @@ public:
 
 
     std::map<uint256, CWalletTx> mapWallet;
-
-#ifdef DTG
-    void debugMapWallet(const char* title = "_");
-#endif
     std::list<CAccountingEntry> laccentries;
 
     typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
@@ -1215,15 +1201,10 @@ public:
     void MarkDirty();
     bool UpdateNullifierNoteMap();
     void UpdateNullifierNoteMapWithTx(const CWalletTx& wtx);
-// DTG    bool AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet, CWalletDB* pwalletdb);
-// DTG       void SyncTransaction(const CTransaction& tx, const CBlock* pblock);
-// DTG       bool AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlock* pblock, bool fUpdate);
-//    ?????? DTG    void EraseFromWallet(const uint256 &hash);
     void WitnessNoteCommitment(
          std::vector<uint256> commitments,
          std::vector<boost::optional<ZCIncrementalWitness>>& witnesses,
          uint256 &final_anchor);
-// DTG    int ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
 
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
@@ -1453,6 +1434,8 @@ public:
     static bool InitAutoBackup();
 
     bool BackupWallet(const std::string& strDest);
+
+    void debugMapWallet(const char* title = "_");
 
     /**
      * HD Wallet Functions

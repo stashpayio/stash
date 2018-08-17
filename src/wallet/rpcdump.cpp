@@ -261,7 +261,7 @@ UniValue importaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Dash address or script");
     }
 
-    {  // DTG: What is going on here? From zCash
+    {
         if (::IsMine(*pwalletMain, script) == ISMINE_SPENDABLE)
             throw JSONRPCError(RPC_WALLET_ERROR, "The wallet already contains the private key for this address or script");
 
@@ -275,7 +275,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
         pwalletMain->MarkDirty();
 
-        if (!pwalletMain->AddWatchOnly(script,0))  // DTG ????
+        if (!pwalletMain->AddWatchOnly(script,0))  
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
 
         if (fRescan)

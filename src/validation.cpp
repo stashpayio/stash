@@ -1728,7 +1728,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
         // are the JoinSplit's requirements met?
         if (!inputs.HaveJoinSplitRequirements(tx))
-        // DTG if (!pcoinsTip->HaveJoinSplitRequirements(tx))
+
         	return state.Invalid(error("CheckInputs(): %s JoinSplit requirements not met", tx.GetHash().ToString()));
 
         CAmount nValueIn = 0;
@@ -1747,8 +1747,8 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
                         strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
             }
 
-#ifdef DTG
-            Do we want this feature?
+#ifdef COINBASE_PROTECTION
+    ***** Do we want this feature?
             // Ensure that coinbases cannot be spent to transparent outputs
                 // Disabled on regtest
                 if (fCoinbaseEnforcedProtectionEnabled &&
@@ -1767,10 +1767,6 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputvalues-outofrange");
 
         }
-
-// DTG        if (nValueIn < tx.GetValueOut())
-// DTG           return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
-// DTG               strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())));
 
         nValueIn += tx.GetJoinSplitValueIn();
         if (!MoneyRange(nValueIn))

@@ -1417,23 +1417,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, &scheduler);
     threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
-/* DTG
-
-    // Count uptime
-    MarkStartTime();
-
-    if ((chainparams.NetworkIDString() != "regtest") &&
-            GetBoolArg("-showmetrics", isatty(STDOUT_FILENO)) &&
-            !fPrintToConsole && !GetBoolArg("-daemon", false)) {
-        // Start the persistent metrics interface
-        ConnectMetricsScreen();
-        threadGroup.create_thread(&ThreadShowMetricsScreen);
-    }
-*/
-     // These must be disabled for now, they are buggy and we probably don't
-     // want any of libsnark's profiling in production anyway.
-     libsnark::inhibit_profiling_info = true;
-     libsnark::inhibit_profiling_counters = true;
+    // These must be disabled for now, they are buggy and we probably don't
+    // want any of libsnark's profiling in production anyway.
+    libsnark::inhibit_profiling_info = true;
+    libsnark::inhibit_profiling_counters = true;
 
      // Initialize Zcash circuit parameters
      ZC_LoadParams();

@@ -36,7 +36,6 @@ protected:
     virtual void NotifyHeaderTip(const CBlockIndex *pindexNew, bool fInitialDownload) {}
     virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
     virtual void SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock) {}
-// DTG    virtual void SyncTransaction(const CTransaction &tx, const CBlock *pblock) {}
     virtual void EraseFromWallet(const uint256 &hash) {}
     virtual void ChainTip(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock, ZCIncrementalMerkleTree tree, bool added) {}
     virtual void NotifyTransactionLock(const CTransaction &tx) {}
@@ -71,8 +70,6 @@ struct CMainSignals {
      * removal was due to conflict from connected block), or appeared in a
      * disconnected block.*/
     boost::signals2::signal<void (const CTransaction &, const CBlockIndex *pindex, int posInBlock)> SyncTransaction;
-// DTG    /** Notifies listeners of updated transaction data (transaction, and optionally the block it is found in. */
-// DTG    boost::signals2::signal<void (const CTransaction &, const CBlock *)> SyncTransaction;
     /** Notifies listeners of an erased transaction (currently disabled, requires transaction replacement). */
     boost::signals2::signal<void (const uint256 &)> EraseTransaction;
     /** Notifies listeners of a change to the tip of the active block chain. */
