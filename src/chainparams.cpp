@@ -236,8 +236,8 @@ public:
         // guarantees the first 2 characters, when base58 encoded, are "SK"
         base58Prefixes[ZCSPENDING_KEY]     = {0xAB,0x36};
 
-        // Dash BIP44 coin type is '5'
-        nExtCoinType = 5;
+        // Stash BIP44 coin type is '0xC0C0'
+        nExtCoinType = 0xC0C0;
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
@@ -391,8 +391,8 @@ public:
          // guarantees the first 2 characters, when base58 encoded, are "ST"
          base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
 
-        // Testnet Dash BIP44 coin type is '1' (All coin's testnet default)
-        nExtCoinType = 1;
+        // Testnet Stash BIP44 coin type is '0xCAFE'
+        nExtCoinType = 0xCAFE;
 
         fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
@@ -521,8 +521,8 @@ public:
         // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        // Testnet Dash BIP44 coin type is '1' (All coin's testnet default)
-        nExtCoinType = 1;
+        // Testnet Stash BIP44 coin type is '0xCAFE'
+        nExtCoinType = 0xCAFE;
 
         fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
@@ -671,8 +671,8 @@ public:
         // Regtest Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        // Regtest Dash BIP44 coin type is '1' (All coin's testnet default)
-        nExtCoinType = 1;
+        // Regtest Stash BIP44 coin type is '0xCAFE'
+        nExtCoinType = 0xCAFE;
    }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
