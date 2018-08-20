@@ -369,9 +369,9 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
-        //vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
-        //vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
+        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
 
         // Testnet Dash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
