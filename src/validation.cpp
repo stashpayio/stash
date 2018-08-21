@@ -3740,13 +3740,6 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     return true;
 }
 
-void print(const CScript& script) {
-  for (auto it = script.begin(); it != script.end(); it++) {
-      std::cout << (int)*it << "   ";
-  }
-  std::cout << std::endl;
-}
-
 bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
@@ -3789,8 +3782,6 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     if (nHeight >= consensusParams.BIP34Height)
     {
         CScript expect = CScript() << CScriptCoinbaseHeight(nHeight);
-        print(expect);
-        print(block.vtx[0]->vin[0].scriptSig);
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
