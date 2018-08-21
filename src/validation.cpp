@@ -2297,6 +2297,9 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     int64_t nTime1 = GetTimeMicros(); nTimeCheck += nTime1 - nTimeStart;
     LogPrint("bench", "    - Sanity checks: %.2fms [%.2fs]\n", 0.001 * (nTime1 - nTimeStart), nTimeCheck * 0.000001);
 /*
+    21/08/2018: Since BIP34 is enfoced from block 1, it was not possible to create new duplicate coinbases.
+                Therefore, the following code is commented out.
+
     // Do not allow blocks that contain transactions which 'overwrite' older transactions,
     // unless those are already completely spent.
     // If such overwrites are allowed, coinbases and transactions depending upon those
@@ -3727,13 +3730,21 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
 
     // check for version 2, 3 and 4 upgrades
-    if((block.nVersion < 2 && nHeight >= consensusParams.BIP34Height) ||
-       (block.nVersion < 3 && nHeight >= consensusParams.BIP66Height) ||
-       (block.nVersion < 4 && nHeight >= consensusParams.BIP65Height))
-            return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
-                                 strprintf("rejected nVersion=0x%08x block", block.nVersion));
+    // 21/08/2018 This code is no longer required as this low block version do not appear on our blockchain
+    //if((block.nVersion < 2 && nHeight >= consensusParams.BIP34Height) ||
+    //   (block.nVersion < 3 && nHeight >= consensusParams.BIP66Height) ||
+    //   (block.nVersion < 4 && nHeight >= consensusParams.BIP65Height))
+    //        return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
+    //                             strprintf("rejected nVersion=0x%08x block", block.nVersion));
 
     return true;
+}
+
+void print(const CScript& script) {
+  for (auto it = script.begin(); it != script.end(); it++) {
+      std::cout << (int)*it << "   ";
+  }
+  std::cout << std::endl;
 }
 
 bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
@@ -3777,7 +3788,9 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     // Enforce rule that the coinbase starts with serialized block height
     if (nHeight >= consensusParams.BIP34Height)
     {
-        CScript expect = CScript() << nHeight;
+        CScript expect = CScript() << CScriptCoinbaseHeight(nHeight);
+        print(expect);
+        print(block.vtx[0]->vin[0].scriptSig);
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
