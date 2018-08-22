@@ -391,6 +391,9 @@ public:
           result.push_back(value & 0xff);
           value >>= 8;
       }
+      if (result.back() & 0x80)
+          result.push_back(0);
+
       return result;
   }
 
