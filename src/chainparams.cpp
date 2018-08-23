@@ -251,11 +251,11 @@ public:
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
          // place this key in .conf file as sporkkey=cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
-        // privKey: cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
+        // privKey: XKJoibhonSsq2Pz6xsMfqZeQmcGVey5zd41YvGTEPaGxP6rNzCAx
         // open debug console and use this command:
         // spork SPORK_NAME [value]
 
-        strSporkAddress = "yj949n1UH6fDhw6HtVE5VMj2iSTaSWBMcW"; // MPB todo - update with real key
+        strSporkAddress = "XigyzwarhX1Q1YtzGM72ov7Zv4J4u9B2Eh"; // MPB todo - update with real key
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
