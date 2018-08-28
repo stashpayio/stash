@@ -579,4 +579,6 @@ void DumpMempool();
 /** Load the mempool from disk. */
 bool LoadMempool();
 
+void showChainActive(int number = -1);
+
 #endif // BITCOIN_VALIDATION_H
