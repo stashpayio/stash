@@ -2848,14 +2848,16 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     CBlockIndex *pindexDelete = chainActive.Tip();
     assert(pindexDelete);
     // Read block from disk.
-    CBlock block;
-    if (!ReadBlockFromDisk(block, pindexDelete, chainparams.GetConsensus()))
+    //CBlock block;
+    auto block = make_shared<CBlock>();
+
+    if (!ReadBlockFromDisk(*(block.get()), pindexDelete, chainparams.GetConsensus()))
         return AbortNode(state, "Failed to read block");
     // Apply the block atomically to the chain state.
     int64_t nStart = GetTimeMicros();
     {
         CCoinsViewCache view(pcoinsTip);
-        if (DisconnectBlock(block, state, pindexDelete, view) != DISCONNECT_OK)
+        if (DisconnectBlock(*(block.get()), state, pindexDelete, view) != DISCONNECT_OK)
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHash().ToString());
         bool flushed = view.Flush();
         assert(flushed);
@@ -2867,7 +2869,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         return false;
     // Resurrect mempool transactions from the disconnected block.
     std::vector<uint256> vHashUpdate;
-    for (const auto& it : block.vtx) {
+    for (const auto& it : block.get()->vtx) {
         const CTransaction& tx = *it;
         // ignore validation errors in resurrected transactions
         CValidationState stateDummy;
@@ -2892,12 +2894,11 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
 
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
-    for (const auto& tx : block.vtx) {
+    for (const auto& tx : block.get()->vtx) {
         GetMainSignals().SyncTransaction(*tx, pindexDelete->pprev, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
     }
     // Update cached incremental witnesses
-    const std::shared_ptr<const CBlock> pblock(&block);
-    GetMainSignals().ChainTip(pindexDelete, pblock, newTree, false);
+    GetMainSignals().ChainTip(pindexDelete, block, newTree, false);
     return true;
 }
 
@@ -4341,6 +4342,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     // Set hashAnchorEnd for the end of best chain
     it->second->hashAnchorEnd = pcoinsTip->GetBestAnchor();
 
+    chainActive.Genesis()->hashAnchor = chainActive.Genesis()->hashAnchorEnd;
     PruneBlockIndexCandidates();
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
@@ -5026,3 +5028,15 @@ public:
         mapBlockIndex.clear();
     }
 } instance_of_cmaincleanup;
+
+
+void showChainActive(int number) {
+    printf("chainActive: \n");
+    int count = number < 0 ? chainActive.Height()+1 : number;
+    for (int i = 0; i < count; i++) {
+       if (!chainActive[i]) {
+          break;
+       }
+       printf("%d: %s | %s\n",i,chainActive[i]->hashAnchor.GetHex().c_str(),chainActive[i]->hashAnchorEnd.GetHex().c_str());
+    }
+}
