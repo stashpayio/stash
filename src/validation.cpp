@@ -1700,7 +1700,11 @@ bool CScriptCheck::operator()() {
 int GetSpendHeight(const CCoinsViewCache& inputs)
 {
     LOCK(cs_main);
-    CBlockIndex* pindexPrev = mapBlockIndex.find(inputs.GetBestBlock())->second;
+    uint256 hash = inputs.GetBestBlock();
+    if (hash.IsNull()) {
+      return 0;
+    }
+    CBlockIndex* pindexPrev = mapBlockIndex.find(hash)->second;
     return pindexPrev->nHeight + 1;
 }
 
