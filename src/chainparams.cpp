@@ -148,8 +148,8 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nPowKGWHeight = 15200;
-        consensus.nPowDGWHeight = 34140;
+        // consensus.nPowKGWHeight = 15200; STASH Always use DGW
+        // consensus.nPowDGWHeight = 34140; STASH Always use DGW
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -307,8 +307,8 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nPowKGWHeight = 4001; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
-        consensus.nPowDGWHeight = 4001;
+        // consensus.nPowKGWHeight = 1; STASH Always use DGW
+        // consensus.nPowDGWHeight = 1;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -339,7 +339,7 @@ public:
         // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000003be69c34b1244f"); // 143200
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000004a7878409189b7a8f75b3815d9b8c45ee8f79955a6c727d83bddb04"); // 143200
+        consensus.defaultAssumeValid = uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834"); // 0
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -353,7 +353,7 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1530905250, 1289075, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1537643050, 808049, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating test genesis block\n");
@@ -367,7 +367,7 @@ public:
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000a20a6b338f3a811c19fd4ade39073b665c25d30ec2877478d452b859ca6"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
@@ -416,7 +416,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (    0, uint256S("0x")),
+            (    0, uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834")),
             0, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -465,8 +465,8 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nPowKGWHeight = 4001; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
-        consensus.nPowDGWHeight = 4001;
+        // consensus.nPowKGWHeight = 1; STASH Always use DGW
+        // consensus.nPowDGWHeight = 1;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -608,8 +608,8 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
-        consensus.nPowKGWHeight = 15200; // same as mainnet
-        consensus.nPowDGWHeight = 34140; // same as mainnet
+        //consensus.nPowKGWHeight = 15200; // STASH Always use DGW 
+        //consensus.nPowDGWHeight = 34140;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
