@@ -482,7 +482,8 @@ libstash_common_a_SOURCES = \
   scheduler.cpp \
   script/sign.cpp \
   script/standard.cpp \
-  warnings.cpp
+  warnings.cpp \
+  zen/delay.cpp
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
