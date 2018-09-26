@@ -1,2 +1,2 @@
-contrib/dashd.bash-completion	dashd
-contrib/dash-cli.bash-completion    dash-cli
+contrib/stashd.bash-completion	stashd
+contrib/stash-cli.bash-completion    stash-cli

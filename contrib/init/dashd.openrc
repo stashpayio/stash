@@ -2,26 +2,26 @@
 
 # backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/dashcore/.dashcore" ]; then
-	BITCOIND_DEFAULT_DATADIR="/var/lib/dashcore/.dashcore"
+if [ -d "/var/lib/stashcore/.stashcore" ]; then
+	BITCOIND_DEFAULT_DATADIR="/var/lib/stashcore/.stashcore"
 else
-	BITCOIND_DEFAULT_DATADIR="/var/lib/dashd"
+	BITCOIND_DEFAULT_DATADIR="/var/lib/stashd"
 fi
 
-BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/dashcore/dash.conf}
-BITCOIND_PIDDIR=${BITCOIND_PIDDIR:-/var/run/dashd}
-BITCOIND_PIDFILE=${BITCOIND_PIDFILE:-${BITCOIND_PIDDIR}/dashd.pid}
+BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/stashcore/stash.conf}
+BITCOIND_PIDDIR=${BITCOIND_PIDDIR:-/var/run/stashd}
+BITCOIND_PIDFILE=${BITCOIND_PIDFILE:-${BITCOIND_PIDDIR}/stashd.pid}
 BITCOIND_DATADIR=${BITCOIND_DATADIR:-${BITCOIND_DEFAULT_DATADIR}}
-BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-dashcore}}
-BITCOIND_GROUP=${BITCOIND_GROUP:-dashcore}
-BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/dashd}
+BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-stashcore}}
+BITCOIND_GROUP=${BITCOIND_GROUP:-stashcore}
+BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/stashd}
 BITCOIND_NICE=${BITCOIND_NICE:-${NICELEVEL:-0}}
 BITCOIND_OPTS="${BITCOIND_OPTS:-${BITCOIN_OPTS}}"
 
-name="Dash Core Daemon"
-description="Dash cryptocurrency P2P network daemon"
+name="Stash Core Daemon"
+description="Stash cryptocurrency P2P network daemon"
 
-command="/usr/bin/dashd"
+command="/usr/bin/stashd"
 command_args="-pid=\"${BITCOIND_PIDFILE}\" \
 		-conf=\"${BITCOIND_CONFIGFILE}\" \
 		-datadir=\"${BITCOIND_DATADIR}\" \
@@ -71,7 +71,7 @@ checkconfig()
 {
 	if ! grep -qs '^rpcpassword=' "${BITCOIND_CONFIGFILE}" ; then
 		eerror ""
-		eerror "ERROR: You must set a secure rpcpassword to run dashd."
+		eerror "ERROR: You must set a secure rpcpassword to run stashd."
 		eerror "The setting must appear in ${BITCOIND_CONFIGFILE}"
 		eerror ""
 		eerror "This password is security critical to securing wallets "
@@ -84,7 +84,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"Dash Core Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Stash Core Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1

@@ -62,12 +62,12 @@
         <translation>Vastaanottava osoite</translation>
     </message>
     <message>
-        <source>These are your Dash addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Nämä ovat Dash osoitteesi maksujen lähetykseen. Tarkista aina lähetettävä määrä ja vastaanottajan osoite ennen kuin lähetät varoja.</translation>
+        <source>These are your Stash addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Nämä ovat Stash osoitteesi maksujen lähetykseen. Tarkista aina lähetettävä määrä ja vastaanottajan osoite ennen kuin lähetät varoja.</translation>
     </message>
     <message>
-        <source>These are your Dash addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Nämä ovat Dash osoitteesi suoritusten vastaanottamiseen. Suositellaan että käytät uutta osoitetta kullekin siirtotapahtumalle.</translation>
+        <source>These are your Stash addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Nämä ovat Stash osoitteesi suoritusten vastaanottamiseen. Suositellaan että käytät uutta osoitetta kullekin siirtotapahtumalle.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -172,8 +172,8 @@
         <translation>Vahvista lompakon salaus</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR DASH&lt;/b&gt;!</source>
-        <translation>Varoitus: Jos salaat lompakon ja unohdat salasanan, &lt;b&gt;MENETÄT KAIKKI DASHisi&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR STASH&lt;/b&gt;!</source>
+        <translation>Varoitus: Jos salaat lompakon ja unohdat salasanan, &lt;b&gt;MENETÄT KAIKKI STASHisi&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -185,7 +185,7 @@
     </message>
     <message>
         <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your funds from being stolen by malware infecting your computer.</source>
-        <translation>%1 sulkeutuu nyt salauksen viimeistelyä varten. Muista että salaus pelkästään ei voi estää Dashiesi varastamista jos koneesi saastuu haittaohjelmilla tai viruksilla.</translation>
+        <translation>%1 sulkeutuu nyt salauksen viimeistelyä varten. Muista että salaus pelkästään ei voi estää Stashiesi varastamista jos koneesi saastuu haittaohjelmilla tai viruksilla.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. Previous backups of the unencrypted wallet file contain the same HD seed and still have full access to all your funds just like the new, encrypted wallet.</source>
@@ -242,12 +242,12 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
-        <source>A fatal error occurred. Dash Core can no longer continue safely and will quit.</source>
-        <translation>Vakava virhe tapahtunut. Dash Core ei voi enää toimia turvallisesti ja sulkeutuu.</translation>
+        <source>A fatal error occurred. Stash Core can no longer continue safely and will quit.</source>
+        <translation>Vakava virhe tapahtunut. Stash Core ei voi enää toimia turvallisesti ja sulkeutuu.</translation>
     </message>
     <message>
-        <source>Dash Core</source>
-        <translation>Dash Core</translation>
+        <source>Stash Core</source>
+        <translation>Stash Core</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -270,16 +270,16 @@
         <translation>L&amp;ähetä</translation>
     </message>
     <message>
-        <source>Send coins to a Dash address</source>
-        <translation>Lähetä varoja Dash osoitteeseen</translation>
+        <source>Send coins to a Stash address</source>
+        <translation>Lähetä varoja Stash osoitteeseen</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
         <translation>&amp;Vastaanota</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and dash: URIs)</source>
-        <translation>Pyydä maksuja (Luo QR koodit ja Dash: URIt)</translation>
+        <source>Request payments (generates QR codes and stash: URIs)</source>
+        <translation>Pyydä maksuja (Luo QR koodit ja Stash: URIt)</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -306,8 +306,8 @@
         <translation>Sulje ohjelma</translation>
     </message>
     <message>
-        <source>Show information about Dash Core</source>
-        <translation>Näytä tietoja Dash Core:sta</translation>
+        <source>Show information about Stash Core</source>
+        <translation>Näytä tietoja Stash Core:sta</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -378,16 +378,16 @@
         <translation>&amp;Allekirjoita Viesti...</translation>
     </message>
     <message>
-        <source>Sign messages with your Dash addresses to prove you own them</source>
-        <translation>Allekirjoita viestit Dash osoitteillasi todistaaksesi että omistat ne</translation>
+        <source>Sign messages with your Stash addresses to prove you own them</source>
+        <translation>Allekirjoita viestit Stash osoitteillasi todistaaksesi että omistat ne</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
         <translation>&amp;Tarkista Viesti...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Dash addresses</source>
-        <translation>Tarkista viestit ollaksesi varma että ne on allekirjoitettu määritetyillä Dash osoitteilla</translation>
+        <source>Verify messages to ensure they were signed with specified Stash addresses</source>
+        <translation>Tarkista viestit ollaksesi varma että ne on allekirjoitettu määritetyillä Stash osoitteilla</translation>
     </message>
     <message>
         <source>&amp;Information</source>
@@ -474,15 +474,15 @@
         <translation>Avaa &amp;URI...</translation>
     </message>
     <message>
-        <source>Open a dash: URI or payment request</source>
-        <translation>Avaa Dash: URI tai maksupyyntö</translation>
+        <source>Open a stash: URI or payment request</source>
+        <translation>Avaa Stash: URI tai maksupyyntö</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Komentorivin valinnat</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Dash command-line options</source>
+        <source>Show the %1 help message to get a list with possible Stash command-line options</source>
         <translation>Näytä %1 ohjelista komentorivin valinnoista</translation>
     </message>
     <message>
@@ -518,8 +518,8 @@
         <translation>Välilehtipalkki</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Dash network</source>
-        <translation><numerusform>%n aktiivinen yhteys Dash verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Dash verkkoon</numerusform></translation>
+        <source>%n active connection(s) to Stash network</source>
+        <translation><numerusform>%n aktiivinen yhteys Stash verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Stash verkkoon</numerusform></translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -857,11 +857,11 @@
         <translation>Valitse yksityisyyden taso.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 1000 DASH</source>
+        <source>Use 2 separate masternodes to mix funds up to 1000 STASH</source>
         <translation>Käytä 2 erillistä masternodea sekoittaaksesi varoja</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 1000 DASH</source>
+        <source>Use 8 separate masternodes to mix funds up to 1000 STASH</source>
         <translation>Käytä 8 erillistä masternodea sekoittaaksesi varoja</translation>
     </message>
     <message>
@@ -869,16 +869,16 @@
         <translation>Käytä 16 erillistä masternodea</translation>
     </message>
     <message>
-        <source>This option is the quickest and will cost about ~0.025 DASH to anonymize 1000 DASH</source>
-        <translation>Tämä vaihtoehto on nopein ja maksaa noin ~0.025 DASH kun anonymisoidaan 1000 DASH</translation>
+        <source>This option is the quickest and will cost about ~0.025 STASH to anonymize 1000 STASH</source>
+        <translation>Tämä vaihtoehto on nopein ja maksaa noin ~0.025 STASH kun anonymisoidaan 1000 STASH</translation>
     </message>
     <message>
-        <source>This option is moderately fast and will cost about 0.05 DASH to anonymize 1000 DASH</source>
-        <translation>Tämä vaihtoehto on keskinopea ja maksaa noin ~0.05 DASH kun anonymisoidaan 1000 DASH</translation>
+        <source>This option is moderately fast and will cost about 0.05 STASH to anonymize 1000 STASH</source>
+        <translation>Tämä vaihtoehto on keskinopea ja maksaa noin ~0.05 STASH kun anonymisoidaan 1000 STASH</translation>
     </message>
     <message>
-        <source>0.1 DASH per 1000 DASH you anonymize.</source>
-        <translation>0.1 DASH maksu per 1000 DASH jonka anonymisoit.</translation>
+        <source>0.1 STASH per 1000 STASH you anonymize.</source>
+        <translation>0.1 STASH maksu per 1000 STASH jonka anonymisoit.</translation>
     </message>
     <message>
         <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
@@ -889,16 +889,16 @@
         <translation>PrivateSend Asetukset</translation>
     </message>
     <message>
-        <source>PrivateSend was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Dash's configuration screen.</source>
-        <translation>PrivateSend on asetettu perusasetuksiin (%1 and 2 kierrosta). Voit muuttaa asetuksia milloin vain Dash asetuksista.</translation>
+        <source>PrivateSend was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Stash's configuration screen.</source>
+        <translation>PrivateSend on asetettu perusasetuksiin (%1 and 2 kierrosta). Voit muuttaa asetuksia milloin vain Stash asetuksista.</translation>
     </message>
     <message>
-        <source>PrivateSend was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Dash's configuration screen.</source>
-        <translation>PrivateSend on asetettu korkean tason asetuksiin (%1 and 8 kierrosta). Voit muuttaa asetuksia milloin vain Dash asetuksista.</translation>
+        <source>PrivateSend was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Stash's configuration screen.</source>
+        <translation>PrivateSend on asetettu korkean tason asetuksiin (%1 and 8 kierrosta). Voit muuttaa asetuksia milloin vain Stash asetuksista.</translation>
     </message>
     <message>
-        <source>PrivateSend was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Dash's configuration screen.</source>
-        <translation>PrivateSend on asetettu maksimitason asetuksiin (%1 and 16 kierrosta). Voit muuttaa asetuksia milloin vain Dash asetuksista.</translation>
+        <source>PrivateSend was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Stash's configuration screen.</source>
+        <translation>PrivateSend on asetettu maksimitason asetuksiin (%1 and 16 kierrosta). Voit muuttaa asetuksia milloin vain Stash asetuksista.</translation>
     </message>
 </context>
 <context>
@@ -940,8 +940,8 @@
         <translation>Muokkaa lähettävää osoitetta</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Dash address.</source>
-        <translation>Annettu osoite "%1" ei ole pätevä Dash osoite.</translation>
+        <source>The entered address "%1" is not a valid Stash address.</source>
+        <translation>Annettu osoite "%1" ei ole pätevä Stash osoite.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -1038,8 +1038,8 @@
         <translation>PrivateSend tietoja</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Dash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.01 DASH, 0.1 DASH, 1 DASH and 10 DASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be anonymized. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more info see &lt;a href="https://dashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://dashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;         </source>
-        <translation>&lt;h3&gt;PrivateSend perusteet&lt;/h3&gt; PrivateSend tarjoaa yksityisyyden hämärtämällä varojesi alkuperäisen osoitteen. Kaikki Dash:it lompakossasi muodostuvat erillisistä "syötteistä", joita voit ajatella erillisinä kolikkoina.&lt;br&gt; PrivateSend käyttää innovatiivista prosessia sekoittaakseen lompakkosi syötteet kahden muun ihmisen syötteisiin, siirtämättä varoja pois lompakostasi. Varojesi kontrolli pysyy aina sinulla.&lt;hr&gt; &lt;b&gt; PrivateSend prosessi toimii seuraavasti:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend aloittaa pilkkomalla siirtotapahtumiesi syötteet pienemmiksi standardi arvoiksi. Nämä arvot ovat 0.01 DASH, 0.1 DASH, 1 DASH ja 10 DASH.&lt;/li&gt; &lt;li&gt;Sitten lompakkosi lähettää pyynnön verkon palvelimille, joita kutsutaan "masternode:iksi". Masternodet saavat tiedon että haluat sekoittaa pilkottuja standardi arvoja. Mitään tunnistetietoja ei lähetetä masternode:ille, ne eivät koskaan tiedä "kuka" olet.&lt;/li&gt; &lt;li&gt;Kun 2 muuta käyttäjää ilmoittaa että he haluavat myös sekoittaa varoja, alkaa sekoitus-sessio. Masternodet sekoittavat standardi arvot ja ilmoittavat kaikille 3:lle käyttäjän lompakoille että maksavat sekoitetut arvot takaisin itselleen. Lompakkosi maksaa nuo sekoitetut arvot suoraan itselleen, mutta eri osoitteeseen (vaihto-osoite).&lt;/li&gt; &lt;li&gt;Jotta varojesi alkuperäinen lähde hämärretään, lompakkosi suorittaa tämän prosessin useita kertoja kaikilla standardi arvoilla. Aina kun prosessi on valmis, sitä kutsutaan "kierrokseksi". Jokainen PrivateSend kierros tekee eksponentiaalisesti vaikeammaksi löytää varojesi alkuperäisen osoitteen.&lt;/li&gt; &lt;li&gt;Tämä sekoitusprosessi tapahtuu taustalla ilman käyttäjän toimenpiteitä. Kun haluat myöhemmin tehdä anonyymin varojen siirron, on varasi valmiiksi sekoitettu (anonymisoitu). Erillistä sekoitusta/odotusta ei tarvita.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;TÄRKEÄÄ:&lt;/b&gt; Lompakkosi sisältää vain 1000 "vaihto-osoitetta". Aina kun sekoitustapahtuma tehdään, max 9 osoitetta käytetään. Tämä tarkoittaa sitä että nuo 1000 osoitetta kestää noin 100 sekoitustapahtumaa. Kun 900 osoitetta on käytetty, lompakkosi täytyy tehdä lisää osoitteita. Se voi tehdä niitä vain jos automaattinen varmistus on käytössä.&lt;br&gt; Tästä seuraa että jos varmistus ei ole käytössä, myös PrivateSend on pois käytöstä. &lt;hr&gt;Lisätietoja &lt;a href="https://dashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://dashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt; </translation>
+        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be anonymized. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more info see &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;         </source>
+        <translation>&lt;h3&gt;PrivateSend perusteet&lt;/h3&gt; PrivateSend tarjoaa yksityisyyden hämärtämällä varojesi alkuperäisen osoitteen. Kaikki Stash:it lompakossasi muodostuvat erillisistä "syötteistä", joita voit ajatella erillisinä kolikkoina.&lt;br&gt; PrivateSend käyttää innovatiivista prosessia sekoittaakseen lompakkosi syötteet kahden muun ihmisen syötteisiin, siirtämättä varoja pois lompakostasi. Varojesi kontrolli pysyy aina sinulla.&lt;hr&gt; &lt;b&gt; PrivateSend prosessi toimii seuraavasti:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend aloittaa pilkkomalla siirtotapahtumiesi syötteet pienemmiksi standardi arvoiksi. Nämä arvot ovat 0.01 STASH, 0.1 STASH, 1 STASH ja 10 STASH.&lt;/li&gt; &lt;li&gt;Sitten lompakkosi lähettää pyynnön verkon palvelimille, joita kutsutaan "masternode:iksi". Masternodet saavat tiedon että haluat sekoittaa pilkottuja standardi arvoja. Mitään tunnistetietoja ei lähetetä masternode:ille, ne eivät koskaan tiedä "kuka" olet.&lt;/li&gt; &lt;li&gt;Kun 2 muuta käyttäjää ilmoittaa että he haluavat myös sekoittaa varoja, alkaa sekoitus-sessio. Masternodet sekoittavat standardi arvot ja ilmoittavat kaikille 3:lle käyttäjän lompakoille että maksavat sekoitetut arvot takaisin itselleen. Lompakkosi maksaa nuo sekoitetut arvot suoraan itselleen, mutta eri osoitteeseen (vaihto-osoite).&lt;/li&gt; &lt;li&gt;Jotta varojesi alkuperäinen lähde hämärretään, lompakkosi suorittaa tämän prosessin useita kertoja kaikilla standardi arvoilla. Aina kun prosessi on valmis, sitä kutsutaan "kierrokseksi". Jokainen PrivateSend kierros tekee eksponentiaalisesti vaikeammaksi löytää varojesi alkuperäisen osoitteen.&lt;/li&gt; &lt;li&gt;Tämä sekoitusprosessi tapahtuu taustalla ilman käyttäjän toimenpiteitä. Kun haluat myöhemmin tehdä anonyymin varojen siirron, on varasi valmiiksi sekoitettu (anonymisoitu). Erillistä sekoitusta/odotusta ei tarvita.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;TÄRKEÄÄ:&lt;/b&gt; Lompakkosi sisältää vain 1000 "vaihto-osoitetta". Aina kun sekoitustapahtuma tehdään, max 9 osoitetta käytetään. Tämä tarkoittaa sitä että nuo 1000 osoitetta kestää noin 100 sekoitustapahtumaa. Kun 900 osoitetta on käytetty, lompakkosi täytyy tehdä lisää osoitteita. Se voi tehdä niitä vain jos automaattinen varmistus on käytössä.&lt;br&gt; Tästä seuraa että jos varmistus ei ole käytössä, myös PrivateSend on pois käytöstä. &lt;hr&gt;Lisätietoja &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt; </translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1057,7 @@
         <translation>Tämä on ensimmäinen kerta, kun %1 on käynnistetty, joten voit valita datahakemiston paikan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Dash block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>%1 will download and store a copy of the Stash block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>%1 lataa ja tallentaa kopion lohkoketjusta. Vähintään %2GB dataa tallennetaan tähän hakemistoon, ja se myös kasvaa ajan myötä. Myös lompakko tallennetaan tähän hakemistoon.</translation>
     </message>
     <message>
@@ -1251,12 +1251,12 @@
         <translation>Lomake</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Dash network, as detailed below.</source>
-        <translation>Viimeisimmät siirtotapahtumat eivät välttämättä ole vielä näkyvissä, ja siksi lompakon saldo voi olla väärin. Saldo korjaantuu oikeaksi kun lompakon synkronointi Dash verkkoon on valmis.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the Stash network, as detailed below.</source>
+        <translation>Viimeisimmät siirtotapahtumat eivät välttämättä ole vielä näkyvissä, ja siksi lompakon saldo voi olla väärin. Saldo korjaantuu oikeaksi kun lompakon synkronointi Stash verkkoon on valmis.</translation>
     </message>
     <message>
-        <source>Attempting to spend Dash that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
-        <translation>Yritys käyttää Dash:eja joihin vaikuttaa ei näkyvissä olevat siirtotapahtumat, tulevat hylätyksi Dash verkossa.</translation>
+        <source>Attempting to spend Stash that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Yritys käyttää Stash:eja joihin vaikuttaa ei näkyvissä olevat siirtotapahtumat, tulevat hylätyksi Stash verkossa.</translation>
     </message>
     <message>
         <source>Number of blocks left</source>
@@ -1345,8 +1345,8 @@
         <translation>(0 = auto, &lt;0 = jätä näin monta prosessorin ydintä vapaaksi)</translation>
     </message>
     <message>
-        <source>Amount of Dash to keep anonymized</source>
-        <translation>Dash määrä joka pidetään anonymisoituna</translation>
+        <source>Amount of Stash to keep anonymized</source>
+        <translation>Stash määrä joka pidetään anonymisoituna</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1397,8 +1397,8 @@
         <translation>Tämä määrä toimii rajana sekoituksen keskeytykselle kun PrivateSend sen saavuttaa.</translation>
     </message>
     <message>
-        <source>Automatically open the Dash Core client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Avaa automaattisesti Dash Core asiakasohjelmalle portti reitittimeen. Tämä toimii vain jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
+        <source>Automatically open the Stash Core client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Avaa automaattisesti Stash Core asiakasohjelmalle portti reitittimeen. Tämä toimii vain jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
     </message>
     <message>
         <source>Accept connections from outside</source>
@@ -1409,8 +1409,8 @@
         <translation>Salli sisään tulevat yhteydet</translation>
     </message>
     <message>
-        <source>Connect to the Dash network through a SOCKS5 proxy.</source>
-        <translation>Kytkeydy Dash verkkoon käyttäen SOCKS5 proxy:a.</translation>
+        <source>Connect to the Stash network through a SOCKS5 proxy.</source>
+        <translation>Kytkeydy Stash verkkoon käyttäen SOCKS5 proxy:a.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1497,8 +1497,8 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Dash network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Kytkeydy Dash verkkoon käyttäen erillistä SOCKS5 proxy:a Tor piilopalveluihin.</translation>
+        <source>Connect to the Stash network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Kytkeydy Stash verkkoon käyttäen erillistä SOCKS5 proxy:a Tor piilopalveluihin.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -1542,9 +1542,9 @@
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/projects/p/dash/</source>
+https://www.transifex.com/projects/p/stash/</source>
         <translation>Puuttuuko sopiva kieli tai käännös on kesken? Auta käännöstyössä täällä:
-https://www.transifex.com/projects/p/dash/</translation>
+https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>User Interface Theme:</source>
@@ -1622,8 +1622,8 @@ https://www.transifex.com/projects/p/dash/</translation>
         <translation>Lomake</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Dash network after a connection is established, but this process has not completed yet.</source>
-        <translation>Näytetyt tiedot eivät välttämättä ole ajan tasalla.&lt;br&gt;Lompakkosi synkronoituu automaattisesti Dash verkkoon kun&lt;br&gt;yhteys on muodostettu, mutta tämä prosessi ei vielä ole valmis.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Stash network after a connection is established, but this process has not completed yet.</source>
+        <translation>Näytetyt tiedot eivät välttämättä ole ajan tasalla.&lt;br&gt;Lompakkosi synkronoituu automaattisesti Stash verkkoon kun&lt;br&gt;yhteys on muodostettu, mutta tämä prosessi ei vielä ole valmis.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1722,8 +1722,8 @@ https://www.transifex.com/projects/p/dash/</translation>
         <translation>Määrä ja Kierrokset:</translation>
     </message>
     <message>
-        <source>0 DASH / 0 Rounds</source>
-        <translation>0 DASH / 0 Kierrosta</translation>
+        <source>0 STASH / 0 Rounds</source>
+        <translation>0 STASH / 0 Kierrosta</translation>
     </message>
     <message>
         <source>Submitted Denom:</source>
@@ -1891,8 +1891,8 @@ https://www.transifex.com/projects/p/dash/</translation>
         <translation>Maksupyyntövirhe</translation>
     </message>
     <message>
-        <source>Cannot start dash: click-to-pay handler</source>
-        <translation>Ei voi käynnistää Dashia: click-to-pay handler</translation>
+        <source>Cannot start stash: click-to-pay handler</source>
+        <translation>Ei voi käynnistää Stashia: click-to-pay handler</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -1907,8 +1907,8 @@ https://www.transifex.com/projects/p/dash/</translation>
         <translation>Virheellinen maksuosoite %1</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Dash address or malformed URI parameters.</source>
-        <translation>URI:a ei voida jäsentää! Tämä voi johtua virheellisestä Dash osoitteesta tai virheellisestä URI:n muuttujasta. </translation>
+        <source>URI cannot be parsed! This can be caused by an invalid Stash address or malformed URI parameters.</source>
+        <translation>URI:a ei voida jäsentää! Tämä voi johtua virheellisestä Stash osoitteesta tai virheellisestä URI:n muuttujasta. </translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1997,8 +1997,8 @@ https://www.transifex.com/projects/p/dash/</translation>
 <context>
     <name>QObject</name>
     <message>
-        <source>Dash Core</source>
-        <translation>Dash Core</translation>
+        <source>Stash Core</source>
+        <translation>Stash Core</translation>
     </message>
     <message>
         <source>%1 didn't yet exit safely...</source>
@@ -2013,8 +2013,8 @@ https://www.transifex.com/projects/p/dash/</translation>
         <translation>Määrä</translation>
     </message>
     <message>
-        <source>Enter a Dash address (e.g. %1)</source>
-        <translation>Syötä Dash osoite (esim. %1)</translation>
+        <source>Enter a Stash address (e.g. %1)</source>
+        <translation>Syötä Stash osoite (esim. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2535,8 +2535,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>&amp;Uudelleen käytä vastaanottavaa osoitetta (ei suositella)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Dash network.</source>
-        <translation>Valinnainen viesti liitettäväksi maksupyyntöön, joka näytetään kun pyyntö on avattu.&lt;br&gt;Huomio: Viestiä ei lähetetä maksun mukana Dash verkkoon.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Stash network.</source>
+        <translation>Valinnainen viesti liitettäväksi maksupyyntöön, joka näytetään kun pyyntö on avattu.&lt;br&gt;Huomio: Viestiä ei lähetetä maksun mukana Stash verkkoon.</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -2547,8 +2547,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Valinnainen nimi liitetään uuteen vastaanottavaan osoitteeseen.</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the Dash network.</source>
-        <translation>Valinnainen viesti liitettäväksi maksupyyntöön, joka näytetään kun pyyntö on avattu.&lt;br&gt;Huomio: Viestiä ei lähetetä maksun mukana Dash verkkoon.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the Stash network.</source>
+        <translation>Valinnainen viesti liitettäväksi maksupyyntöön, joka näytetään kun pyyntö on avattu.&lt;br&gt;Huomio: Viestiä ei lähetetä maksun mukana Stash verkkoon.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
@@ -2816,7 +2816,7 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Jos mukautettu siirtomaksu on asetettu 1000 duff ja siirtotapahtuma on vain 250 tavua,&lt;br /&gt;tällöin "per kilotavu" maksaa vain 250 duffs siirtomaksun, kun taas "yhteensä vähintään" maksaa 1000 duffs.&lt;br /&gt;Siirtotapahtumat jotka ovat isompia kuin kilotavu, molemmat maksaa "per kilotavu".</translation>
     </message>
     <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for dash transactions than the network can process.</source>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for stash transactions than the network can process.</source>
         <translation>Minimi siirtomaksun maksaminen on ok niin kauan kun siirtotapahtumien määrä on pienempi kuin tila lohkoissa.&lt;br /&gt;Mutta ota huomioon että tämä voi johtaa siirtotapahtumaan jota ei vahvisteta koskaan, jos siirtotapahtumia on enemmän kuin verkko voi käsitellä.</translation>
     </message>
     <message>
@@ -3004,8 +3004,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation><numerusform>Arvioitu vahvistuksen aloitus %n lohkon kuluessa.</numerusform><numerusform>Arvioitu vahvistuksen aloitus %n lohkon kuluessa.</numerusform></translation>
     </message>
     <message>
-        <source>Warning: Invalid Dash address</source>
-        <translation>Varoitus: Virheellinen Dash osoite</translation>
+        <source>Warning: Invalid Stash address</source>
+        <translation>Varoitus: Virheellinen Stash osoite</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3035,8 +3035,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Maksun &amp;saaja:</translation>
     </message>
     <message>
-        <source>The Dash address to send the payment to</source>
-        <translation>Dash osoite johon maksu lähetetään</translation>
+        <source>The Stash address to send the payment to</source>
+        <translation>Stash osoite johon maksu lähetetään</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3071,7 +3071,7 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>&amp;Määrä:</translation>
     </message>
     <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive a lower amount of Dash than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive a lower amount of Stash than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <translation>Siirtomaksu vähennetään lähetettävästä summasta. Vastaanottaja saa pienemmän summan kuin mitä laitoit määrä kenttään. Jos useampia vastaanottajia on valittu, siirtomaksu jaetaan tasan.</translation>
     </message>
     <message>
@@ -3083,8 +3083,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Viesti:</translation>
     </message>
     <message>
-        <source>A message that was attached to the dash: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Dash network.</source>
-        <translation>Viesti joka liitettiin Dash: URI joka talletetaan siirtotapahtuman kanssa viitteeksi sinulle. Huomio: Tätä viestiä ei lähetetä Dash verkkoon.</translation>
+        <source>A message that was attached to the stash: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Stash network.</source>
+        <translation>Viesti joka liitettiin Stash: URI joka talletetaan siirtotapahtuman kanssa viitteeksi sinulle. Huomio: Tätä viestiä ei lähetetä Stash verkkoon.</translation>
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
@@ -3136,12 +3136,12 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>&amp;Allekirjoita viesti</translation>
     </message>
     <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Dash sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <source>You can sign messages/agreements with your addresses to prove you can receive Stash sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
         <translation>Voit allekirjoittaa viestit/sopimukset omilla osoitteillasi todistaaksesi että omistat ne. Ole huolellinen että et allekirjoita mitään epämääräistä, satunnaista, phishing hyökkääjä voi huijata sinua allekirjoittamaan henkilöllisyytesi omasta puolestaan. Allekirjoita vain yksityiskohtaisesti täytetty selvitys johon sitoudut.</translation>
     </message>
     <message>
-        <source>The Dash address to sign the message with</source>
-        <translation>Dash osoite jolla viesti allekirjoitetaan</translation>
+        <source>The Stash address to sign the message with</source>
+        <translation>Stash osoite jolla viesti allekirjoitetaan</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3172,8 +3172,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Kopioi tämän hetkinen allekirjoitus leikepöydälle</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Dash address</source>
-        <translation>Allekirjoita viesti todistaaksesi että omistat tämän Dash osoitteen</translation>
+        <source>Sign the message to prove you own this Stash address</source>
+        <translation>Allekirjoita viesti todistaaksesi että omistat tämän Stash osoitteen</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3196,12 +3196,12 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Syötä allekirjoittava osoite, viesti (varmista että kopioit rivinvaihdot, välilyönnit, tabulaattorit, jne täsmälleen oikein) ja allekirjoitus alla oleviin kenttiin varmistaaksesi allekirjoituksen aitouden. Varo lukemasta enempää allekirjoitukseen kuin kuin mitä itse viestissä on, välttääksesi man-in-the-middle hyökkäyksen. Huom. tämä todistaa vain että allekirjoittava osapuoli vastaanottaa osoitteella, se ei voi todistaa lähettäjää.</translation>
     </message>
     <message>
-        <source>The Dash address the message was signed with</source>
-        <translation>Dash osoite jolla viesti on allekirjoitettu</translation>
+        <source>The Stash address the message was signed with</source>
+        <translation>Stash osoite jolla viesti on allekirjoitettu</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Dash address</source>
-        <translation>Tarkista että viesti on allekirjoitettu määritetyllä Dash osoitteella</translation>
+        <source>Verify the message to ensure it was signed with the specified Stash address</source>
+        <translation>Tarkista että viesti on allekirjoitettu määritetyllä Stash osoitteella</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3816,11 +3816,11 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
-        <translation>Lähetä Dasheja</translation>
+        <translation>Lähetä Stasheja</translation>
     </message>
     <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 DASH.</source>
-        <translation>InstantSend ei tue näin korkeaa lähetysmäärää vielä. Siirtotapahtumat on tällä hetkellä rajoitettu %1 DASH.</translation>
+        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
+        <translation>InstantSend ei tue näin korkeaa lähetysmäärää vielä. Siirtotapahtumat on tällä hetkellä rajoitettu %1 STASH.</translation>
     </message>
     <message>
         <source>Used way too many inputs (&gt;%1) for this InstantSend transaction, fees could be huge.</source>
@@ -3867,7 +3867,7 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
     </message>
 </context>
 <context>
-    <name>dash-core</name>
+    <name>stash-core</name>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Kytkeydy annettuun osoitteeseen ja pidä linja aina auki. Käytä [host]:port merkintätapaa IPv6:lle.</translation>
@@ -3906,7 +3906,7 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
-        <translation>Varoitus: Dash verkossa on ristiriitoja! Louhijat näyttävät kokevan virhetilanteita.</translation>
+        <translation>Varoitus: Stash verkossa on ristiriitoja! Louhijat näyttävät kokevan virhetilanteita.</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -4481,8 +4481,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Pidä enintään &lt;n&gt; ei yhdistettyä siirtotapahtumaa muistissa (oletus: %u)</translation>
     </message>
     <message>
-        <source>Disable all Dash specific functionality (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</source>
-        <translation>Kytke pois käytöstä kaikki Dash:in erityistoiminnot (Masternodet, PrivateSend, InstantSend, Budjetointi) (0-1, oletus: %u)</translation>
+        <source>Disable all Stash specific functionality (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</source>
+        <translation>Kytke pois käytöstä kaikki Stash:in erityistoiminnot (Masternodet, PrivateSend, InstantSend, Budjetointi) (0-1, oletus: %u)</translation>
     </message>
     <message>
         <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
@@ -4525,8 +4525,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Jos &lt;category&gt; ei ole toimitettu, tai &lt;category&gt; = 1, tulosta kaikki debug tiedot.</translation>
     </message>
     <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 DASH.</source>
-        <translation>InstantSend ei tue näin korkeaa lähetysmäärää vielä. Siirtotapahtumat on tällä hetkellä rajoitettu %1 DASH.</translation>
+        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
+        <translation>InstantSend ei tue näin korkeaa lähetysmäärää vielä. Siirtotapahtumat on tällä hetkellä rajoitettu %1 STASH.</translation>
     </message>
     <message>
         <source>InstantSend requires inputs with at least %d confirmations, you might need to wait a few minutes and try again.</source>
@@ -4946,8 +4946,8 @@ Vähennä uakommenttien määrää tai kokoa.</translation>
         <translation>RPC palvelimen valinnat:</translation>
     </message>
     <message>
-        <source>Dash Core</source>
-        <translation>Dash Core</translation>
+        <source>Stash Core</source>
+        <translation>Stash Core</translation>
     </message>
     <message>
         <source>The %s developers</source>
@@ -5154,8 +5154,8 @@ Vähennä uakommenttien määrää tai kokoa.</translation>
         <translation>Virheellinen spork osoite määritelty -sporkaddr</translation>
     </message>
     <message>
-        <source>Keep N DASH anonymized (%u-%u, default: %u)</source>
-        <translation>Pidä N DASH anonymisoituna (%u-%u, oletus: %u)</translation>
+        <source>Keep N STASH anonymized (%u-%u, default: %u)</source>
+        <translation>Pidä N STASH anonymisoituna (%u-%u, oletus: %u)</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>

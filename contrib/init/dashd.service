@@ -1,15 +1,15 @@
 [Unit]
-Description=Dash's distributed currency daemon
+Description=Stash's distributed currency daemon
 After=network.target
 
 [Service]
-User=dashcore
-Group=dashcore
+User=stashcore
+Group=stashcore
 
 Type=forking
-PIDFile=/var/lib/dashd/dashd.pid
-ExecStart=/usr/bin/dashd -daemon -pid=/var/lib/dashd/dashd.pid \
--conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashd -disablewallet
+PIDFile=/var/lib/stashd/stashd.pid
+ExecStart=/usr/bin/stashd -daemon -pid=/var/lib/stashd/stashd.pid \
+-conf=/etc/stashcore/stash.conf -datadir=/var/lib/stashd -disablewallet
 
 Restart=always
 PrivateTmp=true

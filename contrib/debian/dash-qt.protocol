@@ -1,6 +1,6 @@
 [Protocol]
-exec=dash-qt '%u'
-protocol=dash
+exec=stash-qt '%u'
+protocol=stash
 input=none
 output=none
 helper=true

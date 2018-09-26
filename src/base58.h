@@ -140,7 +140,7 @@ public:
     CZCSpendingKey(const libzcash::SpendingKey& addr) { Set(addr); }
 };
 
-/** base58-encoded Dash addresses.
+/** base58-encoded Stash addresses.
  * Public-key-hash-addresses have version 76 (or 140 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 16 (or 19 testnet).
