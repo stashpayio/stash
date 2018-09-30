@@ -424,10 +424,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            1529294335, // * UNIX timestamp of last known number of transactions
-            5810120,    // * total number of transactions between genesis and that timestamp
+            1538173112, // * UNIX timestamp of last known number of transactions
+            542,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.01        // * estimated number of transactions per second after that timestamp
+            0.006       // * estimated number of transactions per second after that timestamp
         };
 
     }
