@@ -452,7 +452,7 @@ void OverviewPage::updateAdvancedPSUI(bool fShowAdvancedPSUI) {
 
     if (fLiteMode) return;
 
-    ui->framePrivateSend->setVisible(true);
+    ui->framePrivateSend->setVisible(false); // STASH Disable private send
     ui->labelCompletitionText->setVisible(fShowAdvancedPSUI);
     ui->privateSendProgress->setVisible(fShowAdvancedPSUI);
     ui->labelSubmittedDenomText->setVisible(fShowAdvancedPSUI);

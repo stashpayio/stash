@@ -85,11 +85,15 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
         CoinControlDialog::coinControl->fUseInstantSend = false;
     }
     else{
+        /* START STASH disable private send *                
         ui->checkUsePrivateSend->setChecked(fUsePrivateSend);
-        ui->checkUseInstantSend->setChecked(fUseInstantSend);
+        ui->checkUseInstantSend->setChecked(fUseInstantSend); */
+        ui->checkUsePrivateSend->setChecked(false);
+        ui->checkUsePrivateSend->setVisible(false);
+        /* END STASH disable private send */
         CoinControlDialog::coinControl->fUsePrivateSend = fUsePrivateSend;
         CoinControlDialog::coinControl->fUseInstantSend = fUseInstantSend;
-    }
+    }    
 
     connect(ui->checkUsePrivateSend, SIGNAL(stateChanged ( int )), this, SLOT(updateDisplayUnit()));
     connect(ui->checkUseInstantSend, SIGNAL(stateChanged ( int )), this, SLOT(updateInstantSend()));
