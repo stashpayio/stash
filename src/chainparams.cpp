@@ -143,7 +143,7 @@ public:
         consensus.BIP65Height = 1; // 00000000000076d8fcea02ec0963de4abfd01e771fec0863f960c2c64fe6f357
         consensus.BIP66Height = 1; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
         consensus.DIP0001Height = 782208;
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
+        consensus.powLimit = uint256(); // ~uint256(0) >> 20 // TODO Update once Superblock starts
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -293,7 +293,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 3130; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPeymentsStartBlock
-        consensus.nSuperblockStartHash = uint256S("00000e9af103404e6e3fdfbe11c056f1566b1574b39b00dd18be5a5a58dc039e");
+        consensus.nSuperblockStartHash = uint256S("0000003a0515cf19c9c7aa1a8adee9b3a3f4911c2e497397f3dfe14df5d9d099");
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
