@@ -134,7 +134,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockStartHash = uint256(); // TODO Update after superblock has past
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nGovernanceMinQuorum = 3;
         consensus.nGovernanceFilterElements = 20000;
@@ -293,7 +293,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 3130; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPeymentsStartBlock
-        consensus.nSuperblockStartHash = uint256S("0000003a0515cf19c9c7aa1a8adee9b3a3f4911c2e497397f3dfe14df5d9d099");
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -451,7 +451,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 4200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
-        consensus.nSuperblockStartHash = uint256(); // do not check this on devnet
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on devnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -594,7 +594,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 1500;
-        consensus.nSuperblockStartHash = uint256(); // do not check this on regtest
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 10;
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 100;

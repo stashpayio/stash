@@ -2350,6 +2350,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         }
     }
 */
+    /* START STASH UNUSED
+   
     /// DASH: Check superblock start
 
     // make sure old budget is the real one
@@ -2360,6 +2362,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                              REJECT_INVALID, "bad-sb-start");
 
     /// END DASH
+
+    END STASH */
 
     // BIP16 didn't become active until Apr 1 2012
     int64_t nBIP16SwitchTime = 1333238400;
