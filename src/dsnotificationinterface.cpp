@@ -37,9 +37,6 @@ void CDSNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
 
     masternodeSync.UpdatedBlockTip(pindexNew, fInitialDownload, connman);
 
-//****** DTG       // Update global DIP0001 activation status
-//****** DTG       fDIP0001ActiveAtTip = pindexNew->nHeight >= Params().GetConsensus().DIP0001Height;
-
     if (fInitialDownload)
         return;
 
