@@ -60,6 +60,8 @@ public:
     const std::vector<unsigned char>& AlertKey() const { return vAlertPubKey; }
     int GetDefaultPort() const { return nDefaultPort; }
 
+    bool isLegacyBlock(int height) const {return height != 0 && height <= vHashLegacyBlocks.size(); };
+    uint256 legacyBlockHash(int height) const { return uint256S(vHashLegacyBlocks[height-1]); };
     const CBlock& GenesisBlock() const { return genesis; }
     const CBlock& DevNetGenesisBlock() const { return devnetGenesis; }
     /** Make miner wait to have peers to avoid wasting work */
@@ -113,6 +115,7 @@ protected:
     int nPoolMaxTransactions;
     int nFulfilledRequestExpireTime;
     std::string strSporkAddress;
+    std::vector<std::string> vHashLegacyBlocks;
 };
 
 /**

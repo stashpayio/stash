@@ -1615,10 +1615,19 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 7: load block chain
 
+    if (IsArgSet("-setuplegacyblocks")) {
+      setupLegacyBlocks();
+      return false;
+    }
+
     fReindex = GetBoolArg("-reindex", false);
     bool fReindexChainState = GetBoolArg("-reindex-chainstate", false);
 
-    // Upgrading to 0.8; hard-link the old blknnnn.dat files into /blocks/
+    boost::filesystem::path blocksDir = GetDataDir() / "blocks";
+    if (!boost::filesystem::exists(blocksDir)) {
+        boost::filesystem::create_directories(blocksDir);
+    }
+    /* // Upgrading to 0.8; hard-link the old blknnnn.dat files into /blocks/
     boost::filesystem::path blocksDir = GetDataDir() / "blocks";
     if (!boost::filesystem::exists(blocksDir))
     {
@@ -1643,7 +1652,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         {
             fReindex = true;
         }
-    }
+    } */
 
     // cache size calculations
     int64_t nTotalCache = (GetArg("-dbcache", nDefaultDbCache) << 20);

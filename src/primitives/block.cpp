@@ -33,3 +33,15 @@ std::string CBlock::ToString() const
     }
     return s.str();
 }
+
+bool CBlock::isLegacyBlock() const {
+  if (vtx.size() == 1) { // Block has only a coinbase transaction, so it is not a legacy block
+    return false;
+  }
+  for (unsigned int i = 1; i < vtx.size(); i++) {
+     if (!vtx[i]->isLegacyTransaction()) {
+       return false;
+     }
+  }
+  return true;
+}

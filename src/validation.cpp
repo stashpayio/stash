@@ -19,6 +19,7 @@
 #include "consensus/validation.h"
 #include "hash.h"
 #include "init.h"
+#include "base58.h"
 #include "policy/policy.h"
 #include "pow.h"
 #include "primitives/block.h"
@@ -43,9 +44,12 @@
 #include "instantx.h"
 #include "masternodeman.h"
 #include "masternode-payments.h"
+#include "governance-classes.h"
 
 #include <atomic>
 #include <sstream>
+#include <fstream>
+#include <stdint.h>
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -54,6 +58,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/math/distributions/poisson.hpp>
 #include <boost/thread.hpp>
+#include <boost/variant.hpp>
 
 #include "wallet/asyncrpcoperation_sendmany.h"
 #include "wallet/asyncrpcoperation_shieldcoinbase.h"
@@ -1432,10 +1437,11 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    // Check the header
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
-
+    if (!block.isLegacyBlock()) {
+      // Check the header
+      if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+          return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+    }
     return true;
 }
 
@@ -1672,7 +1678,7 @@ void static InvalidBlockFound(CBlockIndex *pindex, const CValidationState &state
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txundo, int nHeight)
 {
     // mark inputs spent
-    if (!tx.IsCoinBase()) {
+    if (!tx.IsCoinBase() && !tx.isLegacyTransaction()) {
         txundo.vprevout.reserve(tx.vin.size());
         BOOST_FOREACH(const CTxIn &txin, tx.vin) {
             txundo.vprevout.emplace_back();
@@ -1790,7 +1796,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
 bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, std::vector<CScriptCheck> *pvChecks)
 {
-    if (!tx.IsCoinBase())
+    if (!tx.IsCoinBase() && !tx.isLegacyTransaction())
     {
         if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs)))
             return false;
@@ -2435,9 +2441,11 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 
         nInputs += tx.vin.size();
         nSigOps += GetLegacySigOpCount(tx);
-        if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
-            return state.DoS(100, error("ConnectBlock(): too many sigops"),
-                             REJECT_INVALID, "bad-blk-sigops");
+        if (!tx.isLegacyTransaction()) {
+            if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+                return state.DoS(100, error("ConnectBlock(): too many sigops"),
+                                    REJECT_INVALID, "bad-blk-sigops");
+            }
 
         if (!tx.IsCoinBase())
         {
@@ -2503,8 +2511,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 
             }
 
-            if (fStrictPayToScriptHash)
-            {
+            if (fStrictPayToScriptHash && !tx.isLegacyTransaction()) {
                 // Add in sigops done by pay-to-script-hash inputs;
                 // this is to prevent a "rogue miner" from creating
                 // an incredibly-expensive-to-validate block.
@@ -2584,26 +2591,28 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
-    // DASH : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
+    if (!Params().isLegacyBlock(pindex->nHeight)) {
+        // DASH : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
 
-    // It's possible that we simply don't have enough data and this could fail
-    // (i.e. block itself could be a correct one and we need to store it),
-    // that's why this is in ConnectBlock. Could be the other way around however -
-    // the peer who sent us this block is missing some data and wasn't able
-    // to recognize that block is actually invalid.
-    // TODO: resync data (both ways?) and try to reprocess this block later.
-    CAmount blockReward = nFees + GetBlockSubsidy(pindex->pprev->nBits, pindex->pprev->nHeight, chainparams.GetConsensus());
-    std::string strError = "";
-    if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
-        return state.DoS(0, error("ConnectBlock(DASH): %s", strError), REJECT_INVALID, "bad-cb-amount");
-    }
+        // It's possible that we simply don't have enough data and this could fail
+        // (i.e. block itself could be a correct one and we need to store it),
+        // that's why this is in ConnectBlock. Could be the other way around however -
+        // the peer who sent us this block is missing some data and wasn't able
+        // to recognize that block is actually invalid.
+        // TODO: resync data (both ways?) and try to reprocess this block later.
+        CAmount blockReward = nFees + GetBlockSubsidy(pindex->pprev->nBits, pindex->pprev->nHeight, chainparams.GetConsensus());
+        std::string strError = "";
+        if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
+            return state.DoS(0, error("ConnectBlock(DASH): %s", strError), REJECT_INVALID, "bad-cb-amount");
+        }
 
-    if (!IsBlockPayeeValid(*block.vtx[0], pindex->nHeight, blockReward)) {
-        mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-        return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
-                                REJECT_INVALID, "bad-cb-payee");
+        if (!IsBlockPayeeValid(*block.vtx[0], pindex->nHeight, blockReward)) {
+            mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
+            return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
+                                    REJECT_INVALID, "bad-cb-payee");
+        }
+        // END DASH
     }
-    // END DASH
 
     if (!control.Wait())
         return state.DoS(100, false);
@@ -3594,11 +3603,13 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
     return true;
 }
 
-bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
+bool CheckBlockHeader(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
-    // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
-        return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+    if (!block.isLegacyBlock()) {
+        // Check proof of work matches claimed amount
+        if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+            return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+    }
 
     // Check DevNet
     if (!consensusParams.hashDevnetGenesisBlock.IsNull() &&
@@ -3613,7 +3624,7 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const 
 
 bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW, bool fCheckMerkleRoot)
 {
-    // These are checks that are independent of context.
+    // These are checks that are independent of context.bad-txns-vin-empty
 
     if (block.fChecked)
         return true;
@@ -3645,13 +3656,15 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     if (block.vtx.empty() || block.vtx.size() > MaxBlockSize(true) || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > MaxBlockSize(true))
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
+    if (block.isLegacyBlock()) {
+        return true;
+    }
     // First transaction must be coinbase, the rest must not be
     if (block.vtx.empty() || !block.vtx[0]->IsCoinBase())
         return state.DoS(100, false, REJECT_INVALID, "bad-cb-missing", false, "first tx is not coinbase");
     for (unsigned int i = 1; i < block.vtx.size(); i++)
         if (block.vtx[i]->IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "more than one coinbase");
-
 
     // DASH : CHECK TRANSACTIONS FOR INSTANTSEND
 
@@ -3717,21 +3730,25 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
     return true;
 }
 
-bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
+bool ContextualCheckBlockHeader(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
 {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
+    if (Params().isLegacyBlock(nHeight)) {
+      return true;
+    }
     // Check proof of work
-    if(Params().NetworkIDString() == CBaseChainParams::MAIN && nHeight <= 68589){
-        // architecture issues with DGW v1 and v2)
-        unsigned int nBitsNext = GetNextWorkRequired(pindexPrev, &block, consensusParams);
-        double n1 = ConvertBitsToDouble(block.nBits);
-        double n2 = ConvertBitsToDouble(nBitsNext);
-
-        if (abs(n1-n2) > n1*0.5)
-            return state.DoS(100, error("%s : incorrect proof of work (DGW pre-fork) - %f %f %f at %d", __func__, abs(n1-n2), n1, n2, nHeight),
-                            REJECT_INVALID, "bad-diffbits");
-    } else {
-        if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    //if(Params().NetworkIDString() == CBaseChainParams::MAIN && nHeight <= 68589){
+    //    // architecture issues with DGW v1 and v2)
+    //    unsigned int nBitsNext = GetNextWorkRequired(pindexPrev, &block, consensusParams);
+    //    double n1 = ConvertBitsToDouble(block.nBits);
+    //    double n2 = ConvertBitsToDouble(nBitsNext);
+    //
+    //    if (abs(n1-n2) > n1*0.5)
+    //        return state.DoS(100, error("%s : incorrect proof of work (DGW pre-fork) - %f %f %f at %d", __func__, abs(n1-n2), n1, n2, nHeight),
+    //                        REJECT_INVALID, "bad-diffbits");
+    //} else {
+    {
+        if (block.nBits !=  GetNextWorkRequired(pindexPrev, &block, consensusParams))
             return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, strprintf("incorrect proof of work at %d", nHeight));
     }
 
@@ -3775,6 +3792,17 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     if (block.vtx.empty() || block.vtx.size() > nMaxBlockSize || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > nMaxBlockSize)
         return state.DoS(10, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
+    if (Params().isLegacyBlock(nHeight)) {
+        if (block.GetHash() != Params().legacyBlockHash(nHeight)) {
+            return state.DoS(10, false, REJECT_INVALID, "bad-legacy-block", false, "invalid legacy block hash");
+        }
+        return true;
+    }
+
+    if (block.isLegacyBlock()) {
+       return state.DoS(10, false, REJECT_INVALID, "bad-legacy-block", false, "unexpected legacy block");
+    }
+
     // Check that all transactions are finalized and not over-sized
     // Also count sigops
     unsigned int nSigOps = 0;
@@ -3805,7 +3833,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     return true;
 }
 
-static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex)
+static bool AcceptBlockHeader(const CBlock& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex)
 {
     AssertLockHeld(cs_main);
     // Check for duplicate
@@ -5052,4 +5080,266 @@ void showChainActive(int number) {
        }
        printf("%d: %s | %s\n",i,chainActive[i]->hashAnchor.GetHex().c_str(),chainActive[i]->hashAnchorEnd.GetHex().c_str());
     }
+}
+
+
+//
+// Code to handle legacy block
+//
+
+#define MAX_OUTPUTS_PER_TRANSACTION 120
+#define MAX_TRANSACTIONS_PER_BLOCK  400
+
+class CBlockFactory {
+
+public:
+    typedef std::function<int (const CBlock&)> CallbackFunction;
+
+    CBlockFactory(uint256 initHash,std::string blockRewardAddress,CAmount blockReward,CallbackFunction blockReady) {
+        _callBlockReady = blockReady;
+        _blockReward = blockReward;
+
+        CBitcoinAddress addr(blockRewardAddress);
+        CTxDestination dest = addr.Get();
+        assert(dest.which() ==  1);
+        _rewardKeyID = boost::get<CKeyID>(dest);
+
+        _startNewBlock(initHash);
+    }
+
+    ~CBlockFactory() {
+        if (_transaction.vout.size() > 0) {
+            _block.vtx.push_back(MakeTransactionRef(std::move(_transaction)));
+        }
+
+        if (_block.vtx.size() > 0) {
+            uint256 blockHash;
+            if (_finalizeBlock(blockHash)) {
+                fprintf(stderr,"****************************\n");
+                fprintf(stderr,"* Problem with final block *\n");
+                fprintf(stderr,"****************************\n");
+            }
+        }
+
+        fprintf(stderr,"\n");
+        fprintf(stderr,"UTXOs: %d\n",_totalUTXO);
+        fprintf(stderr,"Blocks: %ld\n",_blocks.size());
+        printf("\n//------------------------------------------------------------------------------\n");
+        printf("// Do not edit manually\n");
+        for (int i = 0; i < _blocks.size(); i++) {
+            printf("        \"%s\",\n",_blocks[i].GetHex().c_str());
+        }
+        printf("//------------------------------------------------------------------------------\n\n");
+    }
+
+    int  addUTXO(const std::string& address,CAmount amount) {
+         CBitcoinAddress addr(address);
+         CTxDestination dest = addr.Get();
+
+        switch (dest.which()) {
+            case 1:
+                {
+                    CKeyID keyID = boost::get<CKeyID>(dest);
+                    _transaction.vout.push_back(CTxOut(amount, CScript() << OP_DUP << OP_HASH160 << ToByteVector(keyID) << OP_EQUALVERIFY << OP_CHECKSIG));
+                    _totalUTXO++;
+                }
+                break;
+            case 2:
+                {
+                    CScriptID scriptID = boost::get<CScriptID>(dest);
+                    _transaction.vout.push_back(CTxOut(amount, CScript() << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL));
+                    _totalUTXO++;
+                }
+                break;
+            default:
+                fprintf(stderr,"*******************************\n");
+                fprintf(stderr,"* Invalid address %s\n",address.c_str());
+                fprintf(stderr,"*******************************\n");
+                return 1;
+                break;
+         }
+
+        if (_transaction.vout.size() < MAX_OUTPUTS_PER_TRANSACTION) {
+            return 0;
+        }
+        _block.vtx.push_back(MakeTransactionRef(std::move(_transaction)));
+        _startNewTransaction();
+
+        if (_block.vtx.size() < MAX_TRANSACTIONS_PER_BLOCK) {
+            return 0;
+        }
+
+        uint256 blockHash;
+        if (int ret =_finalizeBlock(blockHash)) {
+            return ret;
+        }
+
+        _startNewBlock(blockHash);
+        return 0;
+    }
+
+private:
+    CallbackFunction _callBlockReady;
+    CBlock _block;
+    CMutableTransaction _transaction;
+    int _totalUTXO = 0;
+    std::vector<uint256> _blocks;
+    CAmount _blockReward;
+    CKeyID  _rewardKeyID;
+
+    void _startNewTransaction() {
+        _transaction.nVersion = 1;
+        _transaction.vin.clear();
+        _transaction.vout.clear();
+
+    }
+
+    void _startNewBlock(uint256& prevHash) {
+        _block.nTime    = GetTime();
+        _block.nBits    = 0x1f0fffff;
+        _block.nNonce   = 0;
+        _block.nVersion = 1;
+        _block.vtx.clear();
+        _block.hashPrevBlock = prevHash;
+
+        // Add coinbase Tx
+        {
+            CMutableTransaction coinbaseTx;
+            coinbaseTx.vin.resize(1);
+            coinbaseTx.vin[0].prevout.SetNull();
+            CScript script = CScript() << CScriptCoinbaseHeight(_blocks.size()+1) << OP_0;
+            coinbaseTx.vin[0].scriptSig = script;
+            coinbaseTx.vout.resize(1);
+            coinbaseTx.vout[0] = CTxOut(_blockReward, CScript() << OP_DUP << OP_HASH160 << ToByteVector(_rewardKeyID) << OP_EQUALVERIFY << OP_CHECKSIG);
+
+            _block.vtx.push_back(MakeTransactionRef(std::move(coinbaseTx)));
+        }
+
+        _startNewTransaction();
+    }
+
+    int _finalizeBlock(uint256& newHash) {
+        fprintf(stderr,".");
+        _block.hashMerkleRoot = BlockMerkleRoot(_block);
+        arith_uint256 hashTarget = arith_uint256().SetCompact(_block.nBits);
+        for(_block.nNonce = 0; UintToArith256(_block.GetHash()) > hashTarget; _block.nNonce++){ }
+        newHash = _block.GetHash();
+        _blocks.push_back(newHash);
+        int ret = _callBlockReady(_block);
+        if (ret) {
+          fprintf(stderr,"***********************\n");
+          fprintf(stderr,"*Callback failed: %d. *\n",ret);
+          fprintf(stderr,"***********************\n");
+        }
+        return ret;
+    }
+};
+
+bool initGenesisBlock(const CChainParams& chainparams)
+{
+    LOCK(cs_main);
+
+    // Check whether we're already initialized
+    assert(chainActive.Genesis() == NULL);
+    try {
+          CValidationState state;
+
+          if (!AddGenesisBlock(chainparams, chainparams.GenesisBlock(), state))
+              return false;
+
+      } catch (const std::runtime_error& e) {
+          return error("%s: failed to initialize block database: %s", __func__, e.what());
+      }
+
+    return true;
+}
+
+CAmount convertToCAmount(const char* ptr) {
+    CAmount amount = 0;
+    while (*ptr != 0) {
+        amount = 10*amount + *ptr++ - '0';
+    }
+    return amount;
+}
+
+void setupLegacyBlocks() {
+    const CChainParams& chainparams = Params();
+    boost::filesystem::path blocksDir = GetDataDir() / "blocks";
+    if (boost::filesystem::exists(blocksDir)) {
+        fprintf(stderr,"********************************************************************\n");
+        fprintf(stderr,"* Setting up legacy blocks failed. Block directory already exists. *\n");
+        fprintf(stderr,"********************************************************************\n");
+        return;
+    }
+
+    const auto filenames = mapMultiArgs.find("-setuplegacyblocks") -> second;
+
+    std::string coinbaseReward = GetArg("-legacyblockreward","500");
+    CAmount reward = std::stoll(coinbaseReward)*100000000L;
+
+    if (!IsArgSet("-legacyblockpayee")) {
+      fprintf(stderr,"**********************************************************************\n");
+      fprintf(stderr,"* Legacy block payee is required. (Use -legacyblockpayee parameter.) *\n");
+      fprintf(stderr,"**********************************************************************\n");
+      return;
+    }
+    std::string payee = GetArg("-legacyblockpayee","");
+
+    if (!initGenesisBlock(chainparams)) {
+        fprintf(stderr,"********************************\n");
+        fprintf(stderr,"* Failed to add genesis block. *\n");
+        fprintf(stderr,"********************************\n");
+        return;
+    }
+
+    {
+        CBlockFactory factory(chainparams.GetConsensus().hashGenesisBlock,payee,reward,[chainparams] (const CBlock& newBlock) -> bool {
+            CValidationState state;
+            unsigned int nBlockSize = ::GetSerializeSize(newBlock, SER_DISK, CLIENT_VERSION);
+            CDiskBlockPos blockPos;
+            if (!FindBlockPos(state, blockPos, nBlockSize+8, 0, newBlock.GetBlockTime()))
+                return 1;
+            if (!WriteBlockToDisk(newBlock, blockPos, chainparams.MessageStart()))
+                return 2;
+            CBlockIndex *pindex = AddToBlockIndex(newBlock);
+            if (!ReceivedBlockTransactions(newBlock, state, pindex, blockPos))
+                return 3;
+            return 0;
+        });
+        for (auto& name: filenames) {
+            if (name.size() == 0) {
+                continue;
+            }
+            std::ifstream file(name.c_str());
+            if (!file.is_open()) {
+                fprintf(stderr,"*******************************\n");
+                fprintf(stderr,"* Failed to open file: %s\n",name.c_str());
+                fprintf(stderr,"*******************************\n");
+                return;
+            }
+            fprintf(stderr,"Processing file: %s\n",name.c_str());
+            while (true) {
+                std::string line;
+                std::getline(file,line,'\n');
+
+                size_t pos = line.find('\t');
+                if (pos == std::string::npos) {
+                    break;
+                }
+                std::string address = line.substr(0,pos);
+                std::string value = line.substr(pos+1);
+                if (factory.addUTXO(address,convertToCAmount(value.c_str()))) {
+                    fprintf(stderr,"******************************\n");
+                    fprintf(stderr,"* Problem adding transaction *\n");
+                    fprintf(stderr,"******************************\n");
+            }
+            }
+            file.close();
+        }
+    }
+
+  fprintf(stderr,"***********************\n");
+  fprintf(stderr,"* Legacy blocks added *\n");
+  fprintf(stderr,"***********************\n");
+
 }

@@ -272,6 +272,10 @@ public:
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
+
+        vHashLegacyBlocks = {
+        };
+
     }
 };
 static CMainParams mainParams;
@@ -416,7 +420,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (    0, uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834")),
+            (0, uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834")),
             0, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -428,6 +432,17 @@ public:
             5810120,    // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.01        // * estimated number of transactions per second after that timestamp
+        };
+
+        vHashLegacyBlocks = {
+
+
+          //------------------------------------------------------------------------------
+          // Do not edit manually
+                  "0005bba5776ff943ea1730b7c84a34c5a27f6721a26c99d663784a5b106d5b2c",
+                  "000194b09c8d898548220015f1636459a8a03e253b70356e821115809d68c28c",
+                  "00025d6b37a20fff1540e6a84171b7088a5e620bf4d1eb2f5b0e6c9a43cc5a65",
+          //------------------------------------------------------------------------------
         };
 
     }
@@ -518,7 +533,7 @@ public:
             printf("new genesis nonce: %d\n", genesis.nNonce);
             printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
         }
-        
+
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x32572d37b0f7a102af86494187376e0c34367eacb2e8f00c47e37ba49e93570c"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
@@ -572,6 +587,11 @@ public:
             2,                            // * we only have 2 coinbase transactions when a devnet is started up
             0.01                          // * estimated number of transactions per second
         };
+
+        vHashLegacyBlocks = {
+
+        };
+
     }
 };
 static CDevNetParams *devNetParams;
@@ -608,7 +628,7 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
-        //consensus.nPowKGWHeight = 15200; // STASH Always use DGW 
+        //consensus.nPowKGWHeight = 15200; // STASH Always use DGW
         //consensus.nPowDGWHeight = 34140;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
@@ -697,6 +717,10 @@ public:
 
         // Regtest Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;
+
+        vHashLegacyBlocks = {
+        };
+
    }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
