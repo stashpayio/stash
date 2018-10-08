@@ -142,7 +142,7 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP65Height = 1; // 00000000000076d8fcea02ec0963de4abfd01e771fec0863f960c2c64fe6f357
         consensus.BIP66Height = 1; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
-        consensus.DIP0001Height = 782208;
+//****** DTG          consensus.DIP0001Height = 782208;
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
@@ -161,12 +161,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1486252800; // Feb 5th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1517788800; // Feb 5th, 2018
 
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1508025600; // Oct 15th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1539561600; // Oct 15th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 4032;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 3226; // 80% of 4032
+//****** DTG          // Deployment of DIP0001
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1508025600; // Oct 15th, 2017
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1539561600; // Oct 15th, 2018
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 4032;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 3226; // 80% of 4032
 
         // Deployment of BIP147
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
@@ -305,7 +305,7 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP65Height = 1; // 0000039cf01242c7f921dcb4806a5994bc003b48c1973ae0c89b67809c2bb2ab
         consensus.BIP66Height = 1; // 0000002acdd29a14583540cb72e1c5cc83783560e38fa7081495d474fe1671f7
-        consensus.DIP0001Height = 5500;
+//****** DTG          consensus.DIP0001Height = 5500;
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
@@ -324,12 +324,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1506556800; // September 28th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1538092800; // September 28th, 2018
 
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
+//****** DTG          // Deployment of DIP0001
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
 
         // Deployment of BIP147
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
@@ -376,9 +376,9 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        //vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
+        //vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
+        //vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
 
         // Testnet Dash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -401,7 +401,7 @@ public:
         // Testnet Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
@@ -439,10 +439,13 @@ public:
 
           //------------------------------------------------------------------------------
           // Do not edit manually
-                  "0005bba5776ff943ea1730b7c84a34c5a27f6721a26c99d663784a5b106d5b2c",
-                  "000194b09c8d898548220015f1636459a8a03e253b70356e821115809d68c28c",
-                  "00025d6b37a20fff1540e6a84171b7088a5e620bf4d1eb2f5b0e6c9a43cc5a65",
+                  "000d93d5fcc79e210f4dab8484b5ce4bb08369b6b3f7a787299b62f064e19df4",
+                  "00069a3c54e9e8293a35cdb34e4ecec08559e059ea469cff24667458370f1509",
+                  "000ca7a832e487711b2c5436efd30f590b83eed5f761d9c101328f3cc0fd0801",
           //------------------------------------------------------------------------------
+
+
+
         };
 
     }
@@ -474,7 +477,7 @@ public:
         consensus.BIP34Height = 1; // BIP34 activated immediately on devnet
         consensus.BIP65Height = 1; // BIP65 activated immediately on devnet
         consensus.BIP66Height = 1; // BIP66 activated immediately on devnet
-        consensus.DIP0001Height = 2; // DIP0001 activated immediately on devnet
+//****** DTG          consensus.DIP0001Height = 2; // DIP0001 activated immediately on devnet
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
@@ -493,12 +496,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1506556800; // September 28th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1538092800; // September 28th, 2018
 
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
+//****** DTG          // Deployment of DIP0001
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
 
         // Deployment of BIP147
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
@@ -622,7 +625,7 @@ public:
         consensus.BIP34Height = 1; // BIP34 has not activated on regtest (far in the future so block v1 are not rejected in tests)
         consensus.BIP65Height = 1; // BIP65 activated on regtest (Used in rpc activation tests)
         consensus.BIP66Height = 1; // BIP66 activated on regtest (Used in rpc activation tests)
-        consensus.DIP0001Height = 2000;
+//****** DTG          consensus.DIP0001Height = 2000;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
@@ -638,9 +641,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 999999999999ULL;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 0;
+//****** DTG          consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 999999999999ULL;
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime = 0;
         //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nTimeout = 999999999999ULL;

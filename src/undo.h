@@ -6,7 +6,7 @@
 #ifndef BITCOIN_UNDO_H
 #define BITCOIN_UNDO_H
 
-#include "compressor.h" 
+#include "compressor.h"
 #include "consensus/consensus.h"
 #include "primitives/transaction.h"
 #include "serialize.h"
@@ -60,7 +60,8 @@ public:
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}
 };
 
-static const size_t MAX_INPUTS_PER_BLOCK = MaxBlockSize(true) / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
+//****** DTG  static const size_t MAX_INPUTS_PER_BLOCK = MaxBlockSize(true) / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
+static const size_t MAX_INPUTS_PER_BLOCK = MaxBlockSize() / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
 
 /** Undo information for a CTransaction */
 class CTxUndo

@@ -101,7 +101,7 @@ bool fAlerts = DEFAULT_ALERTS;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
 
-std::atomic<bool> fDIP0001ActiveAtTip{false};
+//****** DTG  std::atomic<bool> fDIP0001ActiveAtTip{false};
 
 uint256 hashAssumeValid;
 
@@ -532,7 +532,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
 
     // Size limits
-    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_LEGACY_BLOCK_SIZE)
+    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_TX_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-txns-oversize");
 
     // Check for negative or overflow output values
@@ -688,10 +688,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, libzcash:
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
 {
     int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
-    bool fDIP0001Active_context = nHeight >= Params().GetConsensus().DIP0001Height;
+//****** DTG      bool fDIP0001Active_context = nHeight >= Params().GetConsensus().DIP0001Height;
 
     // Size limits
-    if (fDIP0001Active_context && ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE)
+//****** DTG      if (fDIP0001Active_context && ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE)
+    if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE)
         return state.DoS(100, false, REJECT_INVALID, "bad-txns-oversize");
 
     return true;
@@ -2194,10 +2195,10 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
                 // unknown masternode
                 continue;
             }
-            if (mnInfo.nProtocolVersion < DIP0001_PROTOCOL_VERSION) {
-                // masternode is not upgraded yet
-                continue;
-            }
+//****** DTG              if (mnInfo.nProtocolVersion < DIP0001_PROTOCOL_VERSION) {
+//****** DTG                  // masternode is not upgraded yet
+//****** DTG                  continue;
+//****** DTG            }
         }
         if (state == THRESHOLD_LOCKED_IN || state == THRESHOLD_STARTED) {
             nVersion |= VersionBitsMask(params, (Consensus::DeploymentPos)i);
@@ -2432,7 +2433,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > addressUnspentIndex;
     std::vector<std::pair<CSpentIndexKey, CSpentIndexValue> > spentIndex;
 
-    bool fDIP0001Active_context = pindex->nHeight >= Params().GetConsensus().DIP0001Height;
+//****** DTG      bool fDIP0001Active_context = pindex->nHeight >= Params().GetConsensus().DIP0001Height;
 
     for (unsigned int i = 0; i < block.vtx.size(); i++)
     {
@@ -2442,7 +2443,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         nInputs += tx.vin.size();
         nSigOps += GetLegacySigOpCount(tx);
         if (!tx.isLegacyTransaction()) {
-            if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+//****** DTG              if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+        if (nSigOps > MaxBlockSigOps())
                 return state.DoS(100, error("ConnectBlock(): too many sigops"),
                                     REJECT_INVALID, "bad-blk-sigops");
             }
@@ -2516,7 +2518,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                 // this is to prevent a "rogue miner" from creating
                 // an incredibly-expensive-to-validate block.
                 nSigOps += GetP2SHSigOpCount(tx, view);
-                if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+//****** DTG                   if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+                if (nSigOps > MaxBlockSigOps())
                     return state.DoS(100, error("ConnectBlock(): too many sigops"),
                                      REJECT_INVALID, "bad-blk-sigops");
             }
@@ -3653,7 +3656,8 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     // because we receive the wrong transactions for it.
 
     // Size limits (relaxed)
-    if (block.vtx.empty() || block.vtx.size() > MaxBlockSize(true) || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > MaxBlockSize(true))
+//****** DTG        if (block.vtx.empty() || block.vtx.size() > MaxBlockSize(true) || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > MaxBlockSize(true))
+    if (block.vtx.empty() || block.vtx.size() > MaxBlockSize() || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > MaxBlockSize())
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
     if (block.isLegacyBlock()) {
@@ -3707,7 +3711,8 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
         nSigOps += GetLegacySigOpCount(*tx);
     }
     // sigops limits (relaxed)
-    if (nSigOps > MaxBlockSigOps(true))
+//****** DTG        if (nSigOps > MaxBlockSigOps(true))
+    if (nSigOps > MaxBlockSigOps())
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-sigops", false, "out-of-bounds SigOpCount");
 
     if (fCheckPOW && fCheckMerkleRoot)
@@ -3785,10 +3790,11 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
                               ? pindexPrev->GetMedianTimePast()
                               : block.GetBlockTime();
 
-    bool fDIP0001Active_context = nHeight >= Params().GetConsensus().DIP0001Height;
+//****** DTG       bool fDIP0001Active_context = nHeight >= Params().GetConsensus().DIP0001Height;
 
     // Size limits
-    unsigned int nMaxBlockSize = MaxBlockSize(fDIP0001Active_context);
+//****** DTG       unsigned int nMaxBlockSize = MaxBlockSize(fDIP0001Active_context);
+    unsigned int nMaxBlockSize = MaxBlockSize();
     if (block.vtx.empty() || block.vtx.size() > nMaxBlockSize || ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION) > nMaxBlockSize)
         return state.DoS(10, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
@@ -3810,14 +3816,16 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
         if (!IsFinalTx(*tx, nHeight, nLockTimeCutoff)) {
             return state.DoS(10, false, REJECT_INVALID, "bad-txns-nonfinal", false, "non-final transaction");
         }
-        if (fDIP0001Active_context && ::GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE) {
+//****** DTG          if (fDIP0001Active_context && ::GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE) {
+    if (::GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE) {
             return state.DoS(10, false, REJECT_INVALID, "bad-txns-oversized", false, "contains an over-sized transaction");
         }
         nSigOps += GetLegacySigOpCount(*tx);
     }
 
     // Check sigops
-    if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+//****** DTG        if (nSigOps > MaxBlockSigOps(fDIP0001Active_context))
+    if (nSigOps > MaxBlockSigOps())
         return state.DoS(10, false, REJECT_INVALID, "bad-blk-sigops", false, "out-of-bounds SigOpCount");
 
     // Enforce rule that the coinbase starts with serialized block height
@@ -4609,7 +4617,8 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
 
     int nLoaded = 0;
     try {
-        unsigned int nMaxBlockSize = MaxBlockSize(true);
+//****** DTG          unsigned int nMaxBlockSize = MaxBlockSize(true);
+        unsigned int nMaxBlockSize = MaxBlockSize();
         // This takes over fileIn and calls fclose() on it in the CBufferedFile destructor
         CBufferedFile blkdat(fileIn, 2*nMaxBlockSize, nMaxBlockSize+8, SER_DISK, CLIENT_VERSION);
         uint64_t nRewind = blkdat.GetPos();
