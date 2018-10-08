@@ -68,7 +68,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
     connect(ui->checkBoxCoinControlChange, SIGNAL(stateChanged(int)), this, SLOT(coinControlChangeChecked(int)));
     connect(ui->lineEditCoinControlChange, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
 
-    // Dash specific
+    // Stash specific
     QSettings settings;
     if (!settings.contains("bUseDarkSend"))
         settings.setValue("bUseDarkSend", false);
@@ -85,11 +85,15 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
         CoinControlDialog::coinControl->fUseInstantSend = false;
     }
     else{
+        /* START STASH disable private send *                
         ui->checkUsePrivateSend->setChecked(fUsePrivateSend);
-        ui->checkUseInstantSend->setChecked(fUseInstantSend);
+        ui->checkUseInstantSend->setChecked(fUseInstantSend); */
+        ui->checkUsePrivateSend->setChecked(false);
+        ui->checkUsePrivateSend->setVisible(false);
+        /* END STASH disable private send */
         CoinControlDialog::coinControl->fUsePrivateSend = fUsePrivateSend;
         CoinControlDialog::coinControl->fUseInstantSend = fUseInstantSend;
-    }
+    }    
 
     connect(ui->checkUsePrivateSend, SIGNAL(stateChanged ( int )), this, SLOT(updateDisplayUnit()));
     connect(ui->checkUseInstantSend, SIGNAL(stateChanged ( int )), this, SLOT(updateInstantSend()));
@@ -883,7 +887,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         }
         else if (!addr.IsValid()) // Invalid address
         {
-            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Dash address"));
+            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Stash address"));
         }
         else // Valid address
         {

@@ -134,7 +134,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockStartHash = uint256S("0000000000020cb27c7ef164d21003d5d20cdca2f54dd9a9ca6d45f4d47f8aa3");
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nGovernanceMinQuorum = 3;
         consensus.nGovernanceFilterElements = 20000;
@@ -143,8 +143,8 @@ public:
         consensus.BIP65Height = 1; // 00000000000076d8fcea02ec0963de4abfd01e771fec0863f960c2c64fe6f357
         consensus.BIP66Height = 1; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 15200; STASH Always use DGW
@@ -165,7 +165,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000000000026c29d576073ab51ebd1d3c938de02e9a44c7ee9e16f82db28"); // 888900
+        consensus.defaultAssumeValid = uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629"); // 888900
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -180,7 +180,7 @@ public:
         nDefaultPort = 9999;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1538724590, 12818, 0x1e0ffff0, 1, 50 * COIN);
 
         if (true && genesis.nNonce == 0) {
             printf("recalculating genesis block\n");
@@ -195,22 +195,22 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
 
-        // Dash addresses start with 'X'
+        // Stash addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
-        // Dash script addresses start with '7'
+        // Stash script addresses start with '7'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,16);
-        // Dash private keys start with '7' or 'X'
+        // Stash private keys start with '7' or 'X'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,204);
-        // Dash BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
+        // Stash BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        // Dash BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
+        // Stash BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
         // guarantees the first 2 characters, when base58 encoded, are "zc"
@@ -244,7 +244,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  0, uint256S("0x")),
+            (  0, uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
             0,//3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -282,7 +282,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 3130; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPeymentsStartBlock
-        consensus.nSuperblockStartHash = uint256S("00000e9af103404e6e3fdfbe11c056f1566b1574b39b00dd18be5a5a58dc039e");
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -291,8 +291,8 @@ public:
         consensus.BIP65Height = 1; // 0000039cf01242c7f921dcb4806a5994bc003b48c1973ae0c89b67809c2bb2ab
         consensus.BIP66Height = 1; // 0000002acdd29a14583540cb72e1c5cc83783560e38fa7081495d474fe1671f7
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -350,15 +350,15 @@ public:
         vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
         vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // guarantees the first 2 characters, when base58 encoded, are "zt"
@@ -398,21 +398,23 @@ public:
         };
 
         chainTxData = ChainTxData{
-            1529294335, // * UNIX timestamp of last known number of transactions
-            5810120,    // * total number of transactions between genesis and that timestamp
+            1538173112, // * UNIX timestamp of last known number of transactions
+            542,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.01        // * estimated number of transactions per second after that timestamp
+            0.006       // * estimated number of transactions per second after that timestamp
         };
 
         vHashLegacyBlocks = {
 
 
-          //------------------------------------------------------------------------------
-          // Do not edit manually
-                  "000d93d5fcc79e210f4dab8484b5ce4bb08369b6b3f7a787299b62f064e19df4",
-                  "00069a3c54e9e8293a35cdb34e4ecec08559e059ea469cff24667458370f1509",
-                  "000ca7a832e487711b2c5436efd30f590b83eed5f761d9c101328f3cc0fd0801",
-          //------------------------------------------------------------------------------
+          
+//------------------------------------------------------------------------------
+// Do not edit manually
+        "0009ab7e8db4ad441dd6787b820762f551b9ed9cae5dee8399e5597eef77f1e4",
+        "000780e9310514e38e2c98fc044b0c7d3410abbeec37be8b85679f665430db55",
+        "000f1e096d4af4353a45b2a2bea29920b669fd715ea42994360de522b83ca84d",
+//------------------------------------------------------------------------------
+
 
 
 
@@ -439,7 +441,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 4200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
-        consensus.nSuperblockStartHash = uint256(); // do not check this on devnet
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on devnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -448,8 +450,8 @@ public:
         consensus.BIP65Height = 1; // BIP65 activated immediately on devnet
         consensus.BIP66Height = 1; // BIP66 activated immediately on devnet
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -501,17 +503,17 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("dashevo.org",  "devnet-seed.dashevo.org"));
+        //vSeeds.push_back(CDNSSeedData("stashevo.org",  "devnet-seed.stashevo.org"));
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // Testnet Stash BIP44 coin type is '0xCAFE'
@@ -572,7 +574,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
         consensus.nSuperblockStartBlock = 1500;
-        consensus.nSuperblockStartHash = uint256(); // do not check this on regtest
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 10;
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 100;
@@ -581,8 +583,8 @@ public:
         consensus.BIP65Height = 1; // BIP65 activated on regtest (Used in rpc activation tests)
         consensus.BIP66Height = 1; // BIP66 activated on regtest (Used in rpc activation tests)
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         //consensus.nPowKGWHeight = 15200; // STASH Always use DGW
@@ -655,15 +657,15 @@ public:
             0
         };
 
-        // Regtest Dash addresses start with 'y'
+        // Regtest Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Regtest Dash script addresses start with '8' or '9'
+        // Regtest Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Regtest private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Regtest Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Regtest Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Regtest Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Regtest Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // Regtest Stash BIP44 coin type is '0xCAFE'

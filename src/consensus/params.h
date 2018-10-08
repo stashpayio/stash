@@ -54,7 +54,7 @@ struct Params {
     int nBudgetPaymentsCycleBlocks;
     int nBudgetPaymentsWindowBlocks;
     int nSuperblockStartBlock;
-    uint256 nSuperblockStartHash;
+    // uint256 nSuperblockStartHash; STASH not used
     int nSuperblockCycle; // in blocks
     int nGovernanceMinQuorum; // Min absolute vote count to trigger an action
     int nGovernanceFilterElements;

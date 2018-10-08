@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Stash Core
+Comment=Stash P2P Cryptocurrency
+Comment[de]=Verbinde mit dem Stash peer-to-peer Netzwerk
+Comment[fr]=Stash, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Stash, eşten eşe kriptografik sanal para birimi
+Exec=stash-qt %u
+Terminal=false
+Type=Application
+Icon=stash128
+MimeType=x-scheme-handler/stash;
+Categories=Office;Finance;

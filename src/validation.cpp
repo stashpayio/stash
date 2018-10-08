@@ -66,7 +66,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Dash Core cannot be compiled without assertions."
+# error "Stash Core cannot be compiled without assertions."
 #endif
 
 /**
@@ -685,7 +685,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, libzcash:
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
 {
-    int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1
+    int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
 
     // Size limits
     if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE)
@@ -2164,7 +2164,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("dash-scriptch");
+    RenameThread("stash-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2349,6 +2349,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         }
     }
 */
+    /* START STASH UNUSED
+
     /// DASH: Check superblock start
 
     // make sure old budget is the real one
@@ -2359,6 +2361,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                              REJECT_INVALID, "bad-sb-start");
 
     /// END DASH
+
+    END STASH */
 
     // BIP16 didn't become active until Apr 1 2012
     int64_t nBIP16SwitchTime = 1333238400;
@@ -2433,10 +2437,10 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         nInputs += tx.vin.size();
         nSigOps += GetLegacySigOpCount(tx);
         if (!tx.isLegacyTransaction()) {
-        if (nSigOps > MaxBlockSigOps())
+            if (nSigOps > MaxBlockSigOps())
                 return state.DoS(100, error("ConnectBlock(): too many sigops"),
                                     REJECT_INVALID, "bad-blk-sigops");
-            }
+        }
 
         if (!tx.IsCoinBase())
         {
@@ -2594,17 +2598,15 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         CAmount blockReward = nFees + GetBlockSubsidy(pindex->pprev->nBits, pindex->pprev->nHeight, chainparams.GetConsensus());
         std::string strError = "";
         if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
-            return state.DoS(0, error("ConnectBlock(DASH): %s", strError), REJECT_INVALID, "bad-cb-amount");
+            return state.DoS(0, error("ConnectBlock(STASH): %s", strError), REJECT_INVALID, "bad-cb-amount");
         }
 
         if (!IsBlockPayeeValid(*block.vtx[0], pindex->nHeight, blockReward)) {
             mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
-            return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
+            return state.DoS(0, error("ConnectBlock(STASH): couldn't find masternode or superblock payments"),
                                     REJECT_INVALID, "bad-cb-payee");
         }
-        // END DASH
     }
-
     if (!control.Wait())
         return state.DoS(100, false);
     int64_t nTime4 = GetTimeMicros(); nTimeVerify += nTime4 - nTime2;
@@ -3680,7 +3682,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
             }
         }
     } else {
-        LogPrintf("CheckBlock(DASH): spork is off, skipping transaction locking checks\n");
+        LogPrintf("CheckBlock(STASH): spork is off, skipping transaction locking checks\n");
     }
 
     // END DASH
