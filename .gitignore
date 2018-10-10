@@ -137,3 +137,8 @@ cmake-build-debug
 # IDE related
 .settings
 .vscode
+
+# Legacy blocks
+.disableseeds
+*.csv
+

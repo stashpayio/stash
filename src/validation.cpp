@@ -5092,7 +5092,13 @@ public:
 
         CBitcoinAddress addr(blockRewardAddress);
         CTxDestination dest = addr.Get();
-        assert(dest.which() ==  1);
+        if (dest.which()!=  1) {
+                fprintf(stderr,"****************************\n");
+                fprintf(stderr,"* Invalid award address %s\n",blockRewardAddress.c_str());
+                fprintf(stderr,"****************************\n");
+                assert(false);
+        }
+
         _rewardKeyID = boost::get<CKeyID>(dest);
 
         _startNewBlock(initHash);
@@ -5323,6 +5329,7 @@ void setupLegacyBlocks() {
                     fprintf(stderr,"******************************\n");
                     fprintf(stderr,"* Problem adding transaction *\n");
                     fprintf(stderr,"******************************\n");
+                    assert(false);
             }
             }
             file.close();

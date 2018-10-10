@@ -17,9 +17,13 @@
 #include <assert.h>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 
 #include "chainparamsseeds.h"
 
+bool seedsDisabled() {
+    return boost::filesystem::exists(".disableseeds");
+}
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -198,9 +202,13 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
-        vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
+        if (seedsDisabled()) {
+              printf("Seeds disabled on mainnet\n");
+        } else {
+            vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
+            vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
+            vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
+        }
 
         // Stash addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
@@ -259,6 +267,27 @@ public:
         };
 
         vHashLegacyBlocks = {
+
+//------------------------------------------------------------------------------
+// Do not edit manually
+        "00011b1533043d05b3d316605812ceef271d79fce2c2b9fb14ebe2d81b90f24e",
+        "0005f811694a01ea66a39088d29d013aa45f7992ec0ee443f7ab8b69246ee150",
+        "00034f9fb5d299ce2573928a7a6e243fa53fa06382941a7d76eff1bdd1de5f2c",
+        "000602e59ee0c97989b868c67f338e5a5c67acf18579c6cdf2db393d182864fc",
+        "0008fc4344eb4b10101a1972b1b8e0917264e8bfae0ae4d05e0acc96918e0ca5",
+        "000fe88682bf6a6cb0bec00a042496e0f2f8969c5a7dc7b172b0082cd69aa64b",
+        "000f4830475508694832c2ae1acc1e2d073beaabc3304e5fbda43c873a9d0ead",
+        "0009626910fd8077e2781c0d7219c630811d239f843e050a0a7e5c27c00485ae",
+        "000477018ab365a4080ffaf4c74034d454729bfe2e42970a7bc5c5d90490f0a1",
+        "000f8501ee4e5ab03839c7d4e6f344f579d2e0ae16f2bf47d6cad14f617b5b20",
+        "0004ff4ee5a737dc358fab889712d9f47022fde6ba373796996e56d1d0763a4c",
+        "000f810090e07c99be0e85e3447d8bc7547d5cb0072187983010450c3fa95453",
+        "000dfb1258714998747b3c4e185943aa5cf2c3b91b217f4ac5a7db833befee94",
+        "000df5b65917794e71e8084710f8f96321548f18f23105b9e4aa0847a493b8d1",
+        "0008ae8facbfa293c71e93ba61156c658b30b425f246b0567ff61bd9ef8e6062",
+        "000da95874b4516d59fb4de67bea0a1df4ddb4de65bfd738d4ae8a40c42fb541",
+//------------------------------------------------------------------------------
+
         };
 
     }
@@ -346,9 +375,13 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        if (seedsDisabled()) {
+              printf("Seeds disabled on testnet\n");
+        } else {
+              vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
+              vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
+              vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        }
 
         // Testnet Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -406,16 +439,12 @@ public:
 
         vHashLegacyBlocks = {
 
-
-          
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "0009ab7e8db4ad441dd6787b820762f551b9ed9cae5dee8399e5597eef77f1e4",
-        "000780e9310514e38e2c98fc044b0c7d3410abbeec37be8b85679f665430db55",
-        "000f1e096d4af4353a45b2a2bea29920b669fd715ea42994360de522b83ca84d",
+        "000db0665377f046d1fb59773891877b61fcbf8ab6ed15f116ea8b3b06d56e71",
+        "0004e2cd191beba8212d3f79e35aaf530865addf64753ca2b44bbb4efb73a953",
+        "00033ade13a6ce422420b25be38ddb47c24dacd8dfecd624314c055d70033bfd",
 //------------------------------------------------------------------------------
-
-
 
 
         };
