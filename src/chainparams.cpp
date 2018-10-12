@@ -112,6 +112,19 @@ static CBlock FindDevNetGenesisBlock(const Consensus::Params& params, const CBlo
     assert(false);
 }
 
+static void GenerateGenesisHash(CBlock& genesis, const std::string& strNetworkID) 
+{
+    // calculate genesis hash
+    printf("recalculating %s genesis block...\n", strNetworkID.c_str());
+    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    // deliberately empty for loop finds nonce value.
+    for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
+    printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
+    printf("new genesis merkle root: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str());
+    printf("new genesis nonce: %d\n", genesis.nNonce);
+    printf("new genesis hash: 0x%s\n", genesis.GetHash().ToString().c_str());
+}
+
 /**
  * Main network
  */
@@ -186,15 +199,8 @@ public:
 
         genesis = CreateGenesisBlock(1538724590, 12818, 0x1e0ffff0, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -356,17 +362,10 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1537643050, 808049, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1539311667, 0, 0x1e0ffff0, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating test genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -512,15 +511,8 @@ public:
 
         genesis = CreateGenesisBlock(1535054939, 3, 0x207fffff, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating devnet genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -642,15 +634,8 @@ public:
 
         genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating regtest genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
