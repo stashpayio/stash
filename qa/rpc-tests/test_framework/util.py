@@ -49,7 +49,8 @@ class PortSeed:
 #version of the blockchain is used without MOCKTIME
 #then the mempools will not sync due to IBD.
 MOCKTIME = 0
-GENESISTIME = 1417713337
+#GENESISTIME = 1417713337
+GENESISTIME = 1529909214
 
 def set_mocktime(t):
     global MOCKTIME
