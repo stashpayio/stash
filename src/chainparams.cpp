@@ -128,19 +128,19 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
+        consensus.nSubsidyHalvingInterval = 525960; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
         consensus.nMasternodePaymentsStartBlock = 1200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         //consensus.nMasternodePaymentsIncreaseBlock = 2000; // STASH not used
         //consensus.nMasternodePaymentsIncreasePeriod = 576*30; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 6;
         consensus.nInstantSendKeepLock = 24;
-        consensus.nBudgetPaymentsStartBlock = 1200; // actual historical value
-        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsStartBlock = consensus.nBudgetPaymentsStartBlock;
+        consensus.nBudgetPaymentsCycleBlocks = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
+        consensus.nSuperblockStartBlock = consensus.nBudgetPaymentsStartBlock + 100; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
-        consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
-        consensus.nGovernanceMinQuorum = 3;
+        consensus.nSuperblockCycle = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         consensus.nMasternodeMinimumConfirmations = 15;
         consensus.BIP34Height = 1;
@@ -148,7 +148,7 @@ public:
         consensus.BIP66Height = 1; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 15200; STASH Always use DGW
@@ -301,16 +301,16 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 210240;
-        consensus.nMasternodePaymentsStartBlock = 250; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nSubsidyHalvingInterval = 525960;
+        consensus.nMasternodePaymentsStartBlock = 1200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         //consensus.nMasternodePaymentsIncreaseBlock = 270; // STASH not used
         //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 3120;
+        consensus.nBudgetPaymentsStartBlock = consensus.nBudgetPaymentsStartBlock;
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 3130; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPeymentsStartBlock
+        consensus.nSuperblockStartBlock = consensus.nBudgetPaymentsStartBlock + 100; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
@@ -321,7 +321,7 @@ public:
         consensus.BIP66Height = 1; // 0000002acdd29a14583540cb72e1c5cc83783560e38fa7081495d474fe1671f7
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -460,16 +460,16 @@ class CDevNetParams : public CChainParams {
 public:
     CDevNetParams() {
         strNetworkID = "dev";
-        consensus.nSubsidyHalvingInterval = 210240;
-        consensus.nMasternodePaymentsStartBlock = 4010; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nSubsidyHalvingInterval = 525960;
+        consensus.nMasternodePaymentsStartBlock = 1200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         //consensus.nMasternodePaymentsIncreaseBlock = 4030; // STASH not used
         //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 4100;
+        consensus.nBudgetPaymentsStartBlock = consensus.nMasternodePaymentsStartBlock;
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 4200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
+        consensus.nSuperblockStartBlock = consensus.nBudgetPaymentsStartBlock + 100; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on devnet
         consensus.nGovernanceMinQuorum = 1;
@@ -599,10 +599,10 @@ public:
         //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 1000;
+        consensus.nBudgetPaymentsStartBlock = consensus.nBudgetPaymentsStartBlock;
         consensus.nBudgetPaymentsCycleBlocks = 50;
         consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 1500;
+        consensus.nSuperblockStartBlock = consensus.nBudgetPaymentsStartBlock + 100; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 10;
         consensus.nGovernanceMinQuorum = 1;
