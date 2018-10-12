@@ -454,6 +454,10 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
+    bool isLegacyTransaction() const {
+        return vin.size() == 0 && vjoinsplit.size() == 0;
+    }
+
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
         return a.hash == b.hash;

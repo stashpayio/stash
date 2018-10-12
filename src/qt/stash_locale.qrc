@@ -1,0 +1,21 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/stash_bg.qm</file>
+        <file alias="de">locale/stash_de.qm</file>
+        <file alias="en">locale/stash_en.qm</file>
+        <file alias="es">locale/stash_es.qm</file>
+        <file alias="fi">locale/stash_fi.qm</file>
+        <file alias="fr">locale/stash_fr.qm</file>
+        <file alias="it">locale/stash_it.qm</file>
+        <file alias="ja">locale/stash_ja.qm</file>
+        <file alias="nl">locale/stash_nl.qm</file>
+        <file alias="pl">locale/stash_pl.qm</file>
+        <file alias="pt">locale/stash_pt.qm</file>
+        <file alias="ru">locale/stash_ru.qm</file>
+        <file alias="sk">locale/stash_sk.qm</file>
+        <file alias="sv">locale/stash_sv.qm</file>
+        <file alias="vi">locale/stash_vi.qm</file>
+        <file alias="zh_CN">locale/stash_zh_CN.qm</file>
+        <file alias="zh_TW">locale/stash_zh_TW.qm</file>
+    </qresource>
+</RCC>

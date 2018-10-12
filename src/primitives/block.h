@@ -121,6 +121,8 @@ public:
     }
 
     std::string ToString() const;
+
+    bool isLegacyBlock() const;
 };
 
 
