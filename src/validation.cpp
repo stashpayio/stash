@@ -5271,8 +5271,8 @@ void setupLegacyBlocks() {
 
     const auto filenames = mapMultiArgs.find("-setuplegacyblocks") -> second;
 
-    std::string coinbaseReward = GetArg("-legacyblockreward","0");
-    CAmount reward = std::stoll(coinbaseReward)*100000000L;
+    std::string coinbaseReward = GetArg("-legacyblockreward","6760000000");
+    CAmount reward = std::stoll(coinbaseReward);
 
     if (!IsArgSet("-legacyblockpayee")) {
       fprintf(stderr,"**********************************************************************\n");
