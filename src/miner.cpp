@@ -36,7 +36,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// DashMiner
+// StashMiner
 //
 
 //
@@ -89,7 +89,7 @@ BlockAssembler::BlockAssembler(const CChainParams& _chainparams)
     }
 
     // Limit to between 1K and MAX_BLOCK_SIZE-1K for sanity:
-    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MaxBlockSize(fDIP0001ActiveAtTip)-1000), nBlockMaxSize));
+    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MaxBlockSize()-1000), nBlockMaxSize));
 }
 
 void BlockAssembler::resetBlock()
@@ -223,7 +223,7 @@ bool BlockAssembler::TestPackage(uint64_t packageSize, unsigned int packageSigOp
 {
     if (nBlockSize + packageSize >= nBlockMaxSize)
         return false;
-    if (nBlockSigOps + packageSigOps >= MaxBlockSigOps(fDIP0001ActiveAtTip))
+    if (nBlockSigOps + packageSigOps >= MaxBlockSigOps())
         return false;
     return true;
 }
@@ -257,7 +257,7 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
         return false;
     }
 
-    unsigned int nMaxBlockSigOps = MaxBlockSigOps(fDIP0001ActiveAtTip);
+    unsigned int nMaxBlockSigOps = MaxBlockSigOps();
     if (nBlockSigOps + iter->GetSigOpCount() >= nMaxBlockSigOps) {
         // If the block has room for no more sig ops then
         // flag that the block is finished

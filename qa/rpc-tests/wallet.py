@@ -56,7 +56,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(len(self.nodes[1].listunspent()), 1)
         assert_equal(len(self.nodes[2].listunspent()), 0)
 
-        # Send 210 DASH from 0 to 2 using sendtoaddress call.
+        # Send 210 STASH from 0 to 2 using sendtoaddress call.
         # Second transaction will be child of first, and will require a fee
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 20)
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 10)
@@ -81,7 +81,7 @@ class WalletTest (BitcoinTestFramework):
         self.nodes[1].generate(100)
         self.sync_all()
 
-        # node0 should end up with 1000 DASH in block rewards plus fees, but
+        # node0 should end up with 1000 STASH in block rewards plus fees, but
         # minus the 210 plus fees sent to node2
         assert_equal(self.nodes[0].getbalance(), 169*2-30)
         assert_equal(self.nodes[2].getbalance(), 30)
@@ -114,7 +114,7 @@ class WalletTest (BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), 338)
         assert_equal(self.nodes[2].getbalance("from1"), 338-30)
 
-        # Send 100 DASH normal
+        # Send 100 STASH normal
         address = self.nodes[0].getnewaddress("test")
         fee_per_byte = Decimal('0.00001') / 1000
         self.nodes[2].settxfee(fee_per_byte * 1000)

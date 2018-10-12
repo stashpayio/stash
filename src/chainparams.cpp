@@ -17,9 +17,13 @@
 #include <assert.h>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 
 #include "chainparamsseeds.h"
 
+bool seedsDisabled() {
+    return boost::filesystem::exists(".disableseeds");
+}
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -108,6 +112,19 @@ static CBlock FindDevNetGenesisBlock(const Consensus::Params& params, const CBlo
     assert(false);
 }
 
+static void GenerateGenesisHash(CBlock& genesis, const std::string& strNetworkID) 
+{
+    // calculate genesis hash
+    printf("recalculating %s genesis block...\n", strNetworkID.c_str());
+    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    // deliberately empty for loop finds nonce value.
+    for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
+    printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
+    printf("new genesis merkle root: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str());
+    printf("new genesis nonce: %d\n", genesis.nNonce);
+    printf("new genesis hash: 0x%s\n", genesis.GetHash().ToString().c_str());
+}
+
 /**
  * Main network
  */
@@ -124,28 +141,27 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
-        consensus.nMasternodePaymentsStartBlock = 1200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 2000; // actual historical value
-        consensus.nMasternodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
+        consensus.nSubsidyHalvingInterval = 525960; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
+        consensus.nMasternodePaymentsStartBlock = 1000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        //consensus.nMasternodePaymentsIncreaseBlock = 2000; // STASH not used
+        //consensus.nMasternodePaymentsIncreasePeriod = 576*30; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 6;
         consensus.nInstantSendKeepLock = 24;
-        consensus.nBudgetPaymentsStartBlock = 1200; // actual historical value
-        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
-        consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockStartHash = uint256S("0000000000020cb27c7ef164d21003d5d20cdca2f54dd9a9ca6d45f4d47f8aa3");
-        consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
-        consensus.nGovernanceMinQuorum = 3;
+        consensus.nBudgetPaymentsStartBlock = 1000;
+        //consensus.nBudgetPaymentsCycleBlocks = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        //consensus.nBudgetPaymentsWindowBlocks = 100;
+        consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
+        consensus.nSuperblockCycle = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         consensus.nMasternodeMinimumConfirmations = 15;
         consensus.BIP34Height = 1;
         consensus.BIP65Height = 1; // 00000000000076d8fcea02ec0963de4abfd01e771fec0863f960c2c64fe6f357
         consensus.BIP66Height = 1; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
-        consensus.DIP0001Height = 782208;
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 15200; STASH Always use DGW
@@ -161,26 +177,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1486252800; // Feb 5th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1517788800; // Feb 5th, 2018
 
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1508025600; // Oct 15th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1539561600; // Oct 15th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 4032;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 3226; // 80% of 4032
-
-        // Deployment of BIP147
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime = 1524477600; // Apr 23th, 2018
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nTimeout = 1556013600; // Apr 23th, 2019
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nWindowSize = 4032;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nThreshold = 3226; // 80% of 4032
-
-        // The best chain should have at least this much work.
+       // The best chain should have at least this much work.
         //consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000081021b74f9f47bbd7bc"); // 888900
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000000000026c29d576073ab51ebd1d3c938de02e9a44c7ee9e16f82db28"); // 888900
+        consensus.defaultAssumeValid = uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629"); // 888900
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -195,37 +197,34 @@ public:
         nDefaultPort = 9999;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1538724590, 12818, 0x1e0ffff0, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
-        vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
+        if (seedsDisabled()) {
+              printf("Seeds disabled on mainnet\n");
+        } else {
+            vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "seed1.stashpay.org"));
+            vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "seed2.stashpay.org"));
+            vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "seed3.stashpay.org"));
+        }
 
-        // Dash addresses start with 'X'
+        // Stash addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
-        // Dash script addresses start with '7'
+        // Stash script addresses start with '7'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,16);
-        // Dash private keys start with '7' or 'X'
+        // Stash private keys start with '7' or 'X'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,204);
-        // Dash BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
+        // Stash BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        // Dash BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
+        // Stash BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
         // guarantees the first 2 characters, when base58 encoded, are "zc"
@@ -259,7 +258,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  0, uint256S("0x")),
+            (  0, uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
             0,//3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -272,6 +271,31 @@ public:
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
+
+        vHashLegacyBlocks = {
+
+//------------------------------------------------------------------------------
+// Do not edit manually
+        "00011b1533043d05b3d316605812ceef271d79fce2c2b9fb14ebe2d81b90f24e",
+        "0005f811694a01ea66a39088d29d013aa45f7992ec0ee443f7ab8b69246ee150",
+        "00034f9fb5d299ce2573928a7a6e243fa53fa06382941a7d76eff1bdd1de5f2c",
+        "000602e59ee0c97989b868c67f338e5a5c67acf18579c6cdf2db393d182864fc",
+        "0008fc4344eb4b10101a1972b1b8e0917264e8bfae0ae4d05e0acc96918e0ca5",
+        "000fe88682bf6a6cb0bec00a042496e0f2f8969c5a7dc7b172b0082cd69aa64b",
+        "000f4830475508694832c2ae1acc1e2d073beaabc3304e5fbda43c873a9d0ead",
+        "0009626910fd8077e2781c0d7219c630811d239f843e050a0a7e5c27c00485ae",
+        "000477018ab365a4080ffaf4c74034d454729bfe2e42970a7bc5c5d90490f0a1",
+        "000f8501ee4e5ab03839c7d4e6f344f579d2e0ae16f2bf47d6cad14f617b5b20",
+        "0004ff4ee5a737dc358fab889712d9f47022fde6ba373796996e56d1d0763a4c",
+        "000f810090e07c99be0e85e3447d8bc7547d5cb0072187983010450c3fa95453",
+        "000dfb1258714998747b3c4e185943aa5cf2c3b91b217f4ac5a7db833befee94",
+        "000df5b65917794e71e8084710f8f96321548f18f23105b9e4aa0847a493b8d1",
+        "0008ae8facbfa293c71e93ba61156c658b30b425f246b0567ff61bd9ef8e6062",
+        "000da95874b4516d59fb4de67bea0a1df4ddb4de65bfd738d4ae8a40c42fb541",
+//------------------------------------------------------------------------------
+
+        };
+
     }
 };
 static CMainParams mainParams;
@@ -283,17 +307,17 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 210240;
-        consensus.nMasternodePaymentsStartBlock = 250; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 270;
-        consensus.nMasternodePaymentsIncreasePeriod = 10;
+        consensus.nSubsidyHalvingInterval = 525960;
+        consensus.nMasternodePaymentsStartBlock = 1000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        //consensus.nMasternodePaymentsIncreaseBlock = 270; // STASH not used
+        //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 3120;
-        consensus.nBudgetPaymentsCycleBlocks = 50;
-        consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 3130; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPeymentsStartBlock
-        consensus.nSuperblockStartHash = uint256S("00000e9af103404e6e3fdfbe11c056f1566b1574b39b00dd18be5a5a58dc039e");
+        consensus.nBudgetPaymentsStartBlock = 1000;
+        //consensus.nBudgetPaymentsCycleBlocks = 50; // STASH unused
+        //consensus.nBudgetPaymentsWindowBlocks = 10; // STASH unused
+        consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -301,10 +325,9 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP65Height = 1; // 0000039cf01242c7f921dcb4806a5994bc003b48c1973ae0c89b67809c2bb2ab
         consensus.BIP66Height = 1; // 0000002acdd29a14583540cb72e1c5cc83783560e38fa7081495d474fe1671f7
-        consensus.DIP0001Height = 5500;
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -320,26 +343,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1506556800; // September 28th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1538092800; // September 28th, 2018
 
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
-
-        // Deployment of BIP147
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime = 1517792400; // Feb 5th, 2018
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nTimeout = 1549328400; // Feb 5th, 2019
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nWindowSize = 100;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nThreshold = 50; // 50% of 100
-
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0"); // 37900
         // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000003be69c34b1244f"); // 143200
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834"); // 0
+        consensus.defaultAssumeValid = uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476"); // 0
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -353,38 +362,35 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1537643050, 808049, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1539369910, 511913, 0x1e0ffff0, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating test genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
-        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        if (seedsDisabled()) {
+              printf("Seeds disabled on testnet\n");
+        } else {
+              vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "testseed1.stashpay.org"));
+              vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "testseed2.stashpay.org"));
+              vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "testseed3.stashpay.org"));
+        }
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // guarantees the first 2 characters, when base58 encoded, are "zt"
@@ -416,7 +422,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (    0, uint256S("0x0000078548fe4e5084a00ac53773024b3d8bbe89ba1a297eb044635a9938a834")),
+            (0, uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476")),
             0, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -424,12 +430,20 @@ public:
         };
 
         chainTxData = ChainTxData{
-            1529294335, // * UNIX timestamp of last known number of transactions
-            5810120,    // * total number of transactions between genesis and that timestamp
+            1538173112, // * UNIX timestamp of last known number of transactions
+            542,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.01        // * estimated number of transactions per second after that timestamp
+            0.006       // * estimated number of transactions per second after that timestamp
         };
 
+        vHashLegacyBlocks = {
+//------------------------------------------------------------------------------
+// Do not edit manually
+        "000937e580355522342eee1c237d6e469a9ed1086e297b072904a37dc8cec3b6",
+        "000a23c4f9e5c44c2ab3f7bdec4674a21f734a6033ef2abbfca7da2ff1644181",
+        "000540fd94c28c4b9d9592b2656a76eb13f69228381e1a8dc83b440ac4e5a373",
+//------------------------------------------------------------------------------
+        };
     }
 };
 static CTestNetParams testNetParams;
@@ -441,17 +455,17 @@ class CDevNetParams : public CChainParams {
 public:
     CDevNetParams() {
         strNetworkID = "dev";
-        consensus.nSubsidyHalvingInterval = 210240;
-        consensus.nMasternodePaymentsStartBlock = 4010; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 4030;
-        consensus.nMasternodePaymentsIncreasePeriod = 10;
+        consensus.nSubsidyHalvingInterval = 525960;
+        consensus.nMasternodePaymentsStartBlock = 1000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        //consensus.nMasternodePaymentsIncreaseBlock = 4030; // STASH not used
+        //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 4100;
-        consensus.nBudgetPaymentsCycleBlocks = 50;
-        consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 4200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
-        consensus.nSuperblockStartHash = uint256(); // do not check this on devnet
+        consensus.nBudgetPaymentsStartBlock = 1000;
+        //consensus.nBudgetPaymentsCycleBlocks = 50; // STASH unused
+        //consensus.nBudgetPaymentsWindowBlocks = 10; // STASH unused
+        consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on devnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
@@ -459,10 +473,9 @@ public:
         consensus.BIP34Height = 1; // BIP34 activated immediately on devnet
         consensus.BIP65Height = 1; // BIP65 activated immediately on devnet
         consensus.BIP66Height = 1; // BIP66 activated immediately on devnet
-        consensus.DIP0001Height = 2; // DIP0001 activated immediately on devnet
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -477,20 +490,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1506556800; // September 28th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1538092800; // September 28th, 2018
-
-        // Deployment of DIP0001
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 1505692800; // Sep 18th, 2017
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 1537228800; // Sep 18th, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize = 100;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
-
-        // Deployment of BIP147
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime = 1517792400; // Feb 5th, 2018
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nTimeout = 1549328400; // Feb 5th, 2019
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nWindowSize = 100;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nThreshold = 50; // 50% of 100
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
@@ -508,17 +507,10 @@ public:
 
         genesis = CreateGenesisBlock(1535054939, 3, 0x207fffff, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating devnet genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
-        
+
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x32572d37b0f7a102af86494187376e0c34367eacb2e8f00c47e37ba49e93570c"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
@@ -528,17 +520,17 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("dashevo.org",  "devnet-seed.dashevo.org"));
+        //vSeeds.push_back(CDNSSeedData("stashevo.org",  "devnet-seed.stashevo.org"));
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // Testnet Stash BIP44 coin type is '0xCAFE'
@@ -572,6 +564,11 @@ public:
             2,                            // * we only have 2 coinbase transactions when a devnet is started up
             0.01                          // * estimated number of transactions per second
         };
+
+        vHashLegacyBlocks = {
+
+        };
+
     }
 };
 static CDevNetParams *devNetParams;
@@ -585,16 +582,16 @@ public:
     CRegTestParams() {
         strNetworkID = "regtest";
         consensus.nSubsidyHalvingInterval = 150;
-        consensus.nMasternodePaymentsStartBlock = 240;
-        consensus.nMasternodePaymentsIncreaseBlock = 350;
-        consensus.nMasternodePaymentsIncreasePeriod = 10;
+        consensus.nMasternodePaymentsStartBlock = 250;
+        //consensus.nMasternodePaymentsIncreaseBlock = 350; // STASH not used
+        //consensus.nMasternodePaymentsIncreasePeriod = 10; // STASH not used
         consensus.nInstantSendConfirmationsRequired = 2;
         consensus.nInstantSendKeepLock = 6;
-        consensus.nBudgetPaymentsStartBlock = 1000;
-        consensus.nBudgetPaymentsCycleBlocks = 50;
-        consensus.nBudgetPaymentsWindowBlocks = 10;
-        consensus.nSuperblockStartBlock = 1500;
-        consensus.nSuperblockStartHash = uint256(); // do not check this on regtest
+        consensus.nBudgetPaymentsStartBlock = 250;
+        //consensus.nBudgetPaymentsCycleBlocks = 50; // STASH unused
+        //consensus.nBudgetPaymentsWindowBlocks = 10; // STASH unused
+        consensus.nSuperblockStartBlock = 400; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
+        //consensus.nSuperblockStartHash = uint256(); // STASH unused
         consensus.nSuperblockCycle = 10;
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 100;
@@ -602,13 +599,12 @@ public:
         consensus.BIP34Height = 1; // BIP34 has not activated on regtest (far in the future so block v1 are not rejected in tests)
         consensus.BIP65Height = 1; // BIP65 activated on regtest (Used in rpc activation tests)
         consensus.BIP66Height = 1; // BIP66 activated on regtest (Used in rpc activation tests)
-        consensus.DIP0001Height = 2000;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
-        //consensus.nPowKGWHeight = 15200; // STASH Always use DGW 
+        //consensus.nPowKGWHeight = 15200; // STASH Always use DGW
         //consensus.nPowDGWHeight = 34140;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
@@ -618,12 +614,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 999999999999ULL;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit = 2;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime = 0;
-        //BIP147 consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
@@ -640,15 +630,8 @@ public:
 
         genesis = CreateGenesisBlock(1529909214, 54796, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
 
-        if (true && genesis.nNonce == 0) {
-            printf("recalculating regtest genesis block\n");
-            arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-            // deliberately empty for loop finds nonce value.
-            for(genesis.nNonce = 0; UintToArith256(genesis.GetHash()) > hashTarget; genesis.nNonce++){ }
-            printf("new genesisPOW target: %s\n", hashTarget.GetHex().c_str());
-            printf("new genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-            printf("new genesis nonce: %d\n", genesis.nNonce);
-            printf("new genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        if (genesis.nNonce == 0) {
+          GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -684,19 +667,23 @@ public:
             0
         };
 
-        // Regtest Dash addresses start with 'y'
+        // Regtest Stash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Regtest Dash script addresses start with '8' or '9'
+        // Regtest Stash script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Regtest private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Regtest Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Regtest Stash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Regtest Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Regtest Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
         // Regtest Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;
+
+        vHashLegacyBlocks = {
+        };
+
    }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
