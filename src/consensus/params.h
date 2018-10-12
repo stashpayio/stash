@@ -46,13 +46,13 @@ struct Params {
     uint256 hashDevnetGenesisBlock;
     int nSubsidyHalvingInterval;
     int nMasternodePaymentsStartBlock;
-    //int nMasternodePaymentsIncreaseBlock;
-    //int nMasternodePaymentsIncreasePeriod; // in blocks
+    //int nMasternodePaymentsIncreaseBlock; STASH not used
+    //int nMasternodePaymentsIncreasePeriod; STASH not used
     int nInstantSendConfirmationsRequired; // in blocks
     int nInstantSendKeepLock; // in blocks
     int nBudgetPaymentsStartBlock;
-    int nBudgetPaymentsCycleBlocks;
-    int nBudgetPaymentsWindowBlocks;
+    //int nBudgetPaymentsCycleBlocks; STASH not used
+    //int nBudgetPaymentsWindowBlocks; STASH not used
     int nSuperblockStartBlock;
     // uint256 nSuperblockStartHash; STASH not used
     int nSuperblockCycle; // in blocks
