@@ -348,7 +348,7 @@ public:
         // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000003be69c34b1244f"); // 143200
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000d39c9c0a7aa975ad9182dfa53b93129e23825e586a80012be892cbbf3ee"); // 0
+        consensus.defaultAssumeValid = uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476"); // 0
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -362,14 +362,14 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1539312576, 2447364, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1539369910, 511913, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000d39c9c0a7aa975ad9182dfa53b93129e23825e586a80012be892cbbf3ee"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476"));
         assert(genesis.hashMerkleRoot == uint256S("0x7065e73dace1c01a44f3c54cb912d1bb0c0462cbe30ddbbb161a446c5c0ed1e3"));
 
         vFixedSeeds.clear();
@@ -422,7 +422,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x00000d39c9c0a7aa975ad9182dfa53b93129e23825e586a80012be892cbbf3ee")),
+            (0, uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476")),
             0, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -439,12 +439,11 @@ public:
         vHashLegacyBlocks = {
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "0004d212be7e7ccccd1806e1331e444d35dcbdd24732ec6fa5a6d82037217b98",
-        "0009297240a7fea4f7cdf266fdba06263b4ea22ef8c66bd8066a24162d3e6aab",
-        "000f138af3dbb3e28680a9194ef889bcb1ebc5d8f8e52d97872403e8c0413e3c",
+        "000937e580355522342eee1c237d6e469a9ed1086e297b072904a37dc8cec3b6",
+        "000a23c4f9e5c44c2ab3f7bdec4674a21f734a6033ef2abbfca7da2ff1644181",
+        "000540fd94c28c4b9d9592b2656a76eb13f69228381e1a8dc83b440ac4e5a373",
 //------------------------------------------------------------------------------
         };
-
     }
 };
 static CTestNetParams testNetParams;
