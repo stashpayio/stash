@@ -522,10 +522,8 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 {
     // Basic checks that don't depend on any context
 
-    // Transactions can contain empty `vin` and `vout` so long as
+    // Transactions can contain an empty `vout` so long as
     // `vjoinsplit` is non-empty.
-     if (tx.vin.empty() && tx.vjoinsplit.empty())
-        return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
     if (tx.vout.empty() && tx.vjoinsplit.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
 
@@ -686,6 +684,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, libzcash:
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
 {
     int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
+
+    // Transactions can contain an empty `vin` so long as
+    // `vjoinsplit` is non-empty or the transaction is in a legacy block.
+     if (!Params().isLegacyBlock(nHeight) && tx.vin.empty() && tx.vjoinsplit.empty())
+        return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
 
     // Size limits
     if (::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION) > MAX_STANDARD_TX_SIZE)
