@@ -3502,6 +3502,49 @@ UniValue z_gettotalbalance(const JSONRPCRequest& request)
     return result;
 }
 
+UniValue z_listbalances(const JSONRPCRequest& request) {
+    if (!EnsureWalletIsAvailable(request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 0)
+        throw runtime_error(
+            "z_listbalances\n"
+            "\nReturns the balances of all zaddr belonging to the node’s wallet.\n"
+            "\nArguments:\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"taddr\": xxxxx,    (numeric) the amount\n"
+            "  ...\n"
+            "}\n"
+            "\nExamples:\n"
+            "\nThe list of balances\n"
+            + HelpExampleCli("z_listbalances","")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    int nMinDepth = 1;
+    if (request.params.size() > 1) {
+        nMinDepth = request.params[1].get_int();
+    }
+    if (nMinDepth < 0) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum number of confirmations cannot be less than 0");
+    }
+
+    UniValue ret(UniValue::VOBJ);
+    std::set<libzcash::PaymentAddress> addresses;
+    pwalletMain->GetPaymentAddresses(addresses);
+    for (auto addr : addresses ) {
+        if (pwalletMain->HaveSpendingKey(addr)) {
+          std::string addrStr = CZCPaymentAddress(addr).ToString();
+          CAmount nBalance = 0;
+          nBalance = getBalanceZaddr(addrStr, nMinDepth, false);
+          ret.push_back(Pair(addrStr,ValueFromAmount(nBalance)));
+        }
+    }
+    return ret;
+}
+
 UniValue z_getoperationresult(const JSONRPCRequest& request)
 {
     if (!EnsureWalletIsAvailable(request.fHelp))
@@ -4156,6 +4199,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "z_listoperationids",     &z_listoperationids,     true,  {} },
     { "wallet",             "z_getnewaddress",        &z_getnewaddress,        true,  {} },
     { "wallet",             "z_listaddresses",        &z_listaddresses,        true,  {} },
+    { "wallet",             "z_listbalances",         &z_listbalances,         true,  {} },
     { "wallet",             "z_exportkey",            &z_exportkey,            true,  {} },
     { "wallet",             "z_importkey",            &z_importkey,            true,  {} },
     { "wallet",             "z_exportviewingkey",     &z_exportviewingkey,     true,  {} },
