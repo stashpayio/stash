@@ -3506,14 +3506,15 @@ UniValue z_listbalances(const JSONRPCRequest& request) {
     if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 0)
+    if (request.fHelp || request.params.size() > 1)
         throw runtime_error(
-            "z_listbalances\n"
+            "z_listbalances (minconf)\n"
             "\nReturns the balances of all zaddr belonging to the node’s wallet.\n"
             "\nArguments:\n"
+            "1. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "{\n"
-            "  \"taddr\": xxxxx,    (numeric) the amount\n"
+            "  \"zaddr\": xxxxx,    (numeric) the amount\n"
             "  ...\n"
             "}\n"
             "\nExamples:\n"
@@ -3524,8 +3525,8 @@ UniValue z_listbalances(const JSONRPCRequest& request) {
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
     int nMinDepth = 1;
-    if (request.params.size() > 1) {
-        nMinDepth = request.params[1].get_int();
+    if (request.params.size() > 0) {
+        nMinDepth = request.params[0].get_int();
     }
     if (nMinDepth < 0) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum number of confirmations cannot be less than 0");
