@@ -76,7 +76,8 @@ class GetBlockTemplateProposalTest(BitcoinTestFramework):
         self.setup_clean_chain = False
 
     def setup_network(self):
-        self.nodes = self.setup_nodes()
+        # self.nodes = self.setup_nodes()
+        self.nodes = start_nodes(self.num_nodes, self.options.tmpdir, [['-debug=1']] * self.num_nodes)
         connect_nodes_bi(self.nodes, 0, 1)
 
     def run_test(self):
@@ -84,6 +85,7 @@ class GetBlockTemplateProposalTest(BitcoinTestFramework):
         wait_to_sync(node)
         node.generate(1) # Mine a block to leave initial block download
         tmpl = node.getblocktemplate()
+        print(tmpl)
         if 'coinbasetxn' not in tmpl:
             rawcoinbase = encodeUNum(tmpl['height'])
             rawcoinbase += b'\x01-'

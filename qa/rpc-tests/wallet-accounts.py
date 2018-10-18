@@ -10,7 +10,7 @@ from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
 )
-
+from decimal import Decimal
 
 class WalletAccountsTest(BitcoinTestFramework):
 
@@ -31,7 +31,7 @@ class WalletAccountsTest(BitcoinTestFramework):
         
         node.generate(101)
         
-        assert_equal(node.getbalance(), 500)
+        assert_equal(node.getbalance(), Decimal("67.60000"))
         
         accounts = ["a","b","c","d","e"]
         amount_to_send = 1.0
@@ -64,13 +64,13 @@ class WalletAccountsTest(BitcoinTestFramework):
         
         node.generate(101)
         
-        expected_account_balances = {"": 52000}
+        expected_account_balances = {"": Decimal('7030.40000000')}
         for account in accounts:
             expected_account_balances[account] = 0
-        
+
         assert_equal(node.listaccounts(), expected_account_balances)
         
-        assert_equal(node.getbalance(""), 52000)
+        assert_equal(node.getbalance(""), Decimal('7030.40000000'))
         
         for account in accounts:
             address = node.getaccountaddress("")

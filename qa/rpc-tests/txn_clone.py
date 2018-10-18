@@ -10,6 +10,7 @@
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 
+
 class TxnMallTest(BitcoinTestFramework):
 
     def __init__(self):
@@ -27,7 +28,7 @@ class TxnMallTest(BitcoinTestFramework):
 
     def run_test(self):
         # All nodes should start with 12,500 STASH:
-        starting_balance = 12500
+        starting_balance = 1690
         for i in range(4):
             assert_equal(self.nodes[i].getbalance(), starting_balance)
             self.nodes[i].getnewaddress("")  # bug workaround, coins generated assigned to first getnewaddress!
@@ -36,15 +37,15 @@ class TxnMallTest(BitcoinTestFramework):
         self.nodes[0].settxfee(.001)
 
         node0_address_foo = self.nodes[0].getnewaddress("foo")
-        fund_foo_txid = self.nodes[0].sendfrom("", node0_address_foo, 12190)
+        fund_foo_txid = self.nodes[0].sendfrom("", node0_address_foo, 600)
         fund_foo_tx = self.nodes[0].gettransaction(fund_foo_txid)
 
         node0_address_bar = self.nodes[0].getnewaddress("bar")
-        fund_bar_txid = self.nodes[0].sendfrom("", node0_address_bar, 290)
+        fund_bar_txid = self.nodes[0].sendfrom("", node0_address_bar, 400)
         fund_bar_tx = self.nodes[0].gettransaction(fund_bar_txid)
 
         assert_equal(self.nodes[0].getbalance(""),
-                     starting_balance - 12190 - 290 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
+                     starting_balance - 600 - 400 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
 
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress("from0")
@@ -72,10 +73,13 @@ class TxnMallTest(BitcoinTestFramework):
             output0 = clone_raw[pos0 : pos0 + output_len]
             output1 = clone_raw[pos0 + output_len : pos0 + 2 * output_len]
             clone_raw = clone_raw[:pos0] + output1 + output0 + clone_raw[pos0 + 2 * output_len:]
-
         # Use a different signature hash type to sign.  This creates an equivalent but malleated clone.
         # Don't send the clone anywhere yet
+        print("===")
+        print(self.nodes[0].decoderawtransaction(clone_raw))
+        print("===")
         tx1_clone = self.nodes[0].signrawtransaction(clone_raw, None, None, "ALL|ANYONECANPAY")
+        print(tx1_clone)
         assert_equal(tx1_clone["complete"], True)
 
         # Have node0 mine a block, if requested:
@@ -89,14 +93,18 @@ class TxnMallTest(BitcoinTestFramework):
         # Node0's balance should be starting balance, plus 500STASH for another
         # matured block, minus tx1 and tx2 amounts, and minus transaction fees:
         expected = starting_balance + fund_foo_tx["fee"] + fund_bar_tx["fee"]
-        if self.options.mine_block: expected += 500
+        if self.options.mine_block: expected += Decimal("67.600")
         expected += tx1["amount"] + tx1["fee"]
         expected += tx2["amount"] + tx2["fee"]
+        print("===")
+        print(self.nodes[0].getbalance())
+        print(expected)
+        print("===")
         assert_equal(self.nodes[0].getbalance(), expected)
 
         # foo and bar accounts should be debited:
-        assert_equal(self.nodes[0].getbalance("foo", 0), 12190 + tx1["amount"] + tx1["fee"])
-        assert_equal(self.nodes[0].getbalance("bar", 0), 290 + tx2["amount"] + tx2["fee"])
+        assert_equal(self.nodes[0].getbalance("foo", 0), 600 + tx1["amount"] + tx1["fee"])
+        assert_equal(self.nodes[0].getbalance("bar", 0), 400 + tx2["amount"] + tx2["fee"])
 
         if self.options.mine_block:
             assert_equal(tx1["confirmations"], 1)

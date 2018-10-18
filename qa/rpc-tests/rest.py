@@ -16,6 +16,7 @@ from codecs import encode
 
 import http.client
 import urllib.parse
+from decimal import Decimal
 
 def deser_uint256(f):
     r = 0
@@ -69,7 +70,7 @@ class RESTTest (BitcoinTestFramework):
         self.nodes[2].generate(100)
         self.sync_all()
 
-        assert_equal(self.nodes[0].getbalance(), 500)
+        assert_equal(self.nodes[0].getbalance(), Decimal("67.600"))
 
         txid = self.nodes[0].sendtoaddress(self.nodes[1].getnewaddress(), 0.1)
         self.sync_all()

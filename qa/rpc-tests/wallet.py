@@ -40,15 +40,15 @@ class WalletTest (BitcoinTestFramework):
         self.nodes[0].generate(1)
 
         walletinfo = self.nodes[0].getwalletinfo()
-        assert_equal(walletinfo['immature_balance'], 169)
+        assert_equal(walletinfo['immature_balance'], Decimal('67.60000'))
         assert_equal(walletinfo['balance'], 0)
 
         self.sync_all()
         self.nodes[1].generate(101)
         self.sync_all()
 
-        assert_equal(self.nodes[0].getbalance(), 169)
-        assert_equal(self.nodes[1].getbalance(), 169)
+        assert_equal(self.nodes[0].getbalance(), Decimal('67.60000'))
+        assert_equal(self.nodes[1].getbalance(), Decimal('67.60000'))
         assert_equal(self.nodes[2].getbalance(), 0)
 
         # Check that only first and second nodes have UTXOs
@@ -83,7 +83,7 @@ class WalletTest (BitcoinTestFramework):
 
         # node0 should end up with 1000 STASH in block rewards plus fees, but
         # minus the 210 plus fees sent to node2
-        assert_equal(self.nodes[0].getbalance(), 169*2-30)
+        assert_equal(self.nodes[0].getbalance(), Decimal('67.60000')*2-30)
         assert_equal(self.nodes[2].getbalance(), 30)
 
         # Node0 should have two unspent outputs.
@@ -111,8 +111,8 @@ class WalletTest (BitcoinTestFramework):
         self.sync_all()
 
         assert_equal(self.nodes[0].getbalance(), 0)
-        assert_equal(self.nodes[2].getbalance(), 338)
-        assert_equal(self.nodes[2].getbalance("from1"), 338-30)
+        assert_equal(self.nodes[2].getbalance(), Decimal('135.2000'))
+        assert_equal(self.nodes[2].getbalance("from1"), Decimal('135.2000')-30)
 
         # Send 100 STASH normal
         address = self.nodes[0].getnewaddress("test")
@@ -121,7 +121,7 @@ class WalletTest (BitcoinTestFramework):
         txid = self.nodes[2].sendtoaddress(address, 10, "", "", False)
         self.nodes[2].generate(1)
         self.sync_all()
-        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), Decimal('328'), fee_per_byte, count_bytes(self.nodes[2].getrawtransaction(txid)))
+        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), Decimal('135.2000')-10, fee_per_byte, count_bytes(self.nodes[2].getrawtransaction(txid)))
         assert_equal(self.nodes[0].getbalance(), Decimal('10'))
 
         # Send 100 DASH with subtract fee from amount
@@ -177,16 +177,13 @@ class WalletTest (BitcoinTestFramework):
         #4. check if recipient (node0) can list the zero value tx
         usp = self.nodes[1].listunspent()       
         inputs = [{"txid":usp[0]['txid'], "vout":usp[0]['vout']}]
-        #outputs = {self.nodes[1].getnewaddress(): 499.998, self.nodes[0].getnewaddress(): 11.11}
-        outputs = {self.nodes[1].getnewaddress(): 119.998, self.nodes[0].getnewaddress(): 11.11}
-        tx_temp = self.nodes[1].createrawtransaction(inputs, outputs)
-        print(tx_temp)
+        # outputs = {self.nodes[1].getnewaddress(): 499.998, self.nodes[0].getnewaddress(): 11.11}
+        outputs = {self.nodes[1].getnewaddress(): 67.598, self.nodes[0].getnewaddress(): 11.11}
         rawTx = self.nodes[1].createrawtransaction(inputs, outputs).replace("c0833842", "00000000") #replace 11.11 with 0.0 (int32)
         decRawTx = self.nodes[1].decoderawtransaction(rawTx)
         signedRawTx = self.nodes[1].signrawtransaction(rawTx)
         decRawTx = self.nodes[1].decoderawtransaction(signedRawTx['hex'])
         zeroValueTxid= decRawTx['txid']
-        print(decRawTx)
         sendResp = self.nodes[1].sendrawtransaction(signedRawTx['hex'])
 
         self.sync_all()
@@ -275,17 +272,20 @@ class WalletTest (BitcoinTestFramework):
         txid = self.nodes[0].sendtoaddress(address_to_import, 1)
         self.nodes[0].generate(1)
         self.sync_all()
-
         # 2. Import address from node2 to node1
         self.nodes[1].importaddress(address_to_import)
 
         # 3. Validate that the imported address is watch-only on node1
         assert(self.nodes[1].validateaddress(address_to_import)["iswatchonly"])
-
+        self.sync_all()
         # 4. Check that the unspents after import are not spendable
+        '''
         assert_array_result(self.nodes[1].listunspent(),
                            {"address": address_to_import},
                            {"spendable": False})
+        '''
+        assert_array_result(self.nodes[1].listunspent(),
+                            {"address": address_to_import}, {}, True)
 
         # 5. Import private key of the previously imported address on node1
         priv_key = self.nodes[2].dumpprivkey(address_to_import)

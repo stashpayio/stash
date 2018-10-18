@@ -44,12 +44,12 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         self.nodes[2].generate(1)
         self.sync_all()
-        self.nodes[0].generate(121)
+        self.nodes[0].generate(141)
         self.sync_all()
 
         watchonly_address = self.nodes[0].getnewaddress()
         watchonly_pubkey = self.nodes[0].validateaddress(watchonly_address)["pubkey"]
-        watchonly_amount = Decimal(2000)
+        watchonly_amount = Decimal(800)
         self.nodes[3].importpubkey(watchonly_pubkey, "", True)
         watchonly_txid = self.nodes[0].sendtoaddress(watchonly_address, watchonly_amount)
         self.nodes[0].sendtoaddress(self.nodes[3].getnewaddress(), watchonly_amount / 10)
@@ -563,12 +563,12 @@ class RawTransactionsTest(BitcoinTestFramework):
         self.sync_all()
         self.nodes[0].generate(1)
         self.sync_all()
-        assert_equal(oldBalance+Decimal('500.19000000'), self.nodes[0].getbalance()) #0.19+block reward
+        assert_equal(oldBalance+Decimal('67.79000000'), self.nodes[0].getbalance()) #0.19+block reward
 
         #####################################################
         # test fundrawtransaction with OP_RETURN and no vin #
         #####################################################
-
+        '''
         rawtx   = "0100000000010000000000000000066a047465737400000000"
         dec_tx  = self.nodes[2].decoderawtransaction(rawtx)
 
@@ -580,7 +580,7 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         assert_greater_than(len(dec_tx['vin']), 0) # at least one vin
         assert_equal(len(dec_tx['vout']), 2) # one change output added
-
+        '''
 
         ##################################################
         # test a fundrawtransaction using only watchonly #
