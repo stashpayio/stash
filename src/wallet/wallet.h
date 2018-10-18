@@ -1217,9 +1217,11 @@ public:
     CAmount GetBalance() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
+    CAmount GetShieldedBalance() const;
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    CAmount GetWatchShieldedBalance() const;
 
     CAmount GetAnonymizableBalance(bool fSkipDenominated = false, bool fSkipUnconfirmed = true) const;
     CAmount GetAnonymizedBalance() const;
@@ -1410,6 +1412,8 @@ public:
                           int minDepth=1,
                           bool ignoreSpent=true,
                           bool ignoreUnspendable=true);
+
+    void GetAllNotes(std::vector<CNotePlaintextEntry> & outEntries, bool shoulHaveSpendingKey = true);
 
     /* Mark a transaction (and it in-wallet descendants) as abandoned so its inputs may be respent. */
     bool AbandonTransaction(const uint256& hashTx);
