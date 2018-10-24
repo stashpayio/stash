@@ -34,15 +34,15 @@ class TxnMallTest(BitcoinTestFramework):
         
         # Assign coins to foo and bar accounts:
         node0_address_foo = self.nodes[0].getnewaddress("foo")
-        fund_foo_txid = self.nodes[0].sendfrom("", node0_address_foo, 600)
+        fund_foo_txid = self.nodes[0].sendfrom("", node0_address_foo, 1200)
         fund_foo_tx = self.nodes[0].gettransaction(fund_foo_txid)
 
         node0_address_bar = self.nodes[0].getnewaddress("bar")
-        fund_bar_txid = self.nodes[0].sendfrom("", node0_address_bar, 480)
+        fund_bar_txid = self.nodes[0].sendfrom("", node0_address_bar, 400)
         fund_bar_tx = self.nodes[0].gettransaction(fund_bar_txid)
 
         assert_equal(self.nodes[0].getbalance(""),
-                     starting_balance - 600 - 480 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
+                     starting_balance - 1200 - 400 + fund_foo_tx["fee"] + fund_bar_tx["fee"])
 
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress("from0")
@@ -52,15 +52,15 @@ class TxnMallTest(BitcoinTestFramework):
         doublespend_fee = Decimal('-.02')
         rawtx_input_0 = {}
         rawtx_input_0["txid"] = fund_foo_txid
-        rawtx_input_0["vout"] = find_output(self.nodes[0], fund_foo_txid, 600)
+        rawtx_input_0["vout"] = find_output(self.nodes[0], fund_foo_txid, 1200)
         rawtx_input_1 = {}
         rawtx_input_1["txid"] = fund_bar_txid
-        rawtx_input_1["vout"] = find_output(self.nodes[0], fund_bar_txid, 480)
+        rawtx_input_1["vout"] = find_output(self.nodes[0], fund_bar_txid, 400)
         inputs = [rawtx_input_0, rawtx_input_1]
         change_address = self.nodes[0].getnewaddress()
         outputs = {}
-        outputs[node1_address] = 1000
-        outputs[change_address] = 1080 - 1000 + doublespend_fee
+        outputs[node1_address] = 1500
+        outputs[change_address] = 1600 - 1500 + doublespend_fee
         rawtx = self.nodes[0].createrawtransaction(inputs, outputs)
         doublespend = self.nodes[0].signrawtransaction(rawtx)
         assert_equal(doublespend["complete"], True)
@@ -86,8 +86,8 @@ class TxnMallTest(BitcoinTestFramework):
         assert_equal(self.nodes[0].getbalance(), expected)
 
         # foo and bar accounts should be debited:
-        assert_equal(self.nodes[0].getbalance("foo", 0), 600+tx1["amount"]+tx1["fee"])
-        assert_equal(self.nodes[0].getbalance("bar", 0), 480+tx2["amount"]+tx2["fee"])
+        assert_equal(self.nodes[0].getbalance("foo", 0), 1200+tx1["amount"]+tx1["fee"])
+        assert_equal(self.nodes[0].getbalance("bar", 0), 400+tx2["amount"]+tx2["fee"])
 
         if self.options.mine_block:
             assert_equal(tx1["confirmations"], 1)
@@ -115,10 +115,6 @@ class TxnMallTest(BitcoinTestFramework):
         tx1 = self.nodes[0].gettransaction(txid1)
         tx2 = self.nodes[0].gettransaction(txid2)
 
-        print("====")
-        print(tx1["confirmations"])
-        print(tx2["confirmations"])
-        print("====")
         # Both transactions should be conflicted
         assert_equal(tx1["confirmations"], -2)
         assert_equal(tx2["confirmations"], -2)
@@ -126,25 +122,25 @@ class TxnMallTest(BitcoinTestFramework):
         # Node0's total balance should be starting balance, plus 1000STASH for
         # two more matured blocks, minus 12400 for the double-spend, plus fees (which are
         # negative):
-        expected = starting_balance + (Decimal("67.60000") * 2) - 1000 + fund_foo_tx["fee"] + fund_bar_tx["fee"] + doublespend_fee
+        expected = starting_balance + (Decimal("67.60000") * 2) - 1500 + fund_foo_tx["fee"] + fund_bar_tx["fee"] + doublespend_fee
         assert_equal(self.nodes[0].getbalance(), expected)
         assert_equal(self.nodes[0].getbalance("*"), expected)
 
         # Final "" balance is starting_balance - amount moved to accounts - doublespend + subsidies +
         # fees (which are negative)
-        assert_equal(self.nodes[0].getbalance("foo"), 600)
-        assert_equal(self.nodes[0].getbalance("bar"), 480)
+        assert_equal(self.nodes[0].getbalance("foo"), 1200)
+        assert_equal(self.nodes[0].getbalance("bar"), 400)
         assert_equal(self.nodes[0].getbalance(""), starting_balance
-                                                              -600
-                                                              -480
-                                                              -1000
+                                                              -1200
+                                                              -400
+                                                              -1500
                                                               + (Decimal("67.6000") * 2)
                                                               + fund_foo_tx["fee"]
                                                               + fund_bar_tx["fee"]
                                                               + doublespend_fee)
 
         # Node1's "from0" account balance should be just the doublespend:
-        assert_equal(self.nodes[1].getbalance("from0"), 1000)
+        assert_equal(self.nodes[1].getbalance("from0"), 1500)
 
 if __name__ == '__main__':
     TxnMallTest().main()
