@@ -50,8 +50,11 @@ def template_to_bytearray(tmpl, txlist):
     blkver = pack('<L', tmpl['version'])
     mrklroot = genmrklroot(list(dblsha(a) for a in txlist))
     timestamp = pack('<L', tmpl['curtime'])
+    reserved = b'\0' * 32
     nonce = b'\0\0\0\0'
+    # nonce = b'\0' * 32
     blk = blkver + a2b_hex(tmpl['previousblockhash'])[::-1] + mrklroot + timestamp + a2b_hex(tmpl['bits'])[::-1] + nonce
+    # blk = blkver + a2b_hex(tmpl['previousblockhash'])[::-1] + mrklroot + timestamp + a2b_hex(tmpl['bits'])[::-1] + nonce + b'\0'
     blk += varlenEncode(len(txlist))
     for tx in txlist:
         blk += tx
@@ -85,15 +88,13 @@ class GetBlockTemplateProposalTest(BitcoinTestFramework):
         wait_to_sync(node)
         node.generate(1) # Mine a block to leave initial block download
         tmpl = node.getblocktemplate()
-        print(tmpl)
         if 'coinbasetxn' not in tmpl:
             rawcoinbase = encodeUNum(tmpl['height'])
             rawcoinbase += b'\x01-'
             hexcoinbase = b2x(rawcoinbase)
             hexoutval = b2x(pack('<Q', tmpl['coinbasevalue']))
-            tmpl['coinbasetxn'] = {'data': '01000000' + '01' + '0000000000000000000000000000000000000000000000000000000000000000ffffffff' + ('%02x' % (len(rawcoinbase),)) + hexcoinbase + 'fffffffe' + '01' + hexoutval + '00' + '00000000'}
+            tmpl['coinbasetxn'] = {'data': '01000000' + '01' + '0000000000000000000000000000000000000000000000000000000000000000ffffffff' + ('%02x' % (len(rawcoinbase),)) + hexcoinbase + 'fffffffe' + '01' + hexoutval + '00' + '00000000' + '00'}
         txlist = list(bytearray(a2b_hex(a['data'])) for a in (tmpl['coinbasetxn'],) + tuple(tmpl['transactions']))
-
         # Test 0: Capability advertised
         assert('proposal' in tmpl['capabilities'])
 
@@ -123,11 +124,10 @@ class GetBlockTemplateProposalTest(BitcoinTestFramework):
         txlist[-1][4+1] = 0xff
         assert_template(node, tmpl, txlist, 'bad-txns-inputs-missingorspent')
         txlist.pop()
-
         # Test 6: Future tx lock time
-        txlist[0][-4:] = b'\xff\xff\xff\xff'
+        txlist[0][-5:] = b'\xff\xff\xff\xff\x00'
         assert_template(node, tmpl, txlist, 'bad-txns-nonfinal')
-        txlist[0][-4:] = b'\0\0\0\0'
+        txlist[0][-5:] = b'\0\0\0\0\0'
 
         # Test 7: Bad tx count
         txlist.append(b'')
