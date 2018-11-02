@@ -3301,6 +3301,17 @@ CAmount CWallet::GetImmatureBalance() const
     return nTotal;
 }
 
+CAmount  CWallet::GetShieldedBalance() const {
+      CAmount balance = 0;
+      std::vector<CNotePlaintextEntry> entries;
+      LOCK2(cs_main,cs_wallet);
+      pwalletMain->GetAllNotes(entries, true);
+      for (auto & entry : entries) {
+          balance += CAmount(entry.plaintext.value);
+      }
+      return balance;
+}
+
 CAmount CWallet::GetWatchOnlyBalance() const
 {
     CAmount nTotal = 0;
@@ -3344,6 +3355,17 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
         }
     }
     return nTotal;
+}
+
+CAmount  CWallet::GetWatchShieldedBalance() const {
+    CAmount balance = 0;
+    std::vector<CNotePlaintextEntry> entries;
+    LOCK2(cs_main,cs_wallet);
+    pwalletMain->GetAllNotes(entries, false);
+    for (auto & entry : entries) {
+        balance += CAmount(entry.plaintext.value);
+    }
+    return balance;
 }
 
 void CWallet::AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed, const CCoinControl *coinControl, bool fIncludeZeroValue, AvailableCoinsType nCoinType, bool fUseInstantSend) const
@@ -6253,6 +6275,65 @@ void CWallet::GetFilteredNotes(std::vector<CNotePlaintextEntry> & outEntries, st
     }
 }
 
+void CWallet::GetAllNotes(std::vector<CNotePlaintextEntry> & outEntries, bool shoulHaveSpendingKey) {
+    for (auto & p : mapWallet) {
+        CWalletTx wtx = p.second;
+
+        // Filter the transactions before checking for notes
+        if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || wtx.GetDepthInMainChain() < 1) {
+            continue;
+        }
+
+        if (wtx.mapNoteData.size() == 0) {
+            continue;
+        }
+
+        for (auto & pair : wtx.mapNoteData) {
+            JSOutPoint jsop = pair.first;
+            CNoteData nd = pair.second;
+            PaymentAddress pa = nd.address;
+
+            // skip note which has been spent
+            if (nd.nullifier && IsSpent(*nd.nullifier)) {
+                continue;
+            }
+
+            if (shoulHaveSpendingKey != HaveSpendingKey(pa)) {
+                continue;
+            }
+
+            int i = jsop.js; // Index into CTransaction.vjoinsplit
+            int j = jsop.n; // Index into JSDescription.ciphertexts
+
+            // Get cached decryptor
+            ZCNoteDecryption decryptor;
+            if (!GetNoteDecryptor(pa, decryptor)) {
+                // Note decryptors are created when the wallet is loaded, so it should always exist
+                throw std::runtime_error(strprintf("Could not find note decryptor for payment address %s", CZCPaymentAddress(pa).ToString()));
+            }
+
+            // determine amount of funds in the note
+            auto hSig = wtx.tx->vjoinsplit[i].h_sig(*pzcashParams, wtx.tx->joinSplitPubKey);
+            try {
+                NotePlaintext plaintext = NotePlaintext::decrypt(
+                        decryptor,
+                        wtx.tx->vjoinsplit[i].ciphertexts[j],
+                        wtx.tx->vjoinsplit[i].ephemeralKey,
+                        hSig,
+                        (unsigned char) j);
+
+                outEntries.push_back(CNotePlaintextEntry{jsop, plaintext});
+
+            } catch (const note_decryption_failed &err) {
+                // Couldn't decrypt with this spending key
+                throw std::runtime_error(strprintf("Could not decrypt note for payment address %s", CZCPaymentAddress(pa).ToString()));
+            } catch (const std::exception &exc) {
+                // Unexpected failure
+                throw std::runtime_error(strprintf("Error while decrypting note for payment address %s: %s", CZCPaymentAddress(pa).ToString(), exc.what()));
+            }
+        }
+    }
+}
 
 void CWallet::debugMapWallet(const char* title) {
     printf("%s : CWallet::mapWallet\n",title);

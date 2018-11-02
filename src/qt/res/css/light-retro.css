@@ -874,6 +874,27 @@ font-size:12px;
 margin-left:16px;
 }
 
+QWidget .QFrame#frame .QLabel#labelShieldedText { /* Shielded Balance Label */
+qproperty-alignment: 'AlignVCenter | AlignRight';
+min-width:160px;
+font-size:12px;
+background-color:#F8F6F6;
+margin-right:5px;
+padding-right:5px;
+}
+
+QWidget .QFrame#frame .QLabel#labelShielded { /* Shielded Balance */
+qproperty-alignment: 'AlignVCenter | AlignLeft';
+font-size:12px;
+margin-left:0px;
+}
+
+QWidget .QFrame#frame .QLabel#labelWatchShielded { /* Watch-only Shielded Balance */
+qproperty-alignment: 'AlignVCenter | AlignLeft';
+font-size:12px;
+margin-left:16px;
+}
+
 QWidget .QFrame#frame .QLabel#labelTotalText { /* Total Balance Label */
 qproperty-alignment: 'AlignVCenter | AlignRight';
 min-width:160px;
@@ -1636,7 +1657,7 @@ QLabel#transactionSumLabel { /* Example of setObjectName for widgets without nam
 color:#333333;
 font-weight:bold;
 }
- 
+
 QLabel#transactionSum { /* Example of setObjectName for widgets without name */
 color:#333333;
 }
@@ -1650,5 +1671,3 @@ background-color:#F8F6F6;
 QDialog#TransactionDescDialog QTextEdit { /* Contents of Receive Coin Dialog */
 border:1px solid #d7d7d7;
 }
-
-

@@ -2,7 +2,14 @@
 
 set -eu
 
-PARAMS_DIR="/root/.zcash-params"
+if [ -z "$1" ]; then
+    home_dir=$HOME
+else
+    home_dir=$1
+
+fi
+
+PARAMS_DIR="$home_dir/.zcash-params"
 
 SPROUT_PKEY_NAME='sprout-proving.key'
 SPROUT_VKEY_NAME='sprout-verifying.key'
