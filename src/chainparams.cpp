@@ -148,11 +148,11 @@ public:
         consensus.nInstantSendConfirmationsRequired = 6;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 1000;
-        //consensus.nBudgetPaymentsCycleBlocks = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        //consensus.nBudgetPaymentsCycleBlocks = 43830; // ~(365.25*60*24)/12
         //consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
-        consensus.nSuperblockCycle = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockCycle = 43830; // ~(365.25*60*24)/12
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         consensus.nMasternodeMinimumConfirmations = 15;
