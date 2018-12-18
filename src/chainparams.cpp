@@ -182,7 +182,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"); // 0
+        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 0
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -197,7 +197,7 @@ public:
         nDefaultPort = 9999;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1541562169, 665527, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1545016533, 498287, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
@@ -205,15 +205,15 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         if (seedsDisabled()) {
               printf("Seeds disabled on mainnet\n");
         } else {
-            vSeeds.push_back(CDNSSeedData("seed1.stashpay.org", "199.247.31.160"));
-            vSeeds.push_back(CDNSSeedData("seed2.stashpay.org", "45.32.114.27"));
-            vSeeds.push_back(CDNSSeedData("seed3.stashpay.org", "45.76.112.248"));
+            vSeeds.push_back(CDNSSeedData("seed1.stashpay.io", "seed1.stashpay.io"));
+            vSeeds.push_back(CDNSSeedData("seed2.stashpay.io", "seed2.stashpay.io"));
+            vSeeds.push_back(CDNSSeedData("seed3.stashpay.io", "seed3.stashpay.io"));
         }
 
         // Stash addresses start with 'X'
@@ -249,7 +249,7 @@ public:
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
-         // place this key in .conf file as sporkkey=cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
+         // place this key in .conf file as sporkkey=XKJoibhonSsq2Pz6xsMfqZeQmcGVey5zd41YvGTEPaGxP6rNzCAx
         // privKey: XKJoibhonSsq2Pz6xsMfqZeQmcGVey5zd41YvGTEPaGxP6rNzCAx
         // open debug console and use this command:
         // spork SPORK_NAME [value]
@@ -258,7 +258,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  0, uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859")),
+            (  0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
             0,//3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -276,22 +276,24 @@ public:
 
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "0004232a1b60e67a71a56b8e6cf79f2f551f21aeee106e3540e59548301d0a68",
-        "000ebd702d1443b781df097353ec9d234d3683870a36c9dc05b02c631584bb26",
-        "000202381725f7383d1332be383c6ed09a0fd042ca0ecb8b30543823c3580707",
-        "00099f039ad798492ecda3baead8401aebd702ec31f1b89822bb89c68ac372d2",
-        "0001604c5e8353fba29912c08a29e2aae0706036620bc220b69048c2ac48509c",
-        "000584ddf79c9184e801ad6813e7569aa64b13175669234c7034057e4d153777",
-        "000c6a2e031a0bb3e92609e8330288a81d8a3f469ebcbbef86031a49f76d1ef9",
-        "00096787b7ab7c46b18924f7baf0313cf616a75e576fa8d070fef8ecbe362224",
-        "000eaf1cdc7d13c1e7f0117906d1606de8ee83bac08f6eeff1c1541265d6d7dd",
-        "000dc6b5abda5a932bf6aa331fbc8f79036681660576de59bcd1620f1b418ef0",
-        "0005906c8312f08897549606e7f7fc998faea110a3a1141bb1f1782a03cce047",
-        "000333a5d5001c1e430b9f2cf28c42eb8b918b6245efca3635e6066379876a3c",
-        "000f1bff57f08e08076342d56200a72179c1d1f0a39b6aaefcb12130add576a3",
-        "0004b9651e5e77beee6c67f9ee230fc77e067cb3f80e158a656a0d5ca5acd48c",
-        "000196f7e7be389efd81ecfab960f711c45c27b06908f722827086939ef140d0",
-        "000e60c25b66ca496a880532f0076eb8fbb72f0082827d49fbd20697cd2eb8b6",
+        "000d75f767cab06c379c07b4d15dc58c4519ea7406a4a0755a79b4dfd862873c",
+        "00095c8fa94f3082a43430aca06216362e2b0125d243bc1af940aa16b8d6e6f2",
+        "000211c51484ce5c112511a62336bfdd713eccafcc26c188c494941c9255cad2",
+        "00013b52b30be93d663236b011c52f688634371204cf61d7b0df0d10d0fd5d5b",
+        "0007763577df7601b0e572125215aae17c385c96185881fd0d270b8d86b51f12",
+        "000c31826dd4eeac85a0f56f425c3609925569edc3d05f61c7568c9b24cbe964",
+        "00079003f2e4f37017a79881a62be0a3e61a9d11a1651d3649be807e980b60bb",
+        "0000359ab8ad945f501e0f27e29c140f46f0aa04690c59b4c5bd0b759dbe6dd7",
+        "0009abd909f6b5b2cbfbce2413f96a7929c12a23c7e379e260e6b6e130a122ed",
+        "0001cdca4ab4afa461d1c5aa550f129b83156cbe0678c03265dec77f9edcf749",
+        "0009950f38c1d87286b2934dce10c54d1d3ef4441f35d868c8f8ce09fbacdebd",
+        "00013720dc2a5ef17c303fd5a4110afad212d74a270b50751412b4686291c161",
+        "00028ff3db46e6f9a05541245f4a58ee6769dbc31a00c5f08003f191b1d78cf9",
+        "000076a5449ca078769f061d3c44fe319bc52b414f5cfa537b3a51fc15061a39",
+        "000b2fb47a507d468a865d1a2d03b816056eb49cbd4ec0c524d3004550fac5a6",
+        "000ace3e90aa7cb09da7fe1250d827342b4bb8d336450b87cdce9a5ef5646649",
+        "000c5b8a449206a94562f58b2f82ee90b0f4cd2ac1e778bd19e2d51e015e7242",
+        "0004b4ddb4a03d614631aca72f6632bdca9b18492539652195a3477080d8b277",
 //------------------------------------------------------------------------------
 
         };
@@ -348,7 +350,7 @@ public:
         // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000003be69c34b1244f"); // 143200
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"); // 0
+        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 0
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -361,14 +363,14 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1541562169, 665527, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1545016533, 498287, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         vFixedSeeds.clear();
@@ -376,9 +378,9 @@ public:
         if (seedsDisabled()) {
               printf("Seeds disabled on testnet\n");
         } else {
-              vSeeds.push_back(CDNSSeedData("testseed1.stashpay.org", "209.250.249.129"));
-              vSeeds.push_back(CDNSSeedData("testseed2.stashpay.org", "45.76.127.219"));
-              vSeeds.push_back(CDNSSeedData("testseed3.stashpay.org", "66.42.55.162"));
+              vSeeds.push_back(CDNSSeedData("testseed1.stashpay.io", "testseed1.stashpay.io"));
+              vSeeds.push_back(CDNSSeedData("testseed2.stashpay.io", "testseed1.stashpay.io"));
+              vSeeds.push_back(CDNSSeedData("testseed3.stashpay.io", "testseed1.stashpay.io"));
         }
 
         // Testnet Stash addresses start with 'y'
@@ -421,8 +423,8 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859")),
-            1541562169, // * UNIX timestamp of last checkpoint block
+            (0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
+            1545016533, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0         // * estimated number of transactions per day after checkpoint
@@ -438,9 +440,10 @@ public:
         vHashLegacyBlocks = {
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "00025b2f96c4dd37260bb54ecbbfe2537f01254dad72a55ab167a3e61377cc6b",
-        "00084d307b2f13a9b387a8eed158d45e59ba9ce9a304e7c0035b112fc6f96095",
-        "000a1f28a58b670f218d64f224df67e714dd9d0e7dee340f6acdfc53c69be230",
+        "0007297ceb034981af9f58bbbe826a9138766c1d67fcd06bf29bb8fea797b0b1",
+        "0002831a8490b3bb9743db653abd97795eb81adb6fb9e4fba80707298392ad3d",
+        "00053fcc0186448911cb65a4a6814ee61178a417f2cbb6ec04f36229379f53c6",
+        "000dfd446685cad397cd9652001621572a78c0a2b7d5bbf1c19c9b3a04d004d2",
 //------------------------------------------------------------------------------
         };
     }
@@ -474,7 +477,7 @@ public:
         consensus.BIP66Height = 1; // BIP66 activated immediately on devnet
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -504,14 +507,14 @@ public:
         nDefaultPort = 19999;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1541562169,  665527, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1545016533, 498287, 0x207fffff, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         devnetGenesis = FindDevNetGenesisBlock(consensus, genesis, 50 * COIN);
@@ -554,7 +557,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (      0, uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"))
+            (      0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"))
             (      1, devnetGenesis.GetHash())
         };
 
@@ -600,7 +603,7 @@ public:
         consensus.BIP66Height = 1; // BIP66 activated on regtest (Used in rpc activation tests)
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         //consensus.nPowKGWHeight = 15200; // STASH Always use DGW
@@ -627,14 +630,14 @@ public:
         nDefaultPort = 19994;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1541562169, 665527, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1545016533, 498287, 0x1e0ffff0 /*0x207fffff*/, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000005ab3bc82cc725a4933a0bddcc1c38a24a6c6130c95dad104ad2ac4ed859"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
