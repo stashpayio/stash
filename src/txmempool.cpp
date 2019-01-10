@@ -989,18 +989,10 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
 
     for (std::map<uint256, const CTransaction*>::const_iterator it = mapNullifiers.begin(); it != mapNullifiers.end(); it++) {
         uint256 hash = it->second->GetHash();
-        LogPrintf("#### nullhash: %s \n", hash.ToString());
         indexed_transaction_set::nth_index<0>::type::iterator it2= mapTx.find(hash);
         const CTransaction& tx = it2->GetTx();
-
-
-        LogPrintf("===================== \n");
-
-        LogPrintf("#### tx: %s \n", tx.GetHash().ToString());
-        LogPrintf("#### it->second: %s \n", it->second->GetHash().ToString());
-
-    //    assert(it2 != mapTx.end());
-    //    assert(&tx == it->second);
+        assert(it2 != mapTx.end());
+        assert(&tx == it->second);
     }
 
     assert(totalTxSize == checkTotal);
