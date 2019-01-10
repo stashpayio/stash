@@ -60,7 +60,7 @@ public:
     EmptyMerkleRoots() {
         empty_roots.at(0) = Hash();
         for (size_t d = 1; d <= Depth; d++) {
-            empty_roots.at(d) = Hash::combine(empty_roots.at(d-1), empty_roots.at(d-1));
+            empty_roots.at(d) = Hash::combine(empty_roots.at(d-1), empty_roots.at(d-1),  d-1);
         }
     }
     Hash empty_root(size_t depth) {
@@ -170,6 +170,10 @@ public:
         return tree.last();
     }
 
+    uint64_t position() const {
+        return tree.size() - 1;
+    }
+
     Hash root() const {
         return tree.root(Depth, partial_path());
     }
@@ -214,7 +218,29 @@ public:
     SHA256Compress() : uint256() {}
     SHA256Compress(uint256 contents) : uint256(contents) { }
 
-    static SHA256Compress combine(const SHA256Compress& a, const SHA256Compress& b);
+    static SHA256Compress combine(
+        const SHA256Compress& a,
+        const SHA256Compress& b,
+        size_t depth
+    );
+
+    static SHA256Compress uncommitted() {
+        return SHA256Compress();
+    }
+};
+
+class PedersenHash : public uint256 {
+public:
+    PedersenHash() : uint256() {}
+    PedersenHash(uint256 contents) : uint256(contents) { }
+
+    static PedersenHash combine(
+        const PedersenHash& a,
+        const PedersenHash& b,
+        size_t depth
+    );
+
+    static PedersenHash uncommitted();
 };
 
 template<size_t Depth, typename Hash>

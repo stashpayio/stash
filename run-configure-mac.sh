@@ -4,5 +4,5 @@ BUILD="$(./depends/config.guess)"
 echo 'BUILD : '$BUILD
 PREFIX="$(pwd)/depends/$BUILD/"
 echo $PREFIX
-./configure  --prefix="${PREFIX}"   --without-libs  --disable-gui-tests --disable-bench
+./configure  --prefix="${PREFIX}"   --without-libs  --disable-gui-tests --disable-bench --with-incompatible-bdb
 

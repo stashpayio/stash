@@ -3094,6 +3094,7 @@ UniValue zc_raw_joinsplit(const JSONRPCRequest& request)
     mtx.nVersion = 2;
     mtx.joinSplitPubKey = joinSplitPubKey;
 
+
     JSDescription jsdesc(*pzcashParams,
                          joinSplitPubKey,
                          anchor,

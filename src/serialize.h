@@ -21,6 +21,7 @@
 #include <string.h>
 #include <utility>
 #include <vector>
+#include <array>
 
 #include "prevector.h"
 #include <boost/array.hpp>
@@ -505,6 +506,19 @@ template<typename Stream, typename T, typename A> void Unserialize_impl(Stream& 
 template<typename Stream, typename T, typename A, typename V> void Unserialize_impl(Stream& is, std::vector<T, A>& v, const V&);
 template<typename Stream, typename T, typename A> inline void Unserialize(Stream& is, std::vector<T, A>& v);
 
+
+/**
+ * optional
+ */
+template<typename Stream, typename T> void Serialize(Stream& os, const boost::optional<T>& item);
+template<typename Stream, typename T> void Unserialize(Stream& is, boost::optional<T>& item);
+
+/**
+ * array
+ */
+template<typename Stream, typename T, std::size_t N> void Serialize(Stream& os, const std::array<T, N>& item);
+template<typename Stream, typename T, std::size_t N> void Unserialize(Stream& is, std::array<T, N>& item);
+
 /**
  * pair
  */
@@ -522,6 +536,14 @@ template<typename Stream, typename K, typename T, typename Pred, typename A> voi
  */
 template<typename Stream, typename K, typename Pred, typename A> void Serialize(Stream& os, const std::set<K, Pred, A>& m);
 template<typename Stream, typename K, typename Pred, typename A> void Unserialize(Stream& is, std::set<K, Pred, A>& m);
+
+
+/**
+ * list
+ */
+template<typename Stream, typename T, typename A> void Serialize(Stream& os, const std::list<T, A>& m);
+template<typename Stream, typename T, typename A> void Unserialize(Stream& is, std::list<T, A>& m);
+
 
 /**
  * shared_ptr
@@ -733,6 +755,61 @@ inline void Unserialize(Stream& is, std::vector<T, A>& v)
     Unserialize_impl(is, v, T());
 }
 
+/**
+ * optional
+ */
+template<typename Stream, typename T>
+void Serialize(Stream& os, const boost::optional<T>& item)
+{
+    // If the value is there, put 0x01 and then serialize the value.
+    // If it's not, put 0x00.
+    if (item) {
+        unsigned char discriminant = 0x01;
+        Serialize(os, discriminant);
+        Serialize(os, *item);
+    } else {
+        unsigned char discriminant = 0x00;
+        Serialize(os, discriminant);
+    }
+}
+
+template<typename Stream, typename T>
+void Unserialize(Stream& is, boost::optional<T>& item)
+{
+    unsigned char discriminant = 0x00;
+    Unserialize(is, discriminant);
+
+    if (discriminant == 0x00) {
+        item = boost::none;
+    } else if (discriminant == 0x01) {
+        T object;
+        Unserialize(is, object);
+        item = object;
+    } else {
+        throw std::ios_base::failure("non-canonical optional discriminant");
+    }
+}
+
+
+
+/**
+ * array
+ */
+template<typename Stream, typename T, std::size_t N>
+void Serialize(Stream& os, const std::array<T, N>& item)
+{
+    for (size_t i = 0; i < N; i++) {
+        Serialize(os, item[i]);
+    }
+}
+
+template<typename Stream, typename T, std::size_t N>
+void Unserialize(Stream& is, std::array<T, N>& item)
+{
+    for (size_t i = 0; i < N; i++) {
+        Unserialize(is, item[i]);
+    }
+}
 
 
 /**
@@ -877,41 +954,6 @@ template<typename Stream>
 void Unserialize(Stream& is, CScript& v)
 {
     Unserialize(is, (std::vector<unsigned char>&)v);
-}
-
-/**
- * optional
- */
-template<typename Stream, typename T>
-void Serialize(Stream& os, const boost::optional<T>& item)
-{
-    // If the value is there, put 0x01 and then serialize the value.
-    // If it's not, put 0x00.
-    if (item) {
-        unsigned char discriminant = 0x01;
-        Serialize(os, discriminant);
-        Serialize(os, *item);
-    } else {
-        unsigned char discriminant = 0x00;
-        Serialize(os, discriminant);
-    }
-}
-
-template<typename Stream, typename T>
-void Unserialize(Stream& is, boost::optional<T>& item)
-{
-    unsigned char discriminant = 0x00;
-    Unserialize(is, discriminant);
-
-    if (discriminant == 0x00) {
-        item = boost::none;
-    } else if (discriminant == 0x01) {
-        T object;
-        Unserialize(is, object);
-        item = object;
-    } else {
-        throw std::ios_base::failure("non-canonical optional discriminant");
-    }
 }
 
 /**
