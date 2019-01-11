@@ -37,7 +37,7 @@ LIBBITCOINQT=qt/libstashqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 LIBSNARK=snark/libsnark.a
 LIBZCASH=libzcash.a
-LIBZCASH_LIBS = $(GMPXX_LIBS) $(GMP_LIBS) -lsodium  -lrustzcash
+LIBZCASH_LIBS = $(GMPXX_LIBS) $(GMP_LIBS) -lsodium  -lrustzcash 
 
 if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libstash_zmq.a
