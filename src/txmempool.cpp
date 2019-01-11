@@ -613,6 +613,12 @@ void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
     BOOST_FOREACH(const CTxIn& txin, it->GetTx().vin)
         mapNextTx.erase(txin.prevout);
 
+    BOOST_FOREACH(const JSDescription& joinsplit, it->GetTx().vjoinsplit) {
+                   BOOST_FOREACH(const uint256& nf, joinsplit.nullifiers) {
+                       mapNullifiers.erase(nf);
+                   }
+               }
+
     if (vTxHashes.size() > 1) {
         vTxHashes[it->vTxHashesIdx] = std::move(vTxHashes.back());
         vTxHashes[it->vTxHashesIdx].second->vTxHashesIdx = it->vTxHashesIdx;
