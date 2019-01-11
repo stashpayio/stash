@@ -27,19 +27,6 @@
 
 #include <boost/variant.hpp>
 
-template<typename Stream, typename T>
-inline void SerReadWriteGrothProof(Stream& s, const T& proof, CSerActionSerialize ser_action)
-{
-	::Serialize(s, proof);
-}
-
-template<typename Stream, typename T>
-inline void SerReadWriteGrothProof(Stream& s, T& proof, CSerActionUnserialize ser_action)
-{
-	libzcash::GrothProof grothProof;
-	::Unserialize(s, grothProof);
-	proof = grothProof;
-}
 
 class JSDescription
 {
@@ -140,7 +127,6 @@ public:
         READWRITE(randomSeed);
         READWRITE(macs);
         READWRITE(proof);
-        //::SerReadWriteGrothProof(s, proof, ser_action);
         READWRITE(ciphertexts);
     }
 

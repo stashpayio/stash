@@ -681,6 +681,15 @@ public:
         // Regtest Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
+
+        // guarantees the first 2 characters, when base58 encoded, are "zt"
+        base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
+         // guarantees the first 4 characters, when base58 encoded, are "ZiVt"
+        base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
+         // guarantees the first 2 characters, when base58 encoded, are "ST"
+        base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
+
+
         // Regtest Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;
 
