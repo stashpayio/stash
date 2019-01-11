@@ -152,7 +152,7 @@ public:
         //consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
-        consensus.nSuperblockCycle = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockCycle = 43830; // ~(365.25*60*24)/12
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         consensus.nMasternodeMinimumConfirmations = 15;
@@ -258,7 +258,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  0, uint256S("0x00000f3f519e5a8fd0a945f9b8b0b8e63d0e5794c61386c938bacba119341629")),
+            (  0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
             0,//3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -266,8 +266,8 @@ public:
         };
 
         chainTxData = ChainTxData{
-            1529305236, // * UNIX timestamp of last known number of transactions
-            6155435,    // * total number of transactions between genesis and that timestamp
+            0, // * UNIX timestamp of last known number of transactions
+            0,    // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -276,22 +276,24 @@ public:
 
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "00011b1533043d05b3d316605812ceef271d79fce2c2b9fb14ebe2d81b90f24e",
-        "0005f811694a01ea66a39088d29d013aa45f7992ec0ee443f7ab8b69246ee150",
-        "00034f9fb5d299ce2573928a7a6e243fa53fa06382941a7d76eff1bdd1de5f2c",
-        "000602e59ee0c97989b868c67f338e5a5c67acf18579c6cdf2db393d182864fc",
-        "0008fc4344eb4b10101a1972b1b8e0917264e8bfae0ae4d05e0acc96918e0ca5",
-        "000fe88682bf6a6cb0bec00a042496e0f2f8969c5a7dc7b172b0082cd69aa64b",
-        "000f4830475508694832c2ae1acc1e2d073beaabc3304e5fbda43c873a9d0ead",
-        "0009626910fd8077e2781c0d7219c630811d239f843e050a0a7e5c27c00485ae",
-        "000477018ab365a4080ffaf4c74034d454729bfe2e42970a7bc5c5d90490f0a1",
-        "000f8501ee4e5ab03839c7d4e6f344f579d2e0ae16f2bf47d6cad14f617b5b20",
-        "0004ff4ee5a737dc358fab889712d9f47022fde6ba373796996e56d1d0763a4c",
-        "000f810090e07c99be0e85e3447d8bc7547d5cb0072187983010450c3fa95453",
-        "000dfb1258714998747b3c4e185943aa5cf2c3b91b217f4ac5a7db833befee94",
-        "000df5b65917794e71e8084710f8f96321548f18f23105b9e4aa0847a493b8d1",
-        "0008ae8facbfa293c71e93ba61156c658b30b425f246b0567ff61bd9ef8e6062",
-        "000da95874b4516d59fb4de67bea0a1df4ddb4de65bfd738d4ae8a40c42fb541",
+        "000d75f767cab06c379c07b4d15dc58c4519ea7406a4a0755a79b4dfd862873c",
+        "00095c8fa94f3082a43430aca06216362e2b0125d243bc1af940aa16b8d6e6f2",
+        "000211c51484ce5c112511a62336bfdd713eccafcc26c188c494941c9255cad2",
+        "00013b52b30be93d663236b011c52f688634371204cf61d7b0df0d10d0fd5d5b",
+        "0007763577df7601b0e572125215aae17c385c96185881fd0d270b8d86b51f12",
+        "000c31826dd4eeac85a0f56f425c3609925569edc3d05f61c7568c9b24cbe964",
+        "00079003f2e4f37017a79881a62be0a3e61a9d11a1651d3649be807e980b60bb",
+        "0000359ab8ad945f501e0f27e29c140f46f0aa04690c59b4c5bd0b759dbe6dd7",
+        "0009abd909f6b5b2cbfbce2413f96a7929c12a23c7e379e260e6b6e130a122ed",
+        "0001cdca4ab4afa461d1c5aa550f129b83156cbe0678c03265dec77f9edcf749",
+        "0009950f38c1d87286b2934dce10c54d1d3ef4441f35d868c8f8ce09fbacdebd",
+        "00013720dc2a5ef17c303fd5a4110afad212d74a270b50751412b4686291c161",
+        "00028ff3db46e6f9a05541245f4a58ee6769dbc31a00c5f08003f191b1d78cf9",
+        "000076a5449ca078769f061d3c44fe319bc52b414f5cfa537b3a51fc15061a39",
+        "000b2fb47a507d468a865d1a2d03b816056eb49cbd4ec0c524d3004550fac5a6",
+        "000ace3e90aa7cb09da7fe1250d827342b4bb8d336450b87cdce9a5ef5646649",
+        "000c5b8a449206a94562f58b2f82ee90b0f4cd2ac1e778bd19e2d51e015e7242",
+        "0004b4ddb4a03d614631aca72f6632bdca9b18492539652195a3477080d8b277",
 //------------------------------------------------------------------------------
 
         };
@@ -318,7 +320,7 @@ public:
         //consensus.nBudgetPaymentsWindowBlocks = 10; // STASH unused
         consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
-        consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
+        consensus.nSuperblockCycle = 60; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
         consensus.nMasternodeMinimumConfirmations = 1;
@@ -422,16 +424,16 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x00000042958a8787992fa54f9b6cdadaf273002cbd844b9406f61a6f93b0c476")),
-            0, // * UNIX timestamp of last checkpoint block
+            (0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
+            1545016533, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0         // * estimated number of transactions per day after checkpoint
         };
 
         chainTxData = ChainTxData{
-            1538173112, // * UNIX timestamp of last known number of transactions
-            542,        // * total number of transactions between genesis and that timestamp
+            0,// * UNIX timestamp of last known number of transactions
+            0,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.006       // * estimated number of transactions per second after that timestamp
         };
@@ -476,7 +478,7 @@ public:
         consensus.BIP66Height = 1; // BIP66 activated immediately on devnet
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 1; STASH Always use DGW
@@ -602,7 +604,7 @@ public:
         consensus.BIP66Height = 1; // BIP66 activated on regtest (Used in rpc activation tests)
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Stash: 2.5 minutes
+        consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         //consensus.nPowKGWHeight = 15200; // STASH Always use DGW
@@ -656,7 +658,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0x000004ffd4dd61a93f86ea3f552848a0fd3943cedf1885b597b0e1f130173083")),
+            ( 0, uint256S("0x")),
               0,
               0,
               0
@@ -678,13 +680,6 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         // Regtest Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
-
-        // guarantees the first 2 characters, when base58 encoded, are "zt"
-        base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
-         // guarantees the first 4 characters, when base58 encoded, are "ZiVt"
-        base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
-         // guarantees the first 2 characters, when base58 encoded, are "ST"
-        base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
 
         // Regtest Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;
