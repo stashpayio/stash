@@ -22,7 +22,7 @@ QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
     unitlist.append(STASH);
     unitlist.append(mSTASH);
     unitlist.append(uSTASH);
-    unitlist.append(duffs);
+    unitlist.append(stashees);
     return unitlist;
 }
 
@@ -33,7 +33,7 @@ bool BitcoinUnits::valid(int unit)
     case STASH:
     case mSTASH:
     case uSTASH:
-    case duffs:
+    case stashees:
         return true;
     default:
         return false;
@@ -49,7 +49,7 @@ QString BitcoinUnits::name(int unit)
             case STASH: return QString("STASH");
             case mSTASH: return QString("mSTASH");
             case uSTASH: return QString::fromUtf8("μSTASH");
-            case duffs: return QString("duffs");
+            case stashees: return QString("stashees");
             default: return QString("???");
         }
     }
@@ -60,7 +60,7 @@ QString BitcoinUnits::name(int unit)
             case STASH: return QString("tSTASH");
             case mSTASH: return QString("mtSTASH");
             case uSTASH: return QString::fromUtf8("μtSTASH");
-            case duffs: return QString("tduffs");
+            case stashees: return QString("tstashees");
             default: return QString("???");
         }
     }
@@ -75,7 +75,7 @@ QString BitcoinUnits::description(int unit)
             case STASH: return QString("Stash");
             case mSTASH: return QString("Milli-Stash (1 / 1" THIN_SP_UTF8 "000)");
             case uSTASH: return QString("Micro-Stash (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case duffs: return QString("Ten Nano-Stash (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case stashees: return QString("Ten Nano-Stash (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -86,7 +86,7 @@ QString BitcoinUnits::description(int unit)
             case STASH: return QString("TestStashs");
             case mSTASH: return QString("Milli-TestStash (1 / 1" THIN_SP_UTF8 "000)");
             case uSTASH: return QString("Micro-TestStash (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case duffs: return QString("Ten Nano-TestStash (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case stashees: return QString("Ten Nano-TestStash (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -99,7 +99,7 @@ qint64 BitcoinUnits::factor(int unit)
     case STASH:  return 100000000;
     case mSTASH: return 100000;
     case uSTASH: return 100;
-    case duffs: return 1;
+    case stashees: return 1;
     default:   return 100000000;
     }
 }
@@ -111,7 +111,7 @@ int BitcoinUnits::decimals(int unit)
     case STASH: return 8;
     case mSTASH: return 5;
     case uSTASH: return 2;
-    case duffs: return 0;
+    case stashees: return 0;
     default: return 0;
     }
 }

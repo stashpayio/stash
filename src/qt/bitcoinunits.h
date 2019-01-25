@@ -60,7 +60,7 @@ public:
         STASH,
         mSTASH,
         uSTASH,
-        duffs
+        stashees
     };
 
     enum SeparatorStyle
