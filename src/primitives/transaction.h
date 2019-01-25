@@ -10,6 +10,7 @@
 #include "random.h"
 #include "script/script.h"
 #include "serialize.h"
+#include "streams.h"
 #include "uint256.h"
 
 #include "consensus/consensus.h"
@@ -21,6 +22,11 @@
 #include "zcash/Proof.hpp"
 
 #include <functional>
+
+#include <array>
+
+#include <boost/variant.hpp>
+
 
 class JSDescription
 {
@@ -40,14 +46,14 @@ public:
     // are derived from the secrets placed in the note
     // and the secret spend-authority key known by the
     // spender.
-    boost::array<uint256, ZC_NUM_JS_INPUTS> nullifiers;
+    std::array<uint256, ZC_NUM_JS_INPUTS> nullifiers;
 
     // Note commitments are introduced into the commitment
     // tree, blinding the public about the values and
     // destinations involved in the JoinSplit. The presence of
     // a commitment in the note commitment tree is required
     // to spend it.
-    boost::array<uint256, ZC_NUM_JS_OUTPUTS> commitments;
+    std::array<uint256, ZC_NUM_JS_OUTPUTS> commitments;
 
     // Ephemeral key
     uint256 ephemeralKey;
@@ -56,7 +62,7 @@ public:
     // These contain trapdoors, values and other information
     // that the recipient needs, including a memo field. It
     // is encrypted using the scheme implemented in crypto/NoteEncryption.cpp
-    boost::array<ZCNoteEncryption::Ciphertext, ZC_NUM_JS_OUTPUTS> ciphertexts = {{ {{0}} }};
+    std::array<ZCNoteEncryption::Ciphertext, ZC_NUM_JS_OUTPUTS> ciphertexts = {{ {{0}} }};
 
     // Random seed
     uint256 randomSeed;
@@ -64,19 +70,19 @@ public:
     // MACs
     // The verification of the JoinSplit requires these MACs
     // to be provided as an input.
-    boost::array<uint256, ZC_NUM_JS_INPUTS> macs;
+    std::array<uint256, ZC_NUM_JS_INPUTS> macs;
 
     // JoinSplit proof
     // This is a zk-SNARK which ensures that this JoinSplit is valid.
-    libzcash::ZCProof proof;
+    libzcash::GrothProof proof;
 
     JSDescription(): vpub_old(0), vpub_new(0) { }
 
     JSDescription(ZCJoinSplit& params,
             const uint256& pubKeyHash,
             const uint256& rt,
-            const boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            const boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            const std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
             CAmount vpub_old,
             CAmount vpub_new,
             bool computeProof = true, // Set to false in some tests
@@ -87,10 +93,10 @@ public:
             ZCJoinSplit& params,
             const uint256& pubKeyHash,
             const uint256& rt,
-            boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
-            boost::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
-            boost::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
+			std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+			std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+			std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
+			std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
             CAmount vpub_old,
             CAmount vpub_new,
             bool computeProof = true, // Set to false in some tests

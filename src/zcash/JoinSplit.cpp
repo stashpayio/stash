@@ -18,6 +18,10 @@
 #include "sync.h"
 #include "amount.h"
 
+#include "librustzcash.h"
+#include "streams.h"
+#include "version.h"
+
 using namespace libsnark;
 
 namespace libzcash {
@@ -98,55 +102,18 @@ public:
         saveToFile(pkPath, keypair.pk);
     }
 
-    bool verify(
-        const ZCProof& proof,
-        ProofVerifier& verifier,
-        const uint256& pubKeyHash,
-        const uint256& randomSeed,
-        const boost::array<uint256, NumInputs>& macs,
-        const boost::array<uint256, NumInputs>& nullifiers,
-        const boost::array<uint256, NumOutputs>& commitments,
-        uint64_t vpub_old,
-        uint64_t vpub_new,
-        const uint256& rt
-    ) {
-        try {
-            auto r1cs_proof = proof.to_libsnark_proof<r1cs_ppzksnark_proof<ppzksnark_ppT>>();
 
-            uint256 h_sig = this->h_sig(randomSeed, nullifiers, pubKeyHash);
-
-            auto witness = joinsplit_gadget<FieldT, NumInputs, NumOutputs>::witness_map(
-                rt,
-                h_sig,
-                macs,
-                nullifiers,
-                commitments,
-                vpub_old,
-                vpub_new
-            );
-
-            return verifier.check(
-                vk,
-                vk_precomp,
-                witness,
-                r1cs_proof
-            );
-        } catch (...) {
-            return false;
-        }
-    }
-
-    ZCProof prove(
-        const boost::array<JSInput, NumInputs>& inputs,
-        const boost::array<JSOutput, NumOutputs>& outputs,
-        boost::array<Note, NumOutputs>& out_notes,
-        boost::array<ZCNoteEncryption::Ciphertext, NumOutputs>& out_ciphertexts,
+    GrothProof prove(
+        const std::array<JSInput, NumInputs>& inputs,
+        const std::array<JSOutput, NumOutputs>& outputs,
+		std::array<Note, NumOutputs>& out_notes,
+		std::array<ZCNoteEncryption::Ciphertext, NumOutputs>& out_ciphertexts,
         uint256& out_ephemeralKey,
         const uint256& pubKeyHash,
         uint256& out_randomSeed,
-        boost::array<uint256, NumInputs>& out_macs,
-        boost::array<uint256, NumInputs>& out_nullifiers,
-        boost::array<uint256, NumOutputs>& out_commitments,
+		std::array<uint256, NumInputs>& out_macs,
+		std::array<uint256, NumInputs>& out_nullifiers,
+		std::array<uint256, NumOutputs>& out_commitments,
         uint64_t vpub_old,
         uint64_t vpub_new,
         const uint256& rt,
@@ -267,52 +234,54 @@ public:
             out_macs[i] = PRF_pk(inputs[i].key, i, h_sig);
         }
 
+
         if (!computeProof) {
-            return ZCProof();
+                return GrothProof();
         }
 
-        protoboard<FieldT> pb;
-        {
-            joinsplit_gadget<FieldT, NumInputs, NumOutputs> g(pb);
-            g.generate_r1cs_constraints();
-            g.generate_r1cs_witness(
-                phi,
-                rt,
-                h_sig,
-                inputs,
-                out_notes,
-                vpub_old,
-                vpub_new
-            );
-        }
+		GrothProof proof;
 
-        // The constraint system must be satisfied or there is an unimplemented
-        // or incorrect sanity check above. Or the constraint system is broken!
-        assert(pb.is_satisfied());
+		CDataStream ss1(SER_NETWORK, PROTOCOL_VERSION);
+		ss1 << inputs[0].witness.path();
+		std::vector<unsigned char> auth1(ss1.begin(), ss1.end());
 
-        // TODO: These are copies, which is not strictly necessary.
-        std::vector<FieldT> primary_input = pb.primary_input();
-        std::vector<FieldT> aux_input = pb.auxiliary_input();
+		CDataStream ss2(SER_NETWORK, PROTOCOL_VERSION);
+		ss2 << inputs[1].witness.path();
+		std::vector<unsigned char> auth2(ss2.begin(), ss2.end());
 
-        // Swap A and B if it's beneficial (less arithmetic in G2)
-        // In our circuit, we already know that it's beneficial
-        // to swap, but it takes so little time to perform this
-        // estimate that it doesn't matter if we check every time.
-        pb.constraint_system.swap_AB_if_beneficial();
+		librustzcash_sprout_prove(
+			proof.begin(),
 
-        std::ifstream fh(pkPath, std::ios::binary);
+			phi.begin(),
+			rt.begin(),
+			h_sig.begin(),
 
-        if(!fh.is_open()) {
-            throw std::runtime_error(strprintf("could not load param file at %s", pkPath));
-        }
+			inputs[0].key.begin(),
+			inputs[0].note.value,
+			inputs[0].note.rho.begin(),
+			inputs[0].note.r.begin(),
+			auth1.data(),
 
-        return ZCProof(r1cs_ppzksnark_prover_streaming<ppzksnark_ppT>(
-            fh,
-            primary_input,
-            aux_input,
-            pb.constraint_system
-        ));
-    }
+			inputs[1].key.begin(),
+			inputs[1].note.value,
+			inputs[1].note.rho.begin(),
+			inputs[1].note.r.begin(),
+			auth2.data(),
+
+			out_notes[0].a_pk.begin(),
+			out_notes[0].value,
+			out_notes[0].r.begin(),
+
+			out_notes[1].a_pk.begin(),
+			out_notes[1].value,
+			out_notes[1].r.begin(),
+
+			vpub_old,
+			vpub_new
+		);
+
+        return proof;
+     }
 };
 
 template<size_t NumInputs, size_t NumOutputs>
@@ -335,7 +304,7 @@ JoinSplit<NumInputs, NumOutputs>* JoinSplit<NumInputs, NumOutputs>::Prepared(con
 template<size_t NumInputs, size_t NumOutputs>
 uint256 JoinSplit<NumInputs, NumOutputs>::h_sig(
     const uint256& randomSeed,
-    const boost::array<uint256, NumInputs>& nullifiers,
+    const std::array<uint256, NumInputs>& nullifiers,
     const uint256& pubKeyHash
 ) {
     const unsigned char personalization[crypto_generichash_blake2b_PERSONALBYTES]

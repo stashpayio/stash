@@ -869,6 +869,14 @@ AC_CHECK_LIB([gmp],[[__gmpn_sub_n]],GMP_LIBS=-lgmp, [AC_MSG_ERROR(libgmp missing
 AC_CHECK_HEADER([gmpxx.h],,AC_MSG_ERROR(libgmpxx headers missing))
 AC_CHECK_LIB([gmpxx],[main],GMPXX_LIBS=-lgmpxx, [AC_MSG_ERROR(libgmpxx missing)])
 
+RUST_LIBS="-lrustzcash"
+case $host in
+  *mingw*)
+    ;;
+  *)
+    RUST_LIBS="$RUST_LIBS -ldl"
+    ;;
+esac
 
 AM_CONDITIONAL([HAVE_OPENMP], [false])
 
@@ -885,7 +893,8 @@ AX_CHECK_COMPILE_FLAG([-fwrapv],[CXXFLAGS="$CXXFLAGS -fwrapv"])
 AX_CHECK_COMPILE_FLAG([-fno-strict-aliasing],[CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"])
 AX_CHECK_COMPILE_FLAG([-Wno-builtin-declaration-mismatch],[CXXFLAGS="$CXXFLAGS -Wno-builtin-declaration-mismatch"],,[[$CXXFLAG_WERROR]])
 
-LIBZCASH_LIBS="-lgmp -lgmpxx $BOOST_SYSTEM_LIB -lcrypto -lsodium"
+LIBZCASH_LIBS="-lgmp -lgmpxx $BOOST_SYSTEM_LIB -lcrypto -lsodium $RUST_LIBS"
+
 save_CXXFLAGS="${CXXFLAGS}"
 CXXFLAGS="${CXXFLAGS} ${CRYPTO_CFLAGS} ${SSL_CFLAGS}"
 AC_CHECK_DECLS([EVP_MD_CTX_new],,,[AC_INCLUDES_DEFAULT

@@ -12,11 +12,11 @@ def create_block(hashprev, coinbase, nTime=None):
     block = CBlock()
     if nTime is None:
         import time
-        block.nTime = int(time.time()+600)
+        block.nTime = int(time.time()+60)
     else:
         block.nTime = nTime
     block.hashPrevBlock = hashprev
-    block.nBits = 0x207fffff # Will break after a difficulty adjustment...
+    block.nBits = 0x207fffff  # Will break after a difficulty adjustment...
     block.vtx.append(coinbase)
     block.hashMerkleRoot = block.calc_merkle_root()
     block.calc_sha256()
@@ -45,7 +45,7 @@ def create_coinbase(height, pubkey = None):
     coinbase.vin.append(CTxIn(COutPoint(0, 0xffffffff), 
                 ser_string(serialize_script_num(height)), 0xffffffff))
     coinbaseoutput = CTxOut()
-    coinbaseoutput.nValue = 500 * COIN
+    coinbaseoutput.nValue = 6760000000  # 67.6 * COIN
     halvings = int(height/150) # regtest
     coinbaseoutput.nValue >>= halvings
     if (pubkey != None):

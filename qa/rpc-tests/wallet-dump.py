@@ -96,6 +96,7 @@ class WalletDumpTest(BitcoinTestFramework):
         assert_equal(found_addr_rsv, 180)  # keypool size (external+internal)
 
         #encrypt wallet, restart, unlock and dump
+        '''
         self.nodes[0].encryptwallet('test')
         bitcoind_processes[0].wait()
         self.nodes[0] = start_node(0, self.options.tmpdir, self.extra_args[0])
@@ -110,6 +111,6 @@ class WalletDumpTest(BitcoinTestFramework):
         # TODO clarify if we want the behavior that is tested below in Stash (only when HD seed was generated and not user-provided)
         # assert_equal(found_addr_chg, 180 + 50)  # old reserve keys are marked as change now
         assert_equal(found_addr_rsv, 180)  # keypool size
-
+        '''
 if __name__ == '__main__':
     WalletDumpTest().main ()

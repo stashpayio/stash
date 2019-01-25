@@ -47,12 +47,14 @@ class AddressIndexTest(BitcoinTestFramework):
 
         # Check that balances are correct
         balance0 = self.nodes[1].getaddressbalance("93bVhahvUKmQu8gu9g3QnPPa2cxFK98pMB")
+        # balance0 = self.nodes[1].getaddressbalance("ydzbFGLvPXQakkEVR2UjDifcapsFufY6xy")
         assert_equal(balance0["balance"], 0)
 
         # Check p2pkh and p2sh address indexes
         print("Testing p2pkh and p2sh address index...")
 
         txid0 = self.nodes[0].sendtoaddress("yMNJePdcKvXtWWQnFYHNeJ5u8TF2v1dfK4", 10)
+        #txid0 = self.nodes[0].sendtoaddress("yVd8ANdXMZtSzGWwje6akxBV5kwqq5jbok", 10)
         self.nodes[0].generate(1)
 
         txidb0 = self.nodes[0].sendtoaddress("93bVhahvUKmQu8gu9g3QnPPa2cxFK98pMB", 10)
@@ -112,13 +114,13 @@ class AddressIndexTest(BitcoinTestFramework):
         # Check that outputs with the same address will only return one txid
         print("Testing for txid uniqueness...")
         addressHash = binascii.unhexlify("FE30B718DCF0BF8A2A686BF1820C073F8B2C3B37")
+        # addressHash = binascii.unhexlify("C1E15EEDFFEF51113A2A498133A7E9FEEA33B08A")
         scriptPubKey = CScript([OP_HASH160, addressHash, OP_EQUAL])
         unspent = self.nodes[0].listunspent()
         tx = CTransaction()
         tx.vin = [CTxIn(COutPoint(int(unspent[0]["txid"], 16), unspent[0]["vout"]))]
         tx.vout = [CTxOut(10, scriptPubKey), CTxOut(11, scriptPubKey)]
         tx.rehash()
-
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
         sent_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True, False, True)
 

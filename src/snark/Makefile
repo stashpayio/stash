@@ -142,14 +142,24 @@ ifeq ($(PROFILE_OP_COUNTS),1)
 	CXXFLAGS += -DPROFILE_OP_COUNTS
 endif
 
-ifeq ($(STATIC),1)
+#ifeq ($(STATIC),1)
+#ifneq ($(PLATFORM),darwin)
+#	CXXFLAGS += -static
+#endif
+#	CXXFLAGS += -DSTATIC
+#else
+#	CXXFLAGS += -fPIC
+#endif
 ifneq ($(PLATFORM),darwin)
-	CXXFLAGS += -static
-endif
+	CXXFLAGS += -fPIC
+else
+ifeq ($(STATIC),1)
 	CXXFLAGS += -DSTATIC
 else
 	CXXFLAGS += -fPIC
 endif
+endif
+
 
 ifeq ($(MULTICORE),1)
 	CXXFLAGS += -DMULTICORE -fopenmp

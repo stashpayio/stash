@@ -8,19 +8,20 @@
 #include "hash.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
+#include "librustzcash.h"
 
 JSDescription::JSDescription(ZCJoinSplit& params,
             const uint256& pubKeyHash,
             const uint256& anchor,
-            const boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            const boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            const std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
             CAmount vpub_old,
             CAmount vpub_new,
             bool computeProof,
             uint256 *esk // payment disclosure
             ) : vpub_old(vpub_old), vpub_new(vpub_new), anchor(anchor)
 {
-    boost::array<libzcash::Note, ZC_NUM_JS_OUTPUTS> notes;
+    std::array<libzcash::Note, ZC_NUM_JS_OUTPUTS> notes;
 
     proof = params.prove(
         inputs,
@@ -45,10 +46,10 @@ JSDescription JSDescription::Randomized(
             ZCJoinSplit& params,
             const uint256& pubKeyHash,
             const uint256& anchor,
-            boost::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            boost::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
-            boost::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
-            boost::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
+			std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+			std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+			std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
+			std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
             CAmount vpub_old,
             CAmount vpub_new,
             bool computeProof,
@@ -72,23 +73,27 @@ JSDescription JSDescription::Randomized(
     );
 }
 
+
 bool JSDescription::Verify(
     ZCJoinSplit& params,
     libzcash::ProofVerifier& verifier,
-    const uint256& pubKeyHash
-) const {
-    return params.verify(
-        proof,
-        verifier,
-        pubKeyHash,
-        randomSeed,
-        macs,
-        nullifiers,
-        commitments,
-        vpub_old,
-        vpub_new,
-        anchor
-    );
+    const uint256& joinSplitPubKey
+)  const {
+
+	uint256 h_sig = params.h_sig(randomSeed, nullifiers, joinSplitPubKey);
+	return librustzcash_sprout_verify(
+	   proof.begin(),
+	   anchor.begin(),
+	   h_sig.begin(),
+	   macs[0].begin(),
+	   macs[1].begin(),
+	   nullifiers[0].begin(),
+	   nullifiers[1].begin(),
+	   commitments[0].begin(),
+	   commitments[1].begin(),
+	   vpub_old,
+	   vpub_new
+   );
 }
 
 uint256 JSDescription::h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) const

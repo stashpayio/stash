@@ -227,8 +227,11 @@ class JSOutPoint
 public:
     // Transaction hash
     uint256 hash;
-    // Index into CTransaction.vjoinsplit
-    size_t js;
+    #ifdef __APPLE__
+    uint64_t js;            // Index into CTransaction.vjoinsplit
+    #else
+    size_t js;              // Index into CTransaction.vjoinsplit
+    #endif
     // Index into JSDescription fields of length ZC_NUM_JS_OUTPUTS
     uint8_t n;
 

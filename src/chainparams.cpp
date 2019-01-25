@@ -148,7 +148,7 @@ public:
         consensus.nInstantSendConfirmationsRequired = 6;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 1000;
-        //consensus.nBudgetPaymentsCycleBlocks = 43830; // ~(365.25*60*24)/12
+        //consensus.nBudgetPaymentsCycleBlocks = 41540; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         //consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock = 1200; // NOTE: Should satisfy nSuperblockStartBlock > nBudgetPaymentsStartBlock
         //consensus.nSuperblockStartHash = uint256(); // STASH unused
@@ -182,7 +182,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 0
+        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 888900
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -210,10 +210,11 @@ public:
 
         if (seedsDisabled()) {
               printf("Seeds disabled on mainnet\n");
-        } else {
-            vSeeds.push_back(CDNSSeedData("seed1.stashpay.io", "seed1.stashpay.io"));
-            vSeeds.push_back(CDNSSeedData("seed2.stashpay.io", "seed2.stashpay.io"));
-            vSeeds.push_back(CDNSSeedData("seed3.stashpay.io", "seed3.stashpay.io"));
+        } else {            
+            vSeeds.push_back(CDNSSeedData("dnsseed.stash.chat", "dnsseed3.stash.chat"));
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.io", "dnsseed1.stashcoin.io"));
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.org", "dnsseed2.stashcoin.org"));                        
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashchat.org", "dnsseed4.stashchat.org"));            
         }
 
         // Stash addresses start with 'X'
@@ -249,7 +250,7 @@ public:
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
-         // place this key in .conf file as sporkkey=XKJoibhonSsq2Pz6xsMfqZeQmcGVey5zd41YvGTEPaGxP6rNzCAx
+         // place this key in .conf file as sporkkey=cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
         // privKey: XKJoibhonSsq2Pz6xsMfqZeQmcGVey5zd41YvGTEPaGxP6rNzCAx
         // open debug console and use this command:
         // spork SPORK_NAME [value]
@@ -359,7 +360,8 @@ public:
         vAlertPubKey = ParseHex("04517d8a699cb43d3938d7b24faaff7cda448ca4ea267723ba614784de661949bf632d6304316b244646dea079735b9a6fc4af804efb4752075b9fe2245e14e412");
         nDefaultPort = 19999;
         //nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
-        //nMaxTipAge = 16000 * 60 * 60; // ~144 blocks behind -> 2 x s
+        //nMaxTipAge = 16000 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
@@ -378,9 +380,9 @@ public:
         if (seedsDisabled()) {
               printf("Seeds disabled on testnet\n");
         } else {
-              vSeeds.push_back(CDNSSeedData("testseed1.stashpay.io", "testseed1.stashpay.io"));
-              vSeeds.push_back(CDNSSeedData("testseed2.stashpay.io", "testseed1.stashpay.io"));
-              vSeeds.push_back(CDNSSeedData("testseed3.stashpay.io", "testseed1.stashpay.io"));
+        			vSeeds.push_back(CDNSSeedData("testseed1.stashpay.io", "testseed1.stashpay.io"));
+        	        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.io", "testseed1.stashpay.io"));
+        	        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.io", "testseed1.stashpay.io"));
         }
 
         // Testnet Stash addresses start with 'y'
@@ -557,7 +559,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (      0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"))
+            (      0, uint256S("0x32572d37b0f7a102af86494187376e0c34367eacb2e8f00c47e37ba49e93570c"))
             (      1, devnetGenesis.GetHash())
         };
 
@@ -641,8 +643,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
-        vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.up
-        
+        vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
 
         fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = true;
@@ -680,6 +681,15 @@ public:
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         // Regtest Stash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
+
+
+        // guarantees the first 2 characters, when base58 encoded, are "zt"
+        base58Prefixes[ZCPAYMENT_ADDRRESS] = {0x16,0xB6};
+         // guarantees the first 4 characters, when base58 encoded, are "ZiVt"
+        base58Prefixes[ZCVIEWING_KEY]      = {0xA8,0xAC,0x0C};
+         // guarantees the first 2 characters, when base58 encoded, are "ST"
+        base58Prefixes[ZCSPENDING_KEY]     = {0xAC,0x08};
+
 
         // Regtest Stash BIP44 coin type is '0xCAFE'
         nExtCoinType = 0xCAFE;

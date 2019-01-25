@@ -2,10 +2,12 @@
 #include "prf.h"
 #include "crypto/sha256.h"
 
+#include "random.h"
 #include "version.h"
 #include "streams.h"
 
 #include "zcash/util.h"
+#include "librustzcash.h"
 
 namespace libzcash {
 
@@ -41,7 +43,7 @@ uint256 Note::nullifier(const SpendingKey& a_sk) const {
 
 NotePlaintext::NotePlaintext(
     const Note& note,
-    boost::array<unsigned char, ZC_MEMO_SIZE> memo) : memo(memo)
+	std::array<unsigned char, ZC_MEMO_SIZE> memo) : memo(memo)
 {
     value = note.value;
     rho = note.rho;
