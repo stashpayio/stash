@@ -943,7 +943,7 @@ QString loadStyleSheet()
         cssName = QString(":/css/") + theme; 
     }
     else {
-        cssName = QString(":/css/light");  
+        cssName = QString(":/css/drkblue");  
         settings.setValue("theme", "drkblue");
     }
     
