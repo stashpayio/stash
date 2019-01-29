@@ -213,8 +213,8 @@ public:
         } else {            
             vSeeds.push_back(CDNSSeedData("dnsseed.stash.chat", "dnsseed3.stash.chat"));
             vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.io", "dnsseed1.stashcoin.io"));
-            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.org", "dnsseed2.stashcoin.org"));                        
-            vSeeds.push_back(CDNSSeedData("dnsseed.stashchat.org", "dnsseed4.stashchat.org"));            
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.org", "dnsseed2.stashcoin.org"));
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashchat.org", "dnsseed4.stashchat.org"));
         }
 
         // Stash addresses start with 'X'

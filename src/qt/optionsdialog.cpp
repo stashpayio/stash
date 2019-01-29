@@ -92,18 +92,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    /* START STASH
-    ui->theme->addItem(QString("STASH-light"), QVariant("light"));
-    ui->theme->addItem(QString("STASH-light-hires"), QVariant("light-hires"));
-    ui->theme->addItem(QString("STASH-light-retro"), QVariant("light-retro"));
-    ui->theme->addItem(QString("STASH-light-hires-retro"), QVariant("light-hires-retro"));
     ui->theme->addItem(QString("STASH-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("STASH-Crownium"), QVariant("crownium"));
-    ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));
-    END STASH */
-
-    ui->theme->addItem(QString("STASH-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));
+    ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));    
     
     /* Language selector */
     QDir translations(":translations");
