@@ -1,12 +1,11 @@
-Stash Core version 0.12.3.2
+Stash Core version 0.12.3.3
 ==========================
 
 Release is now available from:
 
   <https://www.stashpay.io/downloads/#wallets>
 
-This is a new minor version release, bringing various bugfixes and other
-improvements.
+This is a critical bugfix release.
 
 Please report bugs using the issue tracker at github:
 
@@ -35,7 +34,7 @@ the database if you decide to use any pre-0.12.2.2 version.
 
 Wallet forward or backward compatibility was not affected.
 
-### Downgrade to 0.12.2.2/3, 0.12.3.1
+### Downgrade to 0.12.2.2/3, 0.12.3.1/2
 
 Downgrading to these versions does not require any additional actions, should be
 fully compatible.
@@ -44,29 +43,16 @@ fully compatible.
 Notable changes
 ===============
 
-Improve initial sync
---------------------
+Fix crash bug with duplicate inputs within a transaction
+--------------------------------------------------------
 
-Some users had problems getting their nodes synced. The issue occured due to nodes trying to
-get additional data from each available peer but not being able to process this data fast enough.
-This was recognized as a stalled sync process and thus the process was reset. To address the issue
-we limited sync process to 3 peers max now and the issue should no longer appear as long as there
-are at least 4 connections.
+There was a critical bug discovered in Bitcoin Core's codebase recently which
+can cause node receiving a block to crash https://github.com/bitcoin/bitcoin/pull/14247
 
-Testnet/Devnet fixes
---------------------
-
-Turned out that a low-diff rule for slow blocks backported from Bitcoin works a bit too aggressive for
-a blockchain which uses a dynamic per-block difficulty adjustment algorithm (DGW). While blocks are still
-produced at a more or less constant rate on average, the rate however is way too high.
-
-We also lifted multiple ports restriction on devnet and also incuded other fixes which should improve
-connectivity on devnets which are using nodes with multiple different ports.
-
-
-0.12.3.2 Change log
+0.12.3.3 Change log
 ===================
 
+<<<<<<< HEAD
 See detailed [change log](https://github.com/stashpayio/stash/compare/v0.12.3.1...stashpay:v0.12.3.2) below.
 
 ### Network:
@@ -85,17 +71,15 @@ See detailed [change log](https://github.com/stashpayio/stash/compare/v0.12.3.1.
 ### Other:
 - [`f833e2ed6`](https://github.com/stashpayio/stash/commit/f833e2ed6) Bump to 0.12.3.2 (#2173)
 
+=======
+See detailed [set of changes](https://github.com/dashpay/dash/compare/v0.12.3.2...dashpay:v0.12.3.3).
+>>>>>>> c600487cc... Release notes 0.12.3.3
 
 Credits
 =======
 
-Thanks to everyone who directly contributed to this release:
-
-- Alexander Block
-- PaulieD
-- UdjinM6
-
-As well as everyone who submitted issues and reviewed pull requests.
+Thanks to everyone who directly contributed to this release,
+as well as everyone who submitted issues and reviewed pull requests.
 
 
 Older releases
@@ -121,6 +105,7 @@ Stash Core tree 0.12.1.x was a fork of Bitcoin Core tree 0.12.
 
 These release are considered obsolete. Old release notes can be found here:
 
+<<<<<<< HEAD
 - [v0.12.3.1](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.12.3.1.md) released Jul/03/2018
 - [v0.12.2.3](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.12.2.3.md) released Jan/12/2018
 - [v0.12.2.2](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.12.2.2.md) released Dec/17/2017
@@ -132,4 +117,18 @@ These release are considered obsolete. Old release notes can be found here:
 - [v0.11.0](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.11.0.md) released Jan/15/2015
 - [v0.10.x](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.10.0.md) released Sep/25/2014
 - [v0.9.x](https://github.com/stashpayio/stash/blob/master/doc/release-notes/stash/release-notes-0.9.0.md) released Mar/13/2014
+=======
+- [v0.12.3.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.2.md) released Jul/09/2018
+- [v0.12.3.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.3.1.md) released Jul/03/2018
+- [v0.12.2.3](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.3.md) released Jan/12/2018
+- [v0.12.2.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.2.md) released Dec/17/2017
+- [v0.12.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.2.md) released Nov/08/2017
+- [v0.12.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.1.md) released Feb/06/2017
+- [v0.12.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.12.0.md) released Jun/15/2015
+- [v0.11.2](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.2.md) released Mar/04/2015
+- [v0.11.1](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.1.md) released Feb/10/2015
+- [v0.11.0](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.11.0.md) released Jan/15/2015
+- [v0.10.x](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.10.0.md) released Sep/25/2014
+- [v0.9.x](https://github.com/dashpay/dash/blob/master/doc/release-notes/dash/release-notes-0.9.0.md) released Mar/13/2014
+>>>>>>> c600487cc... Release notes 0.12.3.3
 

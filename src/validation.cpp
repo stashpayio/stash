@@ -518,7 +518,7 @@ int GetUTXOConfirmations(const COutPoint& outpoint)
 }
 
 
-bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs)
+bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 {
     // Basic checks that don't depend on any context
 
@@ -596,15 +596,13 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
             }
         }
     }
-
-    // Check for duplicate inputs - note that this check is slow so we skip it in CheckBlock
-    if (fCheckDuplicateInputs) {
-        std::set<COutPoint> vInOutPoints;
-        for (const auto& txin : tx.vin)
-        {
-            if (!vInOutPoints.insert(txin.prevout).second)
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
-        }
+    
+    // Check for duplicate inputs
+    std::set<COutPoint> vInOutPoints;
+    for (const auto& txin : tx.vin)
+    {
+        if (!vInOutPoints.insert(txin.prevout).second)
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
     }
 
     // Check for duplicate joinsplit nullifiers in this transaction
@@ -620,7 +618,6 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
             vJoinSplitNullifiers.insert(nf);
         }
     }
-
 
     if (tx.IsCoinBase())
     {
@@ -3693,7 +3690,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     // Check transactions
     auto verifier = libzcash::ProofVerifier::Strict();
     for (const auto& tx : block.vtx)
-        if (!CheckTransaction(*tx, state, false))
+        if (!CheckTransaction(*tx, state))
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                 strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
 
