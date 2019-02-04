@@ -182,7 +182,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 888900
+        consensus.defaultAssumeValid = uint256S("0x00000810cae4fdfe5c86165ec0912656c20a4a7d2e1ddcd733a14c0d2761950f"); // 888900
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -197,7 +197,7 @@ public:
         nDefaultPort = 9999;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1545016533, 498287, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1549236600, 1183183, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
@@ -205,7 +205,7 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000810cae4fdfe5c86165ec0912656c20a4a7d2e1ddcd733a14c0d2761950f"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         if (seedsDisabled()) {
@@ -259,7 +259,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
+            (  0, uint256S("0x00000810cae4fdfe5c86165ec0912656c20a4a7d2e1ddcd733a14c0d2761950f")),
             0,//1507424630, // * UNIX timestamp of last checkpoint block
             0,//3701128,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
@@ -277,24 +277,24 @@ public:
 
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "000d75f767cab06c379c07b4d15dc58c4519ea7406a4a0755a79b4dfd862873c",
-        "00095c8fa94f3082a43430aca06216362e2b0125d243bc1af940aa16b8d6e6f2",
-        "000211c51484ce5c112511a62336bfdd713eccafcc26c188c494941c9255cad2",
-        "00013b52b30be93d663236b011c52f688634371204cf61d7b0df0d10d0fd5d5b",
-        "0007763577df7601b0e572125215aae17c385c96185881fd0d270b8d86b51f12",
-        "000c31826dd4eeac85a0f56f425c3609925569edc3d05f61c7568c9b24cbe964",
-        "00079003f2e4f37017a79881a62be0a3e61a9d11a1651d3649be807e980b60bb",
-        "0000359ab8ad945f501e0f27e29c140f46f0aa04690c59b4c5bd0b759dbe6dd7",
-        "0009abd909f6b5b2cbfbce2413f96a7929c12a23c7e379e260e6b6e130a122ed",
-        "0001cdca4ab4afa461d1c5aa550f129b83156cbe0678c03265dec77f9edcf749",
-        "0009950f38c1d87286b2934dce10c54d1d3ef4441f35d868c8f8ce09fbacdebd",
-        "00013720dc2a5ef17c303fd5a4110afad212d74a270b50751412b4686291c161",
-        "00028ff3db46e6f9a05541245f4a58ee6769dbc31a00c5f08003f191b1d78cf9",
-        "000076a5449ca078769f061d3c44fe319bc52b414f5cfa537b3a51fc15061a39",
-        "000b2fb47a507d468a865d1a2d03b816056eb49cbd4ec0c524d3004550fac5a6",
-        "000ace3e90aa7cb09da7fe1250d827342b4bb8d336450b87cdce9a5ef5646649",
-        "000c5b8a449206a94562f58b2f82ee90b0f4cd2ac1e778bd19e2d51e015e7242",
-        "0004b4ddb4a03d614631aca72f6632bdca9b18492539652195a3477080d8b277",
+        "00099b9c337acf556bcf59652344dbd4855d6e302c6990f53f546b6451434237",
+        "0002622e00564ec303ffb10ce2385adcd4d8125ca14e2713e5f6295b8f39dfc1",
+        "00010411a754e2a0dd1c45afd320dde6095b41b42cd4bc862fcdc8f3fd65c4cc",
+        "000fa2d5298cf6d603edda175e17b5d2675c69d6e705aead1db1722789e042b1",
+        "000d1f4db45cd3a46156ed3ab2cecd72be07c4a9b3524f8505ff937b3154adbe",
+        "00021e2180f10f2147033f337210afd4cec591af401b5a6040acbfa701bd36b0",
+        "00010e2c1088648180a2d09bf17ed9b095dc0a1503d839c6794c446b74978cff",
+        "000ca1911fdcfead567e6b8ada07c37eb58f3cd7e665ac43ce14bcf5d23b72ce",
+        "0001cc1fcf9a35a55ecc0b47d1745ec99081b1b638f09e7e16b03ed93d9d7805",
+        "00016ed82429fd78209b2a31341a346c50c5e2a6ebdcb83648a282ef9cfa990d",
+        "000f76bafa138a5d8010a58a95bbe95ca48147256369dec06b1071e886b4c7f2",
+        "000536d8536792e2bf85b665baeec17a05e1dfffe1ec7ba5bd10b620e5bd6584",
+        "0006a7579e7509cc3a16f226d3aebe36f9076567ee44844244b8f48f898bb741",
+        "0001db89bef2a92e2a33351b42a03a685f5bfa132fdb776b4df062049c04a776",
+        "0004ab7d6c94b33d761f210a10ee3a32097dc52a3d912e868becdd5fa8a48c14",
+        "000d4594111bf3104021d753a9b69c84a3cd3c09d367ef973e44b28c3e36959e",
+        "000b03b2bb16a0135702252e4075ad1ec8d5d90c5443cdf216295387fad2f83b",
+        "0007e217228199094825487612b89c141204b19b2a240fb42416418d584b15f9",
 //------------------------------------------------------------------------------
 
         };
