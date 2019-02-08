@@ -162,7 +162,7 @@ public:
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Stash: 1 day
         consensus.nPowTargetSpacing = 1 * 60; // Stash: 1 minute
-        consensus.fPowAllowMinDifficultyBlocks = false;
+        consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         // consensus.nPowKGWHeight = 15200; STASH Always use DGW
         // consensus.nPowDGWHeight = 34140; STASH Always use DGW
