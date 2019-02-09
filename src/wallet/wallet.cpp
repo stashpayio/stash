@@ -1134,6 +1134,13 @@ void CWallet::DecrementNoteWitnesses(const CBlockIndex* pindex)
 
 bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
 {
+    bool fEnableWalletEncryption = fExperimentalMode && GetBoolArg("-developerencryptwallet", false);
+
+    if (!fEnableWalletEncryption) {
+        LogPrintf("WARNING: Wallet encryption is DISABLED");
+        return false;
+    }
+
     if (IsCrypted())
         return false;
 
