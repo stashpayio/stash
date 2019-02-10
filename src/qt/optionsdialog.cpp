@@ -8,6 +8,7 @@
 
 #include "optionsdialog.h"
 #include "ui_optionsdialog.h"
+#include "util.h"
 
 #include "bitcoinunits.h"
 #include "guiutil.h"
@@ -48,7 +49,16 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
     ui->threadsScriptVerif->setMinimum(-GetNumCores());
-    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
+    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);    
+
+    // STASH disabled for initial release
+    ui->showAdvancedPSUI->setVisible(false);
+    ui->lowKeysWarning->setVisible(false);
+    ui->privateSendMultiSession->setVisible(false);
+    ui->privateSendAmount->setVisible(false);
+    ui->privateSendRounds->setVisible(false);
+    ui->labelPrivateSendRounds->setVisible(false);
+    ui->labelPrivateSendAmount->setVisible(false);    
 
     /* Network elements init */
 #ifndef USE_UPNP
