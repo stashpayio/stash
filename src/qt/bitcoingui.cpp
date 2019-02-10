@@ -524,13 +524,13 @@ void BitcoinGUI::createMenuBar()
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     if(walletFrame)
     {
-        if (GetBoolArg("-developerencryptwallet", false))
+        if (GetBoolArg("-developerencryptwallet", false)) {
             settings->addAction(encryptWalletAction);
-
-        settings->addAction(changePassphraseAction);
-        settings->addAction(unlockWalletAction);
-        settings->addAction(lockWalletAction);
-        settings->addSeparator();
+            settings->addAction(changePassphraseAction);
+            settings->addAction(unlockWalletAction);
+            settings->addAction(lockWalletAction);
+            settings->addSeparator();
+        }        
     }
     settings->addAction(optionsAction);
 
