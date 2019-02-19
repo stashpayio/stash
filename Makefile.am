@@ -36,6 +36,9 @@ OSX_DSSTORE_GEN=$(top_srcdir)/contrib/macdeploy/custom_dsstore.py
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
 OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/bitcoin.icns
+OSX_INSTALLER_FETCH_PARAMS=$(top_srcdir)/zcutil/fetch-params.sh
+OSX_INSTALLER_QT_WRAPPER=$(top_srcdir)/contrib/macdeploy/Stash-Qt-Wrapper
+OSX_INSTALLER_PREFLIGHT=$(top_srcdir)/contrib/macdeploy/pre-flight.sh
 OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
 OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
 
@@ -53,7 +56,8 @@ WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/bitcoin.ico \
   $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
   $(top_srcdir)/doc/README_windows.txt
 
-OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \
+OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \ 
+  $(OSX_INSTALLER_FETCH_PARAMS) $(OSX_INSTALLER_PREFLIGHT) $(OSX_INSTALLER_QT_WRAPPER) \
   $(top_srcdir)/contrib/macdeploy/$(OSX_BACKGROUND_SVG) \
   $(OSX_DSSTORE_GEN) \
   $(top_srcdir)/contrib/macdeploy/detached-sig-apply.sh \
@@ -92,7 +96,22 @@ $(OSX_APP)/Contents/Resources/bitcoin.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Stash-Qt: $(BITCOIN_QT_BIN)
+$(OSX_APP)/Contents/MacOS/fetch-params.sh: $(OSX_INSTALLER_FETCH_PARAMS)
+	$(MKDIR_P) $(@D)
+	$(INSTALL_DATA) $< $@ 
+	@chmod +x $@
+
+$(OSX_APP)/Contents/MacOS/pre-flight.sh: $(OSX_INSTALLER_PREFLIGHT)
+	$(MKDIR_P) $(@D)
+	$(INSTALL_DATA) $< $@ 
+	@chmod +x $@
+
+$(OSX_APP)/Contents/MacOS/Stash-Qt: $(OSX_INSTALLER_QT_WRAPPER)
+	$(MKDIR_P) $(@D)
+	$(INSTALL_DATA) $< $@
+	@chmod +x $@ 
+
+$(OSX_APP)/Contents/MacOS/Stash-Qt-Bin: $(BITCOIN_QT_BIN)
 	$(MKDIR_P) $(@D)
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
 
@@ -102,7 +121,8 @@ $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings:
 
 OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
   $(OSX_APP)/Contents/Resources/bitcoin.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Stash-Qt $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
+  $(OSX_APP)/Contents/MacOS/Stash-Qt $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings \
+  $(OSX_APP)/Contents/MacOS/fetch-params.sh $(OSX_APP)/Contents/MacOS/pre-flight.sh $(OSX_APP)/Contents/MacOS/Stash-Qt-Bin
 
 osx_volname:
 	echo $(OSX_VOLNAME) >$@
