@@ -2,7 +2,7 @@
 
 set -eu
 
-if [ -z "$1" ]; then
+if [ -z "$@" ]; then
     home_dir=$HOME
 else
     home_dir=$1
