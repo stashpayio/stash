@@ -8,12 +8,10 @@ else
     home_dir=$1
 fi
 
-PARAMS_DIR="$home_dir"
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    PARAMS_DIR="$HOME/Library/Application Support/ZcashParams"
+    PARAMS_DIR="$home_dir/Library/Application Support/ZcashParams"
 else
-    PARAMS_DIR="$HOME/.zcash-params"
+    PARAMS_DIR="$home_dir/.zcash-params"
 fi
 
 SPROUT_PKEY_NAME='sprout-proving.key'
@@ -165,8 +163,8 @@ function main() {
     || exit_locked_error
     clear
     cat <<EOF
-Stash is downloading additional files (about 1.7GB)
-Stash will automatically launch when the download is complete...
+Stash is downloading additional files (about 1.7GB)...please wait
+
 EOF
 
     # Now create PARAMS_DIR and insert a README if necessary:
@@ -197,4 +195,7 @@ EOF
 
 main
 rm -f /tmp/fetch_params.lock
+cat <<EOF
+Download complete.
+EOF
 exit 0
