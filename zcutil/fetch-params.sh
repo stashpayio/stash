@@ -161,7 +161,7 @@ function main() {
 
     lock fetch-params.sh \
     || exit_locked_error
-    clear
+    clear || true > dev/null
     cat <<EOF
 Stash is downloading additional files (about 1.7GB)...please wait
 
