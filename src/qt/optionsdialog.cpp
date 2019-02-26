@@ -8,7 +8,6 @@
 
 #include "optionsdialog.h"
 #include "ui_optionsdialog.h"
-#include "util.h"
 
 #include "bitcoinunits.h"
 #include "guiutil.h"
