@@ -13,6 +13,7 @@
 
 #include <math.h>
 
+/* STASH TODO Remove unused code
 unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Consensus::Params& params) {
     const CBlockIndex *BlockLastSolved = pindexLast;
     const CBlockIndex *BlockReading = pindexLast;
@@ -79,27 +80,34 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Conse
     return bnNew.GetCompact();
 }
 
+END STASH */
+
 unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params) {
-    /* current difficulty formula, dash - DarkGravity v3, written by Evan Duffield - evan@dash.org */
+    /* current difficulty formula, stash - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
     int64_t nPastBlocks = 24;
 
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        return bnPowLimit.GetCompact();
+    }
     // make sure we have at least (nPastBlocks + 1) blocks, otherwise just return powLimit
     if (!pindexLast || pindexLast->nHeight < nPastBlocks) {
         return bnPowLimit.GetCompact();
     }
 
-    if (params.fPowAllowMinDifficultyBlocks && (
-        // testnet ...
-        (params.hashDevnetGenesisBlock.IsNull() && pindexLast->nChainWork >= UintToArith256(uint256S("0x000000000000000000000000000000000000000000000000003e9ccfe0e03e01"))) ||
-        // or devnet
-        !params.hashDevnetGenesisBlock.IsNull())) {
-        // Special difficulty rule for testnet/devnet:
-        // If the new block's timestamp is more than 2* 2.5 minutes
-        // then allow mining of a min-difficulty block.
-        // TODO: "testnet OR devenet" part on next testnet hard-fork
-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*2)
+    if (params.fPowAllowMinDifficultyBlocks) {                        
+        // recent block is more than 2 hours old
+        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + 2 * 60 * 60) {
             return bnPowLimit.GetCompact();
+        }
+        // recent block is more than 10 minutes old
+        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*4) {
+            arith_uint256 bnNew = arith_uint256().SetCompact(pindexLast->nBits) * 10;
+            if (bnNew > bnPowLimit) {
+                bnNew = bnPowLimit;
+            }
+            return bnNew.GetCompact();
+        }        
     }
 
     const CBlockIndex *pindex = pindexLast;
@@ -183,6 +191,9 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    return DarkGravityWave(pindexLast, pblock, params);
+    /* STASH 
+
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
         return DarkGravityWave(pindexLast, pblock, params);
@@ -193,6 +204,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     else {
         return GetNextWorkRequiredBTC(pindexLast, pblock, params);
     }
+
+    END STASH */
 }
 
 // for DIFF_BTC only!

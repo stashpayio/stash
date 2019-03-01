@@ -7,7 +7,6 @@
 # Test addressindex generation and fetching
 #
 
-import time
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 from test_framework.script import *
@@ -16,9 +15,10 @@ import binascii
 
 class AddressIndexTest(BitcoinTestFramework):
 
-    def setup_chain(self):
-        print("Initializing test directory "+self.options.tmpdir)
-        initialize_chain_clean(self.options.tmpdir, 4)
+    def __init__(self):
+        super().__init__()
+        self.setup_clean_chain = True
+        self.num_nodes = 4
 
     def setup_network(self):
         self.nodes = []
@@ -47,12 +47,14 @@ class AddressIndexTest(BitcoinTestFramework):
 
         # Check that balances are correct
         balance0 = self.nodes[1].getaddressbalance("93bVhahvUKmQu8gu9g3QnPPa2cxFK98pMB")
+        # balance0 = self.nodes[1].getaddressbalance("ydzbFGLvPXQakkEVR2UjDifcapsFufY6xy")
         assert_equal(balance0["balance"], 0)
 
         # Check p2pkh and p2sh address indexes
         print("Testing p2pkh and p2sh address index...")
 
         txid0 = self.nodes[0].sendtoaddress("yMNJePdcKvXtWWQnFYHNeJ5u8TF2v1dfK4", 10)
+        #txid0 = self.nodes[0].sendtoaddress("yVd8ANdXMZtSzGWwje6akxBV5kwqq5jbok", 10)
         self.nodes[0].generate(1)
 
         txidb0 = self.nodes[0].sendtoaddress("93bVhahvUKmQu8gu9g3QnPPa2cxFK98pMB", 10)
@@ -112,15 +114,15 @@ class AddressIndexTest(BitcoinTestFramework):
         # Check that outputs with the same address will only return one txid
         print("Testing for txid uniqueness...")
         addressHash = binascii.unhexlify("FE30B718DCF0BF8A2A686BF1820C073F8B2C3B37")
+        # addressHash = binascii.unhexlify("C1E15EEDFFEF51113A2A498133A7E9FEEA33B08A")
         scriptPubKey = CScript([OP_HASH160, addressHash, OP_EQUAL])
         unspent = self.nodes[0].listunspent()
         tx = CTransaction()
         tx.vin = [CTxIn(COutPoint(int(unspent[0]["txid"], 16), unspent[0]["vout"]))]
         tx.vout = [CTxOut(10, scriptPubKey), CTxOut(11, scriptPubKey)]
         tx.rehash()
-
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        sent_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True)
+        sent_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True, False, True)
 
         self.nodes[0].generate(1)
         self.sync_all()
@@ -149,7 +151,7 @@ class AddressIndexTest(BitcoinTestFramework):
         tx.vout = [CTxOut(amount, scriptPubKey2)]
         tx.rehash()
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        spending_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True)
+        spending_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True, False, True)
         self.nodes[0].generate(1)
         self.sync_all()
         balance1 = self.nodes[1].getaddressbalance(address2)
@@ -163,7 +165,7 @@ class AddressIndexTest(BitcoinTestFramework):
         tx.rehash()
 
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        sent_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True)
+        sent_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True, False, True)
         self.nodes[0].generate(1)
         self.sync_all()
 
@@ -202,7 +204,8 @@ class AddressIndexTest(BitcoinTestFramework):
         self.nodes[2].invalidateblock(best_hash)
         self.nodes[3].invalidateblock(best_hash)
         # Allow some time for the reorg to start
-        time.sleep(2)
+        set_mocktime(get_mocktime() + 2)
+        set_node_times(self.nodes, get_mocktime())
         self.sync_all()
 
         balance4 = self.nodes[1].getaddressbalance(address2)
@@ -244,8 +247,9 @@ class AddressIndexTest(BitcoinTestFramework):
         tx.vout = [CTxOut(amount, scriptPubKey3)]
         tx.rehash()
         signed_tx = self.nodes[2].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        memtxid1 = self.nodes[2].sendrawtransaction(signed_tx["hex"], True)
-        time.sleep(2)
+        memtxid1 = self.nodes[2].sendrawtransaction(signed_tx["hex"], True, False, True)
+        set_mocktime(get_mocktime() + 2)
+        set_node_times(self.nodes, get_mocktime())
 
         tx2 = CTransaction()
         tx2.vin = [CTxIn(COutPoint(int(unspent[1]["txid"], 16), unspent[1]["vout"]))]
@@ -258,8 +262,9 @@ class AddressIndexTest(BitcoinTestFramework):
         ]
         tx2.rehash()
         signed_tx2 = self.nodes[2].signrawtransaction(binascii.hexlify(tx2.serialize()).decode("utf-8"))
-        memtxid2 = self.nodes[2].sendrawtransaction(signed_tx2["hex"], True)
-        time.sleep(2)
+        memtxid2 = self.nodes[2].sendrawtransaction(signed_tx2["hex"], True, False, True)
+        set_mocktime(get_mocktime() + 2)
+        set_node_times(self.nodes, get_mocktime())
 
         mempool = self.nodes[2].getaddressmempool({"addresses": [address3]})
         assert_equal(len(mempool), 3)
@@ -285,8 +290,9 @@ class AddressIndexTest(BitcoinTestFramework):
         tx.rehash()
         self.nodes[2].importprivkey(privKey3)
         signed_tx3 = self.nodes[2].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        memtxid3 = self.nodes[2].sendrawtransaction(signed_tx3["hex"], True)
-        time.sleep(2)
+        memtxid3 = self.nodes[2].sendrawtransaction(signed_tx3["hex"], True, False, True)
+        set_mocktime(get_mocktime() + 2)
+        set_node_times(self.nodes, get_mocktime())
 
         mempool3 = self.nodes[2].getaddressmempool({"addresses": [address3]})
         assert_equal(len(mempool3), 2)
@@ -317,7 +323,7 @@ class AddressIndexTest(BitcoinTestFramework):
         tx.rehash()
         self.nodes[0].importprivkey(privkey1)
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
-        mem_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True)
+        mem_txid = self.nodes[0].sendrawtransaction(signed_tx["hex"], True, False, True)
 
         self.sync_all()
         mempool_deltas = self.nodes[2].getaddressmempool({"addresses": [address1]})

@@ -1,7 +1,7 @@
 // Copyright (c) 2014-2017 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
-#ifndef DASH_HDCHAIN_H
-#define DASH_HDCHAIN_H
+#ifndef STASH_HDCHAIN_H
+#define STASH_HDCHAIN_H
 
 #include "key.h"
 #include "sync.h"
@@ -29,6 +29,8 @@ class CHDChain
 {
 private:
     static const int CURRENT_VERSION = 1;
+    static const int ZCASH_VERSION=4;
+
     int nVersion;
 
     uint256 id;
@@ -45,7 +47,7 @@ private:
 
 public:
 
-    CHDChain() : nVersion(CHDChain::CURRENT_VERSION) { SetNull(); }
+    CHDChain() { SetNull(); }
     CHDChain(const CHDChain& other) :
         nVersion(other.nVersion),
         id(other.id),
@@ -147,4 +149,4 @@ public:
     std::string GetKeyPath() const;
 };
 
-#endif // DASH_HDCHAIN_H
+#endif // STASH_HDCHAIN_H

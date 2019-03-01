@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include "addrman.h"
-#include "test/test_dash.h"
+#include "test/test_stash.h"
 #include <string>
 #include <boost/test/unit_test.hpp>
 
@@ -33,7 +33,7 @@ public:
         return (unsigned int)(state % nMax);
     }
 
-    CAddrInfo* Find(const CNetAddr& addr, int* pnId = NULL)
+    CAddrInfo* Find(const CService& addr, int* pnId = NULL)
     {
         return CAddrMan::Find(addr, pnId);
     }

@@ -14,6 +14,11 @@
 
 #include <vector>
 
+#include <boost/foreach.hpp>
+
+static const int SPROUT_VALUE_VERSION = 1001400;
+
+
 class CBlockFileInfo
 {
 public:
@@ -190,6 +195,21 @@ public:
     //! Verification status of this block. See enum BlockStatus
     unsigned int nStatus;
 
+    //! The anchor for the tree state up to the start of this block
+    uint256 hashAnchor;
+
+    //! (memory only) The anchor for the tree state up to the end of this block
+    uint256 hashAnchorEnd;
+
+    //! Change in value held by the Sprout circuit over this block.
+    //! Will be boost::none for older blocks on old nodes until a reindex has taken place.
+    boost::optional<CAmount> nSproutValue;
+
+    //! (memory only) Total value held by the Sprout circuit up to and including this block.
+    //! Will be boost::none for on old nodes until a reindex has taken place.
+    //! Will be boost::none if nChainTx is zero.
+    boost::optional<CAmount> nChainSproutValue;
+
     //! block header
     int nVersion;
     uint256 hashMerkleRoot;
@@ -216,7 +236,11 @@ public:
         nTx = 0;
         nChainTx = 0;
         nStatus = 0;
+        hashAnchor = uint256();
+        hashAnchorEnd = uint256();
         nSequenceId = 0;
+        nSproutValue = boost::none;
+        nChainSproutValue = boost::none;
         nTimeMax = 0;
 
         nVersion       = 0;
@@ -381,6 +405,7 @@ public:
             READWRITE(VARINT(nDataPos));
         if (nStatus & BLOCK_HAVE_UNDO)
             READWRITE(VARINT(nUndoPos));
+        READWRITE(hashAnchor);
 
         // block hash
         READWRITE(hash);
@@ -391,6 +416,12 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+
+        // Only read/write nSproutValue if the client version used to create
+        // this index was storing them.
+        if ((s.GetType() & SER_DISK) && (nVersion >= SPROUT_VALUE_VERSION)) {
+            READWRITE(nSproutValue);
+        }
     }
 
     uint256 GetBlockHash() const

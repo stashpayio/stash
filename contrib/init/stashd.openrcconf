@@ -1,0 +1,33 @@
+# /etc/conf.d/stashd: config file for /etc/init.d/stashd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/stashcore/stash.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/stashd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/stashd.pid"
+
+# Where to write stashd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/stashd"
+
+# User and group to own stashd process
+#BITCOIND_USER="stashcore"
+#BITCOIND_GROUP="stashcore"
+
+# Path to stashd executable
+#BITCOIND_BIN="/usr/bin/stashd"
+
+# Nice value to run stashd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for bitcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITCOIND_SIGTERM_TIMEOUT=60

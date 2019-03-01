@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -eu
+basePath=$(dirname "$0")
+paramsPath="$HOME/Library/Application Support/ZcashParams"
+preflightPath=$basePath/pre-flight.sh
+
+sprout_verifying_key="sprout-verifying.key"
+sprout_proving_key="sprout-proving.key"
+sprout_groth16_params="sprout-groth16.params"
+sapling_output_params="sapling-output.params"
+sapling_spend_params="sapling-spend.params"
+
+if [ ! -f "$paramsPath/$sprout_verifying_key" ] ||
+   [ ! -f "$paramsPath/$sprout_proving_key" ] ||
+   [ ! -f "$paramsPath/$sprout_groth16_params" ] ||
+   [ ! -f "$paramsPath/$sapling_output_params" ] ||
+   [ ! -f "$paramsPath/$sapling_spend_params" ] ; then
+  osascript -e 'tell app "System Events" to display dialog "Stash Core needs to download additional files (about 1.7GB)" with icon note buttons { "OK" } default button 1'
+  osascript -e 'tell application "Terminal"
+  activate
+  do script "\"'"$preflightPath"'\""
+  end tell'
+else
+  $basePath/Stash-Qt-Bin&
+fi

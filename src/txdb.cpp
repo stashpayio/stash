@@ -16,6 +16,10 @@
 
 #include <boost/thread.hpp>
 
+using namespace std;
+
+static const char DB_ANCHOR = 'A';
+static const char DB_NULLIFIER = 's';
 static const char DB_COIN = 'C';
 static const char DB_COINS = 'c';
 static const char DB_BLOCK_FILES = 'f';
@@ -27,6 +31,7 @@ static const char DB_SPENTINDEX = 'p';
 static const char DB_BLOCK_INDEX = 'b';
 
 static const char DB_BEST_BLOCK = 'B';
+static const char DB_BEST_ANCHOR = 'a';
 static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
@@ -55,9 +60,29 @@ struct CoinEntry {
 
 }
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true)
 {
 }
+
+bool CCoinsViewDB::GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const {
+    if (rt == ZCIncrementalMerkleTree::empty_root()) {
+        ZCIncrementalMerkleTree new_tree;
+        tree = new_tree;
+        return true;
+    }
+
+    bool read = db.Read(make_pair(DB_ANCHOR, rt), tree);
+
+    return read;
+}
+
+bool CCoinsViewDB::GetNullifier(const uint256 &nf) const {
+    bool spent = false;
+    bool read = db.Read(make_pair(DB_NULLIFIER, nf), spent);
+
+    return read;
+}
+
 
 bool CCoinsViewDB::GetCoin(const COutPoint &outpoint, Coin &coin) const {
     return db.Read(CoinEntry(&outpoint), coin);
@@ -74,8 +99,15 @@ uint256 CCoinsViewDB::GetBestBlock() const {
     return hashBestChain;
 }
 
-bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
-    CDBBatch batch(db);
+uint256 CCoinsViewDB::GetBestAnchor() const {
+	uint256 hashBestAnchor;
+	if (!db.Read(DB_BEST_ANCHOR, hashBestAnchor))
+		return ZCIncrementalMerkleTree::empty_root();
+	return hashBestAnchor;
+}
+
+
+void CCoinsViewDB::_BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock, CDBBatch& batch) {
     size_t count = 0;
     size_t changed = 0;
     for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();) {
@@ -93,10 +125,70 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
     }
     if (!hashBlock.IsNull())
         batch.Write(DB_BEST_BLOCK, hashBlock);
+    LogPrint("coindb", "Committing %u changed transaction outputs (out of %u) to coin database...\n", (unsigned int)changed, (unsigned int)count);
+}
 
-    bool ret = db.WriteBatch(batch);
-    LogPrint("coindb", "Committed %u changed transaction outputs (out of %u) to coin database...\n", (unsigned int)changed, (unsigned int)count);
-    return ret;
+bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
+    CDBBatch batch(db);
+    this->_BatchWrite(mapCoins,hashBlock,batch);
+    return db.WriteBatch(batch);
+
+}
+
+void static BatchWriteAnchor(CDBBatch &batch,
+                             const uint256 &croot,
+                             const ZCIncrementalMerkleTree &tree,
+                             const bool &entered)
+{
+    if (!entered)
+        batch.Erase(make_pair(DB_ANCHOR, croot));
+    else {
+        batch.Write(make_pair(DB_ANCHOR, croot), tree);
+    }
+}
+
+void static BatchWriteNullifier(CDBBatch &batch, const uint256 &nf, const bool &entered) {
+    if (!entered)
+        batch.Erase(make_pair(DB_NULLIFIER, nf));
+    else
+        batch.Write(make_pair(DB_NULLIFIER, nf), true);
+}
+
+void static BatchWriteHashBestAnchor(CDBBatch &batch, const uint256 &hash) {
+    batch.Write(DB_BEST_ANCHOR, hash);
+}
+
+bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins,
+                              const uint256 &hashBlock,
+                              const uint256 &hashAnchor,
+                              CAnchorsMap &mapAnchors,
+                              CNullifiersMap &mapNullifiers) {
+	CDBBatch batch(db);
+	this->_BatchWrite(mapCoins,hashBlock,batch);
+
+    for (CAnchorsMap::iterator it = mapAnchors.begin(); it != mapAnchors.end();) {
+        if (it->second.flags & CAnchorsCacheEntry::DIRTY) {
+            BatchWriteAnchor(batch, it->first, it->second.tree, it->second.entered);
+            // TODO: changed++?
+        }
+        CAnchorsMap::iterator itOld = it++;
+        mapAnchors.erase(itOld);
+    }
+
+    for (CNullifiersMap::iterator it = mapNullifiers.begin(); it != mapNullifiers.end();) {
+        if (it->second.flags & CNullifiersCacheEntry::DIRTY) {
+            BatchWriteNullifier(batch, it->first, it->second.entered);
+            // TODO: changed++?
+        }
+        CNullifiersMap::iterator itOld = it++;
+        mapNullifiers.erase(itOld);
+    }
+
+    if (!hashAnchor.IsNull())
+        BatchWriteHashBestAnchor(batch, hashAnchor);
+
+    return db.WriteBatch(batch);
+
 }
 
 size_t CCoinsViewDB::EstimateSize() const
@@ -364,6 +456,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nFile          = diskindex.nFile;
                 pindexNew->nDataPos       = diskindex.nDataPos;
                 pindexNew->nUndoPos       = diskindex.nUndoPos;
+                pindexNew->hashAnchor     = diskindex.hashAnchor;
                 pindexNew->nVersion       = diskindex.nVersion;
                 pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
                 pindexNew->nTime          = diskindex.nTime;
@@ -371,10 +464,12 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
+                pindexNew->nSproutValue   = diskindex.nSproutValue;
 
-                if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
-                    return error("%s: CheckProofOfWork failed: %s", __func__, pindexNew->ToString());
-
+                if (!Params().isLegacyBlock(diskindex.nHeight)) {
+                    if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
+                        return error("%s: CheckProofOfWork failed: %s", __func__, pindexNew->ToString());
+                }
                 pcursor->Next();
             } else {
                 return error("%s: failed to read value", __func__);

@@ -189,6 +189,26 @@ static bool DecryptKey(const CKeyingMaterial& vMasterKey, const std::vector<unsi
     return key.VerifyPubKey(vchPubKey);
 }
 
+
+static bool DecryptSpendingKey(const CKeyingMaterial& vMasterKey,
+                               const std::vector<unsigned char>& vchCryptedSecret,
+                               const libzcash::PaymentAddress& address,
+                               libzcash::SpendingKey& sk)
+{
+    CKeyingMaterial vchSecret;
+    if(!DecryptSecret(vMasterKey, vchCryptedSecret, address.GetHash(), vchSecret))
+        return false;
+
+    if (vchSecret.size() != libzcash::SerializedSpendingKeySize)
+        return false;
+
+    CSecureDataStream ss(vchSecret, SER_NETWORK, PROTOCOL_VERSION);
+    ss >> sk;
+    return sk.address() == address;
+}
+
+
+
 bool CCryptoKeyStore::SetCrypted()
 {
     LOCK(cs_KeyStore);
@@ -239,7 +259,22 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn, bool fForMixin
             if (fDecryptionThoroughlyChecked)
                 break;
         }
-        if (keyPass && keyFail)
+        CryptedSpendingKeyMap::const_iterator skmi = mapCryptedSpendingKeys.begin();
+        for (; skmi != mapCryptedSpendingKeys.end(); ++skmi)
+        {
+            const libzcash::PaymentAddress &address = (*skmi).first;
+            const std::vector<unsigned char> &vchCryptedSecret = (*skmi).second;
+            libzcash::SpendingKey sk;
+            if (!DecryptSpendingKey(vMasterKeyIn, vchCryptedSecret, address, sk))
+            {
+                keyFail = true;
+                break;
+            }
+            keyPass = true;
+            if (fDecryptionThoroughlyChecked)
+                break;
+        }
+       if (keyPass && keyFail)
         {
             LogPrintf("The wallet is probably corrupted: Some keys decrypt but not all.\n");
             assert(false);
@@ -336,6 +371,62 @@ bool CCryptoKeyStore::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) co
         }
         // Check for watch-only pubkeys
         return CBasicKeyStore::GetPubKey(address, vchPubKeyOut);
+    }
+    return false;
+}
+
+bool CCryptoKeyStore::AddSpendingKey(const libzcash::SpendingKey &sk)
+{
+    {
+        LOCK(cs_SpendingKeyStore);
+        if (!IsCrypted())
+            return CBasicKeyStore::AddSpendingKey(sk);
+
+        if (IsLocked())
+            return false;
+
+        std::vector<unsigned char> vchCryptedSecret;
+        CSecureDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+        ss << sk;
+        CKeyingMaterial vchSecret(ss.begin(), ss.end());
+        auto address = sk.address();
+        if (!EncryptSecret(vMasterKey, vchSecret, address.GetHash(), vchCryptedSecret))
+            return false;
+
+        if (!AddCryptedSpendingKey(address, sk.receiving_key(), vchCryptedSecret))
+            return false;
+    }
+    return true;
+}
+
+bool CCryptoKeyStore::AddCryptedSpendingKey(const libzcash::PaymentAddress &address,
+                                            const libzcash::ReceivingKey &rk,
+                                            const std::vector<unsigned char> &vchCryptedSecret)
+{
+    {
+        LOCK(cs_SpendingKeyStore);
+        if (!SetCrypted())
+            return false;
+
+        mapCryptedSpendingKeys[address] = vchCryptedSecret;
+        mapNoteDecryptors.insert(std::make_pair(address, ZCNoteDecryption(rk)));
+    }
+    return true;
+}
+
+bool CCryptoKeyStore::GetSpendingKey(const libzcash::PaymentAddress &address, libzcash::SpendingKey &skOut) const
+{
+    {
+        LOCK(cs_SpendingKeyStore);
+        if (!IsCrypted())
+            return CBasicKeyStore::GetSpendingKey(address, skOut);
+
+        CryptedSpendingKeyMap::const_iterator mi = mapCryptedSpendingKeys.find(address);
+        if (mi != mapCryptedSpendingKeys.end())
+        {
+            const std::vector<unsigned char> &vchCryptedSecret = (*mi).second;
+            return DecryptSpendingKey(vMasterKey, vchCryptedSecret, address, skOut);
+        }
     }
     return false;
 }

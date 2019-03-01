@@ -7,7 +7,9 @@
 
 #include "keystore.h"
 #include "serialize.h"
+#include "streams.h"
 #include "support/allocators/secure.h"
+#include "zcash/Address.hpp"
 
 class uint256;
 
@@ -18,13 +20,13 @@ const unsigned int WALLET_CRYPTO_IV_SIZE = 16;
 /**
  * Private key encryption is done based on a CMasterKey,
  * which holds a salt and random encryption key.
- * 
+ *
  * CMasterKeys are encrypted using AES-256-CBC using a key
  * derived using derivation method nDerivationMethod
  * (0 == EVP_sha512()) and derivation iterations nDeriveIterations.
  * vchOtherDerivationParameters is provided for alternative algorithms
  * which may require more parameters (such as scrypt).
- * 
+ *
  * Wallet Private Keys are then encrypted using AES-256-CBC
  * with the double-sha256 of the public key as the IV, and the
  * master key's key as the encryption key (see keystore.[ch]).
@@ -66,6 +68,18 @@ public:
 };
 
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CKeyingMaterial;
+
+class CSecureDataStream : public CBaseDataStream<CKeyingMaterial>
+{
+public:
+    explicit CSecureDataStream(int nTypeIn, int nVersionIn) : CBaseDataStream(nTypeIn, nVersionIn) { }
+
+    CSecureDataStream(const_iterator pbegin, const_iterator pend, int nTypeIn, int nVersionIn) :
+            CBaseDataStream(pbegin, pend, nTypeIn, nVersionIn) { }
+
+    CSecureDataStream(const vector_type& vchIn, int nTypeIn, int nVersionIn) :
+            CBaseDataStream(vchIn, nTypeIn, nVersionIn) { }
+};
 
 namespace wallet_crypto
 {
@@ -120,11 +134,12 @@ class CCryptoKeyStore : public CBasicKeyStore
 {
 private:
     CryptedKeyMap mapCryptedKeys;
+    CryptedSpendingKeyMap mapCryptedSpendingKeys;
     CHDChain cryptedHDChain;
 
     CKeyingMaterial vMasterKey;
 
-    //! if fUseCrypto is true, mapKeys must be empty
+    //! if fUseCrypto is true, mapKeys and mapSpendingKeys must be empty
     //! if fUseCrypto is false, vMasterKey must be empty
     bool fUseCrypto;
 
@@ -218,7 +233,38 @@ public:
         }
     }
 
-    virtual bool GetHDChain(CHDChain& hdChainRet) const override;
+    virtual bool AddCryptedSpendingKey(const libzcash::PaymentAddress &address,
+                                       const libzcash::ReceivingKey &rk,
+                                       const std::vector<unsigned char> &vchCryptedSecret);
+    bool AddSpendingKey(const libzcash::SpendingKey &sk);
+    bool HaveSpendingKey(const libzcash::PaymentAddress &address) const
+    {
+        {
+            LOCK(cs_SpendingKeyStore);
+            if (!IsCrypted())
+                return CBasicKeyStore::HaveSpendingKey(address);
+            return mapCryptedSpendingKeys.count(address) > 0;
+        }
+        return false;
+    }
+    bool GetSpendingKey(const libzcash::PaymentAddress &address, libzcash::SpendingKey &skOut) const;
+    void GetPaymentAddresses(std::set<libzcash::PaymentAddress> &setAddress) const
+    {
+        if (!IsCrypted())
+        {
+            CBasicKeyStore::GetPaymentAddresses(setAddress);
+            return;
+        }
+        setAddress.clear();
+        CryptedSpendingKeyMap::const_iterator mi = mapCryptedSpendingKeys.begin();
+        while (mi != mapCryptedSpendingKeys.end())
+        {
+            setAddress.insert((*mi).first);
+            mi++;
+        }
+    }
+
+    bool GetHDChain(CHDChain& hdChainRet) const;
 
     /**
      * Wallet status (encrypted, locked) changed.

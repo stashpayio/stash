@@ -10,6 +10,11 @@ from test_framework.util import *
 
 class KeyPoolTest(BitcoinTestFramework):
 
+    def __init__(self):
+        super().__init__()
+        self.setup_clean_chain = True
+        self.num_nodes = 1
+
     def run_test(self):
         nodes = self.nodes
 
@@ -17,7 +22,7 @@ class KeyPoolTest(BitcoinTestFramework):
         nodes[0].encryptwallet('test')
         bitcoind_processes[0].wait()
         # Restart node 0
-        nodes[0] = start_node(0, self.options.tmpdir, ['-usehd=0'])
+        nodes[0] = start_node(0, self.options.tmpdir, ['-usehd=0','-experimentalfeatures', '-developerencryptwallet'])
         # Keep creating keys
         addr = nodes[0].getnewaddress()
 
@@ -63,12 +68,9 @@ class KeyPoolTest(BitcoinTestFramework):
         except JSONRPCException as e:
             assert(e.error['code']==-12)
 
-    def setup_chain(self):
-        print("Initializing test directory "+self.options.tmpdir)
-        initialize_chain_clean(self.options.tmpdir, 1)
-
     def setup_network(self):
-        self.nodes = start_nodes(1, self.options.tmpdir, [['-usehd=0']])
+        self.nodes = start_nodes(1, self.options.tmpdir, [['-usehd=0', '-experimentalfeatures', '-developerencryptwallet']])
+
 
 if __name__ == '__main__':
     KeyPoolTest().main()

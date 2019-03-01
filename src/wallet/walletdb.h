@@ -10,6 +10,8 @@
 #include "wallet/db.h"
 #include "hdchain.h"
 #include "key.h"
+#include "keystore.h"
+#include "zcash/Address.hpp"
 
 #include <list>
 #include <stdint.h>
@@ -88,6 +90,7 @@ public:
     bool ErasePurpose(const std::string& strAddress);
 
     bool WriteTx(const CWalletTx& wtx);
+    bool WriteTx(uint256 hash, const CWalletTx& wtx);
     bool EraseTx(uint256 hash);
 
     bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta);
@@ -105,6 +108,8 @@ public:
     bool WriteOrderPosNext(int64_t nOrderPosNext);
 
     bool WriteDefaultKey(const CPubKey& vchPubKey);
+
+    bool WriteWitnessCacheSize(int64_t nWitnessCacheSize);
 
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
@@ -141,6 +146,17 @@ public:
 
     static void IncrementUpdateCounter();
     static unsigned int GetUpdateCounter();
+
+    /// Write spending key to wallet database, where key is payment address and value is spending key.
+    bool WriteZKey(const libzcash::PaymentAddress& addr, const libzcash::SpendingKey& key, const CKeyMetadata &keyMeta);
+    bool WriteCryptedZKey(const libzcash::PaymentAddress & addr,
+                          const libzcash::ReceivingKey & rk,
+                          const std::vector<unsigned char>& vchCryptedSecret,
+                          const CKeyMetadata &keyMeta);
+
+    bool WriteViewingKey(const libzcash::ViewingKey &vk);
+    bool EraseViewingKey(const libzcash::ViewingKey &vk);
+
 private:
     CWalletDB(const CWalletDB&);
     void operator=(const CWalletDB&);

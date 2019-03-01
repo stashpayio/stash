@@ -25,6 +25,11 @@ public:
         typ = initialType;
         val = initialStr;
     }
+    #ifdef __APPLE__
+    UniValue(size_t val_) {
+        setInt(val_);
+    }
+    #endif
     UniValue(uint64_t val_) {
         setInt(val_);
     }
@@ -54,6 +59,9 @@ public:
     bool setNull();
     bool setBool(bool val);
     bool setNumStr(const std::string& val);
+    #ifdef __APPLE__
+    bool setInt(size_t val_);
+    #endif
     bool setInt(uint64_t val);
     bool setInt(int64_t val);
     bool setInt(int val_) { return setInt((int64_t)val_); }
@@ -88,12 +96,17 @@ public:
         UniValue tmpVal(VSTR, val_);
         return push_back(tmpVal);
     }
+    #ifdef __APPLE__
+    bool push_back(size_t val_) {
+        UniValue tmpVal(val_);
+        return push_back(tmpVal);
+    }
+    #endif
     bool push_back(const char *val_) {
         std::string s(val_);
         return push_back(s);
     }
     bool push_backV(const std::vector<UniValue>& vec);
-
     bool pushKV(const std::string& key, const UniValue& val);
     bool pushKV(const std::string& key, const std::string& val_) {
         UniValue tmpVal(VSTR, val_);
@@ -169,6 +182,15 @@ static inline std::pair<std::string,UniValue> Pair(const char *cKey, const char 
     UniValue uVal(cVal);
     return std::make_pair(key, uVal);
 }
+
+#ifdef __APPLE__
+static inline std::pair<std::string,UniValue> Pair(const char *cKey, size_t sizeVal)
+{
+    std::string key(cKey);
+    UniValue uVal(sizeVal);
+    return std::make_pair(key, uVal);
+}
+#endif
 
 static inline std::pair<std::string,UniValue> Pair(const char *cKey, std::string strVal)
 {

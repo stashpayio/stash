@@ -53,7 +53,8 @@ UniValue privatesend(const JSONRPCRequest& request)
     if(request.params[0].get_str() == "start") {
         {
             LOCK(pwalletMain->cs_wallet);
-            EnsureWalletIsUnlocked();
+            if (pwalletMain->IsLocked(true))
+                throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please unlock wallet for mixing with walletpassphrase first.");
         }
 
         privateSendClient.fEnablePrivateSend = true;
@@ -249,7 +250,7 @@ UniValue masternode(const JSONRPCRequest& request)
 
         obj.push_back(Pair("height",        nHeight));
         obj.push_back(Pair("IP:port",       mnInfo.addr.ToString()));
-        obj.push_back(Pair("protocol",      (int64_t)mnInfo.nProtocolVersion));
+        obj.push_back(Pair("protocol",      mnInfo.nProtocolVersion));
         obj.push_back(Pair("outpoint",      mnInfo.outpoint.ToStringShort()));
         obj.push_back(Pair("payee",         CBitcoinAddress(mnInfo.pubKeyCollateralAddress.GetID()).ToString()));
         obj.push_back(Pair("lastseen",      mnInfo.nTimeLastPing));
@@ -410,7 +411,7 @@ UniValue masternode(const JSONRPCRequest& request)
 
         // Find possible candidates
         std::vector<COutput> vPossibleCoins;
-        pwalletMain->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_1000);
+        pwalletMain->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_10000);
 
         UniValue obj(UniValue::VOBJ);
         for (const auto& out : vPossibleCoins) {
@@ -513,7 +514,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
                 "  lastpaidblock  - Print the last block height a node was paid on the network\n"
                 "  lastpaidtime   - Print the last time a node was paid on the network\n"
                 "  lastseen       - Print timestamp of when a masternode was last seen on the network\n"
-                "  payee          - Print Dash address associated with a masternode (can be additionally filtered,\n"
+                "  payee          - Print Stash address associated with a masternode (can be additionally filtered,\n"
                 "                   partial match)\n"
                 "  protocol       - Print protocol of a masternode (can be additionally filtered, exact match)\n"
                 "  pubkey         - Print the masternode (not collateral) public key\n"
@@ -642,7 +643,7 @@ UniValue masternodelist(const JSONRPCRequest& request)
             } else if (strMode == "protocol") {
                 if (strFilter !="" && strFilter != strprintf("%d", mn.nProtocolVersion) &&
                     strOutpoint.find(strFilter) == std::string::npos) continue;
-                obj.push_back(Pair(strOutpoint, (int64_t)mn.nProtocolVersion));
+                obj.push_back(Pair(strOutpoint, mn.nProtocolVersion));
             } else if (strMode == "pubkey") {
                 if (strFilter !="" && strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, HexStr(mn.pubKeyMasternode)));
@@ -769,9 +770,6 @@ UniValue masternodebroadcast(const JSONRPCRequest& request)
             LOCK(pwalletMain->cs_wallet);
             EnsureWalletIsUnlocked();
         }
-
-        std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-        mnEntries = masternodeConfig.getEntries();
 
         int nSuccessful = 0;
         int nFailed = 0;
@@ -932,13 +930,13 @@ UniValue sentinelping(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafe argNames
   //  --------------------- ------------------------  -----------------------  ------ ----------
-    { "dash",               "masternode",             &masternode,             true,  {} },
-    { "dash",               "masternodelist",         &masternodelist,         true,  {} },
-    { "dash",               "masternodebroadcast",    &masternodebroadcast,    true,  {} },
-    { "dash",               "getpoolinfo",            &getpoolinfo,            true,  {} },
-    { "dash",               "sentinelping",           &sentinelping,           true,  {} },
+    { "stash",               "masternode",             &masternode,             true,  {} },
+    { "stash",               "masternodelist",         &masternodelist,         true,  {} },
+    { "stash",               "masternodebroadcast",    &masternodebroadcast,    true,  {} },
+    { "stash",               "getpoolinfo",            &getpoolinfo,            true,  {} },
+    { "stash",               "sentinelping",           &sentinelping,           true,  {} },
 #ifdef ENABLE_WALLET
-    { "dash",               "privatesend",            &privatesend,            false, {} },
+    { "stash",               "privatesend",            &privatesend,            false, {} },
 #endif // ENABLE_WALLET
 };
 

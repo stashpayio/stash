@@ -14,11 +14,13 @@
 #include <map>
 #include <stdint.h>
 #include <string>
+#include <memory>
 
 #include <boost/function.hpp>
 
 #include <univalue.h>
 
+class AsyncRPCQueue;
 class CRPCCommand;
 
 namespace RPCServer
@@ -57,6 +59,9 @@ public:
 
 /** Query whether RPC is running */
 bool IsRPCRunning();
+
+/** Get the async queue*/
+std::shared_ptr<AsyncRPCQueue> getAsyncRPCQueue();
 
 /**
  * Set the RPC warmup status.  When this is done, all RPC calls will error out
@@ -143,7 +148,7 @@ public:
 };
 
 /**
- * Dash RPC command dispatcher.
+ * Stash RPC command dispatcher.
  */
 class CRPCTable
 {
@@ -191,6 +196,7 @@ extern int64_t nWalletUnlockTime;
 extern CAmount AmountFromValue(const UniValue& value);
 extern UniValue ValueFromAmount(const CAmount& amount);
 extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
+extern double GetNetworkDifficulty(const CBlockIndex* blockindex = NULL);
 extern std::string HelpRequiringPassphrase();
 extern std::string HelpExampleCli(const std::string& methodname, const std::string& args);
 extern std::string HelpExampleRpc(const std::string& methodname, const std::string& args);

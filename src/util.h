@@ -12,7 +12,7 @@
 #define BITCOIN_UTIL_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/dash-config.h"
+#include "config/stash-config.h"
 #endif
 
 #include "compat.h"
@@ -24,25 +24,26 @@
 #include <exception>
 #include <map>
 #include <stdint.h>
-#include <string>
+
 #include <vector>
 
 #include <boost/filesystem/path.hpp>
 #include <boost/signals2/signal.hpp>
 #include <boost/thread/exceptions.hpp>
 
+
 // Debugging macros
 
 // Uncomment the following line to enable debugging messages
 // or enable on a per file basis prior to inclusion of util.h
-//#define ENABLE_DASH_DEBUG
-#ifdef ENABLE_DASH_DEBUG
+//#define ENABLE_STASH_DEBUG
+#ifdef ENABLE_STASH_DEBUG
 #define DBG( x ) x
 #else
-#define DBG( x ) 
+#define DBG( x )
 #endif
 
-//Dash only features
+//Stash only features
 
 extern bool fMasternodeMode;
 extern bool fLiteMode;
@@ -111,6 +112,8 @@ bool error(const char* fmt, const Args&... args)
     return false;
 }
 
+const boost::filesystem::path &ZC_GetParamsDir();
+
 void PrintExceptionContinue(const std::exception *pex, const char* pszThread);
 void ParseParameters(int argc, const char*const argv[]);
 void FileCommit(FILE *file);
@@ -136,6 +139,14 @@ boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 void OpenDebugLog();
 void ShrinkDebugFile();
 void runCommand(const std::string& strCommand);
+const boost::filesystem::path GetExportDir();
+
+/** Returns privacy notice (for -version, -help and metrics screen) */
+std::string PrivacyInfo();
+
+/** Returns licensing information (for -version) */
+std::string LicenseInfo();
+
 
 inline bool IsSwitchChar(char c)
 {
@@ -236,7 +247,7 @@ std::string GetThreadName();
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    std::string s = strprintf("dash-%s", name);
+    std::string s = strprintf("stash-%s", name);
     RenameThread(s.c_str());
     try
     {
@@ -288,5 +299,12 @@ std::string IntVersionToString(uint32_t nVersion);
  */
 std::string SafeIntVersionToString(uint32_t nVersion);
 
+
+class CNetMessage;
+
+void LogIncomingMsg(CNetMessage& msg);
+void LogOutgoingMsg(const char* data, size_t length);
+void dumpBuffer(const std::string& str);
+void dumpBuffer(const CScript& script);
 
 #endif // BITCOIN_UTIL_H

@@ -249,7 +249,7 @@ uint256 CGovernanceObject::GetHash() const
     ss << vchSig;
     // fee_tx is left out on purpose
 
-    DBG( printf("CGovernanceObject::GetHash %i %lli %s\n", nRevision, nTime, GetDataAsHexString().c_str()); );
+    DBG( printf("CGovernanceObject::GetHash %i %li %s\n", nRevision, nTime, GetDataAsHexString().c_str()); );
 
     return ss.GetHash();
 }
@@ -470,8 +470,7 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
             // Note: It's ok to have expired proposals
             // they are going to be cleared by CGovernanceManager::UpdateCachesAndClean()
             // TODO: should they be tagged as "expired" to skip vote downloading?
-            // DO NOT USE THIS UNTIL MAY, 2018 on mainnet
-            if ((GetAdjustedTime() >= 1526423380 || Params().NetworkIDString() != CBaseChainParams::MAIN) && !validator.Validate(false)) {
+            if (!validator.Validate(false)) {
                 strError = strprintf("Invalid proposal data, error messages: %s", validator.GetErrorMessages());
                 return false;
             }
@@ -494,7 +493,7 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
                 if (err == CMasternode::COLLATERAL_UTXO_NOT_FOUND) {
                     strError = "Failed to find Masternode UTXO, missing masternode=" + strOutpoint + "\n";
                 } else if (err == CMasternode::COLLATERAL_INVALID_AMOUNT) {
-                    strError = "Masternode UTXO should have 1000 DASH, missing masternode=" + strOutpoint + "\n";
+                    strError = "Masternode UTXO should have 10000 STASH, missing masternode=" + strOutpoint + "\n";
                 } else if (err == CMasternode::COLLATERAL_INVALID_PUBKEY) {
                     fMissingMasternode = true;
                     strError = "Masternode not found: " + strOutpoint;
@@ -710,11 +709,8 @@ void CGovernanceObject::UpdateSentinelVariables()
 
     // CALCULATE THE MINUMUM VOTE COUNT REQUIRED FOR FULL SIGNAL
 
-    // todo - 12.1 - should be set to `10` after governance vote compression is implemented
     int nAbsVoteReq = std::max(Params().GetConsensus().nGovernanceMinQuorum, nMnCount / 10);
     int nAbsDeleteReq = std::max(Params().GetConsensus().nGovernanceMinQuorum, (2 * nMnCount) / 3);
-    // todo - 12.1 - Temporarily set to 1 for testing - reverted
-    //nAbsVoteReq = 1;
 
     // SET SENTINEL FLAGS TO FALSE
 

@@ -12,6 +12,7 @@
 #include "masternode-sync.h"
 #include "masternodeman.h"
 #include "messagesigner.h"
+#include "netfulfilledman.h"
 #include "netmessagemaker.h"
 #include "script/sign.h"
 #include "txmempool.h"
@@ -192,6 +193,7 @@ void CPrivateSendBase::SetNull()
     nState = POOL_STATE_IDLE;
     nSessionID = 0;
     nSessionDenom = 0;
+    nSessionInputCount = 0;
     vecEntries.clear();
     finalMutableTransaction.vin.clear();
     finalMutableTransaction.vout.clear();
@@ -390,10 +392,10 @@ int CPrivateSend::GetDenominations(const std::vector<CTxOut>& vecTxOut, bool fSi
 bool CPrivateSend::GetDenominationsBits(int nDenom, std::vector<int> &vecBitsRet)
 {
     // ( bit on if present, 4 denominations example )
-    // bit 0 - 100DASH+1
-    // bit 1 - 10DASH+1
-    // bit 2 - 1DASH+1
-    // bit 3 - .1DASH+1
+    // bit 0 - 100STASH+1
+    // bit 1 - 10STASH+1
+    // bit 2 - 1STASH+1
+    // bit 3 - .1STASH+1
 
     int nMaxDenoms = vecStandardDenominations.size();
 
@@ -456,6 +458,7 @@ std::string CPrivateSend::GetMessageByID(PoolMessage nMessageID)
         case MSG_NOERR:                 return _("No errors detected.");
         case MSG_SUCCESS:               return _("Transaction created successfully.");
         case MSG_ENTRIES_ADDED:         return _("Your entries added successfully.");
+        case ERR_INVALID_INPUT_COUNT:   return _("Invalid input count.");
         default:                        return _("Unknown response.");
     }
 }
@@ -511,14 +514,14 @@ void CPrivateSend::SyncTransaction(const CTransaction& tx, const CBlockIndex *pi
 //TODO: Rename/move to core
 void ThreadCheckPrivateSend(CConnman& connman)
 {
-    if(fLiteMode) return; // disable all Dash specific functionality
+    if(fLiteMode) return; // disable all Stash specific functionality
 
     static bool fOneThread;
     if(fOneThread) return;
     fOneThread = true;
 
     // Make this thread recognisable as the PrivateSend thread
-    RenameThread("dash-ps");
+    RenameThread("stash-ps");
 
     unsigned int nTick = 0;
 
@@ -545,6 +548,7 @@ void ThreadCheckPrivateSend(CConnman& connman)
                 activeMasternode.ManageState(connman);
 
             if(nTick % 60 == 0) {
+                netfulfilledman.CheckAndRemove();
                 mnodeman.ProcessMasternodeConnections(connman);
                 mnodeman.CheckAndRemove(connman);
                 mnodeman.WarnMasternodeDaemonUpdates();
