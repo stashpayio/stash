@@ -478,8 +478,8 @@ private:
     std::vector<CService> vPendingMasternodes;
     CCriticalSection cs_vPendingMasternodes;
     std::vector<CNode*> vNodes;
-    std::list<CNode*> vNodesDisconnected;
     mutable CCriticalSection cs_vNodes;
+    std::list<CNode*> vNodesDisconnected;
     std::atomic<NodeId> nLastNodeId;
 
     /** Services this instance offers */

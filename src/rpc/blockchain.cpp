@@ -22,7 +22,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "hash.h"
-
+#include "script/standard.h"
 #include <stdint.h>
 
 #include <univalue.h>
@@ -31,6 +31,8 @@
 
 #include <mutex>
 #include <condition_variable>
+
+using namespace std;
 
 struct CUpdatedBlock
 {
@@ -74,6 +76,25 @@ double GetDifficulty(const CBlockIndex* blockindex)
     }
 
     return dDiff;
+}
+
+static UniValue ValuePoolDesc(
+    const std::string &name,
+    const boost::optional<CAmount> chainValue,
+    const boost::optional<CAmount> valueDelta)
+{
+    UniValue rv(UniValue::VOBJ);
+    rv.push_back(Pair("id", name));
+    rv.push_back(Pair("monitored", (bool)chainValue));
+    if (chainValue) {
+        rv.push_back(Pair("chainValue", ValueFromAmount(*chainValue)));
+        rv.push_back(Pair("chainValueZat", *chainValue));
+    }
+    if (valueDelta) {
+        rv.push_back(Pair("valueDelta", ValueFromAmount(*valueDelta)));
+        rv.push_back(Pair("valueDeltaZat", *valueDelta));
+    }
+    return rv;
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
@@ -137,6 +158,11 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
+    result.push_back(Pair("anchor", blockindex->hashAnchorEnd.GetHex()));
+
+    UniValue valuePools(UniValue::VARR);
+    valuePools.push_back(ValuePoolDesc("sprout", blockindex->nChainSproutValue, blockindex->nSproutValue));
+    result.push_back(Pair("valuePools", valuePools));
 
     if (blockindex->pprev)
         result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
@@ -1062,8 +1088,8 @@ UniValue gettxout(const JSONRPCRequest& request)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of dash addresses\n"
-            "        \"address\"     (string) dash address\n"
+            "     \"addresses\" : [          (array of string) array of stash addresses\n"
+            "        \"address\"     (string) stash address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"
@@ -1265,16 +1291,22 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("chainwork",             chainActive.Tip()->nChainWork.GetHex()));
     obj.push_back(Pair("pruned",                fPruneMode));
 
-    const Consensus::Params& consensusParams = Params().GetConsensus();
+    ZCIncrementalMerkleTree tree;
+    pcoinsTip->GetAnchorAt(pcoinsTip->GetBestAnchor(), tree);
+    obj.push_back(Pair("commitments",           tree.size()));
+
     CBlockIndex* tip = chainActive.Tip();
+    UniValue valuePools(UniValue::VARR);
+    valuePools.push_back(ValuePoolDesc("sprout", tip->nChainSproutValue, boost::none));
+    obj.push_back(Pair("valuePools",            valuePools));
+
+    const Consensus::Params& consensusParams = Params().GetConsensus();
     UniValue softforks(UniValue::VARR);
     UniValue bip9_softforks(UniValue::VOBJ);
     softforks.push_back(SoftForkDesc("bip34", 2, tip, consensusParams));
     softforks.push_back(SoftForkDesc("bip66", 3, tip, consensusParams));
     softforks.push_back(SoftForkDesc("bip65", 4, tip, consensusParams));
     BIP9SoftForkDescPushBack(bip9_softforks, "csv", consensusParams, Consensus::DEPLOYMENT_CSV);
-    BIP9SoftForkDescPushBack(bip9_softforks, "dip0001", consensusParams, Consensus::DEPLOYMENT_DIP0001);
-    BIP9SoftForkDescPushBack(bip9_softforks, "bip147", consensusParams, Consensus::DEPLOYMENT_BIP147);
     obj.push_back(Pair("softforks",             softforks));
     obj.push_back(Pair("bip9_softforks", bip9_softforks));
 

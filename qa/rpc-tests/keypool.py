@@ -22,7 +22,7 @@ class KeyPoolTest(BitcoinTestFramework):
         nodes[0].encryptwallet('test')
         bitcoind_processes[0].wait()
         # Restart node 0
-        nodes[0] = start_node(0, self.options.tmpdir, ['-usehd=0'])
+        nodes[0] = start_node(0, self.options.tmpdir, ['-usehd=0','-experimentalfeatures', '-developerencryptwallet'])
         # Keep creating keys
         addr = nodes[0].getnewaddress()
 
@@ -69,7 +69,8 @@ class KeyPoolTest(BitcoinTestFramework):
             assert(e.error['code']==-12)
 
     def setup_network(self):
-        self.nodes = start_nodes(1, self.options.tmpdir, [['-usehd=0']])
+        self.nodes = start_nodes(1, self.options.tmpdir, [['-usehd=0', '-experimentalfeatures', '-developerencryptwallet']])
+
 
 if __name__ == '__main__':
     KeyPoolTest().main()

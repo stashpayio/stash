@@ -120,7 +120,7 @@ protected:
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
-        Dbt datKey(ssKey.data(), ssKey.size());
+        Dbt datKey(&ssKey[0], ssKey.size());
 
         // Read
         Dbt datValue;
@@ -157,13 +157,13 @@ protected:
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
-        Dbt datKey(ssKey.data(), ssKey.size());
+        Dbt datKey(&ssKey[0], ssKey.size());
 
         // Value
         CDataStream ssValue(SER_DISK, CLIENT_VERSION);
         ssValue.reserve(10000);
         ssValue << value;
-        Dbt datValue(ssValue.data(), ssValue.size());
+        Dbt datValue(&ssValue[0], ssValue.size());
 
         // Write
         int ret = pdb->put(activeTxn, &datKey, &datValue, (fOverwrite ? 0 : DB_NOOVERWRITE));
@@ -186,7 +186,7 @@ protected:
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
-        Dbt datKey(ssKey.data(), ssKey.size());
+        Dbt datKey(&ssKey[0], ssKey.size());
 
         // Erase
         int ret = pdb->del(activeTxn, &datKey, 0);
@@ -206,7 +206,7 @@ protected:
         CDataStream ssKey(SER_DISK, CLIENT_VERSION);
         ssKey.reserve(1000);
         ssKey << key;
-        Dbt datKey(ssKey.data(), ssKey.size());
+        Dbt datKey(&ssKey[0], ssKey.size());
 
         // Exists
         int ret = pdb->exists(activeTxn, &datKey, 0);

@@ -36,7 +36,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// DashMiner
+// StashMiner
 //
 
 //
@@ -89,7 +89,7 @@ BlockAssembler::BlockAssembler(const CChainParams& _chainparams)
     }
 
     // Limit to between 1K and MAX_BLOCK_SIZE-1K for sanity:
-    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MaxBlockSize(fDIP0001ActiveAtTip)-1000), nBlockMaxSize));
+    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MaxBlockSize()-1000), nBlockMaxSize));
 }
 
 void BlockAssembler::resetBlock()
@@ -166,7 +166,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     // Compute regular coinbase transaction.
     coinbaseTx.vout[0].nValue = blockReward;
-    coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
+    coinbaseTx.vin[0].scriptSig = CScript() << CScriptCoinbaseHeight(nHeight) << OP_0;
 
     // Update coinbase transaction with additional info about masternode and governance payments,
     // get some info back to pass to getblocktemplate
@@ -223,7 +223,7 @@ bool BlockAssembler::TestPackage(uint64_t packageSize, unsigned int packageSigOp
 {
     if (nBlockSize + packageSize >= nBlockMaxSize)
         return false;
-    if (nBlockSigOps + packageSigOps >= MaxBlockSigOps(fDIP0001ActiveAtTip))
+    if (nBlockSigOps + packageSigOps >= MaxBlockSigOps())
         return false;
     return true;
 }
@@ -257,7 +257,7 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
         return false;
     }
 
-    unsigned int nMaxBlockSigOps = MaxBlockSigOps(fDIP0001ActiveAtTip);
+    unsigned int nMaxBlockSigOps = MaxBlockSigOps();
     if (nBlockSigOps + iter->GetSigOpCount() >= nMaxBlockSigOps) {
         // If the block has room for no more sig ops then
         // flag that the block is finished
@@ -582,7 +582,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
     ++nExtraNonce;
     unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
     CMutableTransaction txCoinbase(*pblock->vtx[0]);
-    txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
+    txCoinbase.vin[0].scriptSig = (CScript() << CScriptCoinbaseHeight(nHeight) << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
     assert(txCoinbase.vin[0].scriptSig.size() <= 100);
 
     pblock->vtx[0] = MakeTransactionRef(std::move(txCoinbase));

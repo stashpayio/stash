@@ -79,14 +79,14 @@ public:
     }
 };
 
-class SaltedOutpointHasher
+class SaltedHasher
 {
 private:
     /** Salt */
     const uint64_t k0, k1;
 
 public:
-    SaltedOutpointHasher();
+    SaltedHasher();
 
     /**
      * This *must* return size_t. With Boost 1.46 on 32-bit systems the
@@ -96,7 +96,13 @@ public:
     size_t operator()(const COutPoint& id) const {
         return SipHashUint256Extra(k0, k1, id.hash, id.n);
     }
+
+    size_t operator()(const uint256& key) const {
+         return SipHashUint256(k0, k1,key);
+     }
+
 };
+
 
 struct CCoinsCacheEntry
 {
@@ -117,7 +123,34 @@ struct CCoinsCacheEntry
     explicit CCoinsCacheEntry(Coin&& coin_) : coin(std::move(coin_)), flags(0) {}
 };
 
-typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher> CCoinsMap;
+struct CAnchorsCacheEntry
+{
+    bool entered; // This will be false if the anchor is removed from the cache
+    ZCIncrementalMerkleTree tree; // The tree itself
+    unsigned char flags;
+
+    enum Flags {
+        DIRTY = (1 << 0), // This cache entry is potentially different from the version in the parent view.
+    };
+
+    CAnchorsCacheEntry() : entered(false), flags(0) {}
+};
+
+struct CNullifiersCacheEntry
+{
+    bool entered; // If the nullifier is spent or not
+    unsigned char flags;
+
+    enum Flags {
+        DIRTY = (1 << 0), // This cache entry is potentially different from the version in the parent view.
+    };
+
+    CNullifiersCacheEntry() : entered(false), flags(0) {}
+};
+
+typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedHasher> CCoinsMap;
+typedef boost::unordered_map<uint256, CAnchorsCacheEntry, SaltedHasher> CAnchorsMap;
+typedef boost::unordered_map<uint256, CNullifiersCacheEntry, SaltedHasher> CNullifiersMap;
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor
@@ -144,6 +177,13 @@ private:
 class CCoinsView
 {
 public:
+
+    //! Retrieve the tree at a particular anchored root in the chain
+    virtual bool GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const;
+
+    //! Determine whether a nullifier is spent or not
+    virtual bool GetNullifier(const uint256 &nullifier) const;
+
     /** Retrieve the Coin (unspent transaction output) for a given outpoint.
      *  Returns true only when an unspent coin was found, which is returned in coin.
      *  When false is returned, coin's value is unspecified.
@@ -156,14 +196,22 @@ public:
     //! Retrieve the block hash whose state this CCoinsView currently represents
     virtual uint256 GetBestBlock() const;
 
+    //! Get the current "tip" or the latest anchored tree root in the chain
+    virtual uint256 GetBestAnchor() const;
+
     //! Do a bulk modification (multiple Coin changes + BestBlock change).
     //! The passed mapCoins can be modified.
     virtual bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock);
+    virtual bool BatchWrite(CCoinsMap &mapCoins,
+                            const uint256 &hashBlock,
+                            const uint256 &hashAnchor,
+                            CAnchorsMap &mapAnchors,
+                            CNullifiersMap &mapNullifiers);
 
     //! Get a cursor to iterate over the whole state
     virtual CCoinsViewCursor *Cursor() const;
 
-    //! As we use CCoinsViews polymorphically, have a virtual destructor
+     //! As we use CCoinsViews polymorphically, have a virtual destructor
     virtual ~CCoinsView() {}
 
     //! Estimate database size (0 if not implemented)
@@ -179,12 +227,20 @@ protected:
 
 public:
     CCoinsViewBacked(CCoinsView *viewIn);
+    bool GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const override;
+    bool GetNullifier(const uint256 &nullifier) const override;
     bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
+    uint256 GetBestAnchor() const override;
     void SetBackend(CCoinsView &viewIn);
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
-    CCoinsViewCursor *Cursor() const override;
+    bool BatchWrite(CCoinsMap &mapCoins,
+                    const uint256 &hashBlock,
+                    const uint256 &hashAnchor,
+                    CAnchorsMap &mapAnchors,
+                    CNullifiersMap &mapNullifiers) override;
+   CCoinsViewCursor *Cursor() const override;
     size_t EstimateSize() const override;
 };
 
@@ -195,10 +251,13 @@ class CCoinsViewCache : public CCoinsViewBacked
 protected:
     /**
      * Make mutable so that we can "fill the cache" even from Get-methods
-     * declared as "const".  
+     * declared as "const".
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
+    mutable uint256 hashAnchor;
+    mutable CAnchorsMap cacheAnchors;
+    mutable CNullifiersMap cacheNullifiers;
 
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
@@ -207,14 +266,34 @@ public:
     CCoinsViewCache(CCoinsView *baseIn);
 
     // Standard CCoinsView methods
+    bool GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const override;
+    bool GetNullifier(const uint256 &nullifier) const override;
     bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
+    uint256 GetBestAnchor() const override;
     void SetBestBlock(const uint256 &hashBlock);
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
+    bool BatchWrite(CCoinsMap &mapCoins,
+                    const uint256 &hashBlock,
+                    const uint256 &hashAnchor,
+                    CAnchorsMap &mapAnchors,
+                    CNullifiersMap &mapNullifiers) override;
     CCoinsViewCursor* Cursor() const override {
         throw std::logic_error("CCoinsViewCache cursor iteration not supported.");
     }
+
+    // Adds the tree to mapAnchors and sets the current commitment
+    // root to this root.
+    void PushAnchor(const ZCIncrementalMerkleTree &tree);
+
+    // Removes the current commitment root from mapAnchors and sets
+    // the new current root.
+    void PopAnchor(const uint256 &rt);
+
+    // Marks a nullifier as spent or not.
+    void SetNullifier(const uint256 &nullifier, bool spent);
+
 
     /**
      * Check if we have the given utxo already loaded in this cache.
@@ -267,8 +346,8 @@ public:
     //! Calculate the size of the cache (in bytes)
     size_t DynamicMemoryUsage() const;
 
-    /** 
-     * Amount of dash coming in to a transaction
+    /**
+     * Amount of stash coming in to a transaction
      * Note that lightweight clients may not know anything besides the hash of previous transactions,
      * so may not be able to calculate this.
      *
@@ -279,6 +358,9 @@ public:
 
     //! Check whether all prevouts of the transaction are present in the UTXO set represented by this view
     bool HaveInputs(const CTransaction& tx) const;
+
+    //! Check whether all joinsplit requirements (anchors/nullifiers) are satisfied
+    bool HaveJoinSplitRequirements(const CTransaction& tx) const;
 
     /**
      * Return priority of tx at height nHeight. Also calculate the sum of the values of the inputs

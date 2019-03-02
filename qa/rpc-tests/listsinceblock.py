@@ -5,6 +5,8 @@
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal
+from decimal import Decimal
+
 
 class ListSinceBlockTest (BitcoinTestFramework):
 
@@ -48,7 +50,7 @@ class ListSinceBlockTest (BitcoinTestFramework):
 
         assert_equal(self.nodes[0].getbalance(), 0)
         assert_equal(self.nodes[1].getbalance(), 0)
-        assert_equal(self.nodes[2].getbalance(), 500)
+        assert_equal(self.nodes[2].getbalance(), Decimal('67.60000000'))
         assert_equal(self.nodes[3].getbalance(), 0)
 
         # Split network into two

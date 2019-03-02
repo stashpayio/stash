@@ -179,7 +179,7 @@ enum opcodetype
 
 
     // template matching params
-    OP_SMALLINTEGER = 0xfa,
+	OP_SMALLINTEGER = 0xfa,
     OP_PUBKEYS = 0xfb,
     OP_PUBKEYHASH = 0xfd,
     OP_PUBKEY = 0xfe,
@@ -370,6 +370,38 @@ private:
     int64_t m_value;
 };
 
+class CScriptCoinbaseHeight {
+
+public:
+
+  explicit CScriptCoinbaseHeight(const int64_t& n)
+  {
+      m_value = n;
+  }
+
+  std::vector<unsigned char> serialize() const
+  {
+      assert(m_value > 0);
+
+      int64_t value = m_value;
+      std::vector<unsigned char> result;
+
+      while(value > 0)
+      {
+          result.push_back(value & 0xff);
+          value >>= 8;
+      }
+      if (result.back() & 0x80)
+          result.push_back(0);
+
+      return result;
+  }
+
+private:
+  int64_t m_value;
+
+};
+
 typedef prevector<28, unsigned char> CScriptBase;
 
 /** Serialized script, used inside transaction inputs and outputs */
@@ -417,8 +449,8 @@ public:
     explicit CScript(const CScriptNum& b) { operator<<(b); }
     explicit CScript(const std::vector<unsigned char>& b) { operator<<(b); }
 
-
     CScript& operator<<(int64_t b) { return push_int64(b); }
+    CScript& operator<<(const CScriptCoinbaseHeight& b) { return *this << b.serialize(); }
 
     CScript& operator<<(opcodetype opcode)
     {
@@ -639,6 +671,8 @@ public:
     {
         return (size() > 0 && *begin() == OP_RETURN) || (size() > MAX_SCRIPT_SIZE);
     }
+
+    std::string ToString() const;
 
     void clear()
     {

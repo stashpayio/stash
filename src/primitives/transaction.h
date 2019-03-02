@@ -7,9 +7,153 @@
 #define BITCOIN_PRIMITIVES_TRANSACTION_H
 
 #include "amount.h"
+#include "random.h"
 #include "script/script.h"
 #include "serialize.h"
+#include "streams.h"
 #include "uint256.h"
+
+#include "consensus/consensus.h"
+#include <boost/array.hpp>
+
+#include "zcash/NoteEncryption.hpp"
+#include "zcash/Zcash.h"
+#include "zcash/JoinSplit.hpp"
+#include "zcash/Proof.hpp"
+
+#include <functional>
+
+#include <array>
+
+#include <boost/variant.hpp>
+
+
+class JSDescription
+{
+public:
+    // These values 'enter from' and 'exit to' the value
+    // pool, respectively.
+    CAmount vpub_old;
+    CAmount vpub_new;
+
+    // JoinSplits are always anchored to a root in the note
+    // commitment tree at some point in the blockchain
+    // history or in the history of the current
+    // transaction.
+    uint256 anchor;
+
+    // Nullifiers are used to prevent double-spends. They
+    // are derived from the secrets placed in the note
+    // and the secret spend-authority key known by the
+    // spender.
+    std::array<uint256, ZC_NUM_JS_INPUTS> nullifiers;
+
+    // Note commitments are introduced into the commitment
+    // tree, blinding the public about the values and
+    // destinations involved in the JoinSplit. The presence of
+    // a commitment in the note commitment tree is required
+    // to spend it.
+    std::array<uint256, ZC_NUM_JS_OUTPUTS> commitments;
+
+    // Ephemeral key
+    uint256 ephemeralKey;
+
+    // Ciphertexts
+    // These contain trapdoors, values and other information
+    // that the recipient needs, including a memo field. It
+    // is encrypted using the scheme implemented in crypto/NoteEncryption.cpp
+    std::array<ZCNoteEncryption::Ciphertext, ZC_NUM_JS_OUTPUTS> ciphertexts = {{ {{0}} }};
+
+    // Random seed
+    uint256 randomSeed;
+
+    // MACs
+    // The verification of the JoinSplit requires these MACs
+    // to be provided as an input.
+    std::array<uint256, ZC_NUM_JS_INPUTS> macs;
+
+    // JoinSplit proof
+    // This is a zk-SNARK which ensures that this JoinSplit is valid.
+    libzcash::GrothProof proof;
+
+    JSDescription(): vpub_old(0), vpub_new(0) { }
+
+    JSDescription(ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& rt,
+            const std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof = true, // Set to false in some tests
+            uint256 *esk = nullptr // payment disclosure
+    );
+
+    static JSDescription Randomized(
+            ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& rt,
+			std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+			std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+			std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
+			std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof = true, // Set to false in some tests
+            uint256 *esk = nullptr, // payment disclosure
+            std::function<int(int)> gen = GetRandInt
+    );
+
+    // Verifies that the JoinSplit proof is correct.
+    bool Verify(
+        ZCJoinSplit& params,
+        libzcash::ProofVerifier& verifier,
+        const uint256& pubKeyHash
+    ) const;
+
+    // Returns the calculated h_sig
+    uint256 h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) const;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(vpub_old);
+        READWRITE(vpub_new);
+        READWRITE(anchor);
+        READWRITE(nullifiers);
+        READWRITE(commitments);
+        READWRITE(ephemeralKey);
+        READWRITE(randomSeed);
+        READWRITE(macs);
+        READWRITE(proof);
+        READWRITE(ciphertexts);
+    }
+
+    friend bool operator==(const JSDescription& a, const JSDescription& b)
+    {
+        return (
+            a.vpub_old == b.vpub_old &&
+            a.vpub_new == b.vpub_new &&
+            a.anchor == b.anchor &&
+            a.nullifiers == b.nullifiers &&
+            a.commitments == b.commitments &&
+            a.ephemeralKey == b.ephemeralKey &&
+            a.ciphertexts == b.ciphertexts &&
+            a.randomSeed == b.randomSeed &&
+            a.macs == b.macs &&
+            a.proof == b.proof
+            );
+    }
+
+    friend bool operator!=(const JSDescription& a, const JSDescription& b)
+    {
+        return !(a == b);
+    }
+
+    void debug(const char* title = "");
+};
+
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
@@ -107,6 +251,11 @@ public:
         READWRITE(nSequence);
     }
 
+    bool IsFinal() const
+    {
+        return (nSequence == std::numeric_limits<uint32_t>::max());
+    }
+
     friend bool operator==(const CTxIn& a, const CTxIn& b)
     {
         return (a.prevout   == b.prevout &&
@@ -166,13 +315,13 @@ public:
 
     CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
     {
-        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units duffs-per-kilobyte.
+        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units stashees-per-kilobyte.
         // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
         // A typical spendable txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 1000 duffs per kB
-        // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 duffs.
-        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in duffs)
-        // i.e. 182 * 3 = 546 duffs with default -minrelaytxfee = minRelayTxFee = 1000 duffs per kB.
+        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 1000 stashees per kB
+        // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 stashees.
+        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in stashees)
+        // i.e. 182 * 3 = 546 stashees with default -minrelaytxfee = minRelayTxFee = 1000 stashees per kB.
         if (scriptPubKey.IsUnspendable())
             return 0;
 
@@ -207,7 +356,20 @@ struct CMutableTransaction;
  */
 class CTransaction
 {
+private:
+    /** Memory only. */
+    const uint256 hash;
+    void UpdateHash() const;
+
+protected:
+    /** Developer testing only.  Set evilDeveloperFlag to true.
+     * Convert a CMutableTransaction into a CTransaction without invoking UpdateHash()
+     */
+    CTransaction(const CMutableTransaction &tx, bool evilDeveloperFlag);
+
 public:
+    typedef boost::array<unsigned char, 64> joinsplit_sig_t;
+
     // Default transaction version.
     static const int32_t CURRENT_VERSION=2;
 
@@ -227,26 +389,36 @@ public:
     const std::vector<CTxOut> vout;
     const uint32_t nLockTime;
 
-private:
-    /** Memory only. */
-    const uint256 hash;
+    const uint32_t nExpiryHeight;
+    const std::vector<JSDescription> vjoinsplit;
+    const uint256 joinSplitPubKey;
+    const joinsplit_sig_t joinSplitSig = {{0}};
 
-    uint256 ComputeHash() const;
-
-public:
     /** Construct a CTransaction that qualifies as IsNull() */
     CTransaction();
 
     /** Convert a CMutableTransaction into a CTransaction. */
     CTransaction(const CMutableTransaction &tx);
-    CTransaction(CMutableTransaction &&tx);
 
-    template <typename Stream>
-    inline void Serialize(Stream& s) const {
-        s << this->nVersion;
-        s << vin;
-        s << vout;
-        s << nLockTime;
+    CTransaction& operator=(const CTransaction& tx);
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(*const_cast<int32_t*>(&this->nVersion));
+        READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
+        READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
+        READWRITE(*const_cast<uint32_t*>(&nLockTime));
+        READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
+        if (vjoinsplit.size() > 0) {
+            READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
+            READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
+        }
+
+
+        if (ser_action.ForRead())
+            UpdateHash();
     }
 
     /** This deserializing constructor is provided instead of an Unserialize method.
@@ -267,6 +439,9 @@ public:
     // GetValueIn() is a method on CCoinsViewCache, because
     // inputs must be known to compute value in.
 
+    // Return sum of JoinSplit vpub_new
+    CAmount GetJoinSplitValueIn() const;
+
     // Compute priority, given priority of inputs and (optionally) tx size
     double ComputePriority(double dPriorityInputs, unsigned int nTxSize=0) const;
 
@@ -285,6 +460,10 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
+    bool isLegacyTransaction() const {
+        return vin.size() == 0 && vjoinsplit.size() == 0;
+    }
+
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
         return a.hash == b.hash;
@@ -296,6 +475,8 @@ public:
     }
 
     std::string ToString() const;
+
+    void debug(const char* title = "");
 };
 
 /** A mutable version of CTransaction. */
@@ -305,6 +486,10 @@ struct CMutableTransaction
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
+    uint32_t nExpiryHeight;
+    std::vector<JSDescription> vjoinsplit;
+    uint256 joinSplitPubKey;
+    CTransaction::joinsplit_sig_t joinSplitSig = {{0}};
 
     CMutableTransaction();
     CMutableTransaction(const CTransaction& tx);
@@ -317,6 +502,11 @@ struct CMutableTransaction
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
+        READWRITE(vjoinsplit);
+        if (vjoinsplit.size() > 0) {
+            READWRITE(joinSplitPubKey);
+            READWRITE(joinSplitSig);
+        }
     }
 
     template <typename Stream>

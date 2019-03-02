@@ -106,7 +106,7 @@ public:
         txoutMasternode = CTxOut();
         voutSuperblock.clear();
         fChecked = false;
-    }
+     }
 
     CBlockHeader GetBlockHeader() const
     {
@@ -121,6 +121,8 @@ public:
     }
 
     std::string ToString() const;
+
+    bool isLegacyBlock() const;
 };
 
 
@@ -157,6 +159,10 @@ struct CBlockLocator
     bool IsNull() const
     {
         return vHave.empty();
+    }
+
+    friend bool operator==(const CBlockLocator& a, const CBlockLocator& b) {
+        return (a.vHave == b.vHave);
     }
 };
 

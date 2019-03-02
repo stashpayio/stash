@@ -5,6 +5,8 @@
 #ifndef BITCOIN_RPCREGISTER_H
 #define BITCOIN_RPCREGISTER_H
 
+#include <univalue.h>
+
 /** These are in one header file to avoid creating tons of single-function
  * headers for everything under src/rpc/ */
 class CRPCTable;
@@ -24,6 +26,7 @@ void RegisterMasternodeRPCCommands(CRPCTable &tableRPC);
 /** Register governance RPC commands */
 void RegisterGovernanceRPCCommands(CRPCTable &tableRPC);
 
+
 static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
 {
     RegisterBlockchainRPCCommands(t);
@@ -34,5 +37,9 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
     RegisterMasternodeRPCCommands(t);
     RegisterGovernanceRPCCommands(t);
 }
+
+// Common functions that operate on UniValue objects
+UniValue sendrawtransaction(const UniValue& params);
+UniValue signrawtransaction(const UniValue& params);
 
 #endif

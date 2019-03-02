@@ -6,7 +6,7 @@
 #ifndef BITCOIN_UNDO_H
 #define BITCOIN_UNDO_H
 
-#include "compressor.h" 
+#include "compressor.h"
 #include "consensus/consensus.h"
 #include "primitives/transaction.h"
 #include "serialize.h"
@@ -60,7 +60,7 @@ public:
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}
 };
 
-static const size_t MAX_INPUTS_PER_BLOCK = MaxBlockSize(true) / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
+static const size_t MAX_INPUTS_PER_BLOCK = MaxBlockSize() / ::GetSerializeSize(CTxIn(), SER_NETWORK, PROTOCOL_VERSION);
 
 /** Undo information for a CTransaction */
 class CTxUndo
@@ -99,12 +99,14 @@ class CBlockUndo
 {
 public:
     std::vector<CTxUndo> vtxundo; // for all but the coinbase
+    uint256 old_tree_root;
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(vtxundo);
+        READWRITE(old_tree_root);
     }
 };
 

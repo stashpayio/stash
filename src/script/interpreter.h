@@ -18,6 +18,9 @@ class CScript;
 class CTransaction;
 class uint256;
 
+/** Special case nIn for signing JoinSplits. */
+const unsigned int NOT_AN_INPUT = UINT_MAX;
+
 /** Signature hash types/flags */
 enum
 {

@@ -31,6 +31,22 @@ std::string SanitizeString(const std::string& str, int rule)
     return strResult;
 }
 
+std::string SanitizeFilename(const std::string& str)
+{
+    /**
+     * safeChars chosen to restrict filename, keeping it simple to avoid cross-platform issues.
+     * http://stackoverflow.com/a/2306003
+     */
+    static std::string safeChars(CHARS_ALPHA_NUM);
+    std::string strResult;
+    for (std::string::size_type i = 0; i < str.size(); i++)
+    {
+        if (safeChars.find(str[i]) != std::string::npos)
+            strResult.push_back(str[i]);
+    }
+    return strResult;
+}
+
 const signed char p_util_hexdigit[256] =
 { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,

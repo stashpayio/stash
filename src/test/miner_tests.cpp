@@ -18,7 +18,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
-#include "test/test_dash.h"
+#include "test/test_stash.h"
 
 #include <memory>
 
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         pblock->nTime = chainActive.Tip()->GetMedianTimePast()+1;
         CMutableTransaction txCoinbase(*pblock->vtx[0]);
         txCoinbase.nVersion = 1;
-        txCoinbase.vin[0].scriptSig = CScript() << (chainActive.Height() + 1);
+        txCoinbase.vin[0].scriptSig = CScript() << CScriptCoinbaseHeight(chainActive.Height() + 1);
         txCoinbase.vin[0].scriptSig.push_back(blockinfo[i].extranonce);
         txCoinbase.vin[0].scriptSig.push_back(chainActive.Height());
         txCoinbase.vout[0].scriptPubKey = CScript();

@@ -5,9 +5,10 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION @CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@
+!define VERSION @CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@.@CLIENT_VERSION_BUILD@
 !define COMPANY "@PACKAGE_NAME@ project"
 !define URL @PACKAGE_URL@
+!define CONFIG_FOLDER "StashCore"
 
 # MUI Symbol Definitions
 !define MUI_ICON "@abs_top_srcdir@/share/pixmaps/bitcoin.ico"
@@ -44,21 +45,28 @@ Var StartMenuGroup
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
+# Snark Parameters
+!define SPROUT_PROVING_HASH "af23e521697ed69d8b8a6b9c53e48300"
+!define SPROUT_VERIFYING_HASH "21e8b499aa84b5920ca0cea260074f34"
+!define SAPLING_SPEND_HASH "0f44c12ef115ae019decf18ade583b20"
+!define SAPLING_OUTPUT_HASH "924daf81b87a81bbbb9c7d18562046c8"
+!define SAPLING_SPROUT_GROTH16_HASH "00f0cbfc8651ea4003eea5f627b0cd73"
+
 # Installer languages
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
 OutFile @abs_top_srcdir@/@PACKAGE_TARNAME@-${VERSION}-win@WINDOWS_BITS@-setup.exe
 !if "@WINDOWS_BITS@" == "64"
-InstallDir $PROGRAMFILES64\DashCore
+InstallDir $PROGRAMFILES64\StashCore
 !else
-InstallDir $PROGRAMFILES\DashCore
+InstallDir $PROGRAMFILES\StashCore
 !endif
 CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion ${VERSION}.@CLIENT_VERSION_BUILD@
+VIProductVersion ${VERSION}
 VIAddVersionKey ProductName "@PACKAGE_NAME@"
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -73,19 +81,158 @@ ShowUninstDetails show
 Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    File @abs_top_srcdir@/release/@BITCOIN_GUI_NAME@@EXEEXT@
+    File @abs_top_srcdir@/src/qt/@BITCOIN_GUI_NAME@@EXEEXT@
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=readme.txt @abs_top_srcdir@/doc/README_windows.txt
     SetOutPath $INSTDIR\daemon
-    File @abs_top_srcdir@/release/@BITCOIN_DAEMON_NAME@@EXEEXT@
-    File @abs_top_srcdir@/release/@BITCOIN_CLI_NAME@@EXEEXT@
+    File @abs_top_srcdir@/src/@BITCOIN_DAEMON_NAME@@EXEEXT@
+    File @abs_top_srcdir@/src/@BITCOIN_CLI_NAME@@EXEEXT@
     SetOutPath $INSTDIR\doc
     File /r @abs_top_srcdir@/doc\*.*
     SetOutPath $INSTDIR
     WriteRegStr HKCU "${REGKEY}\Components" Main 1
 SectionEnd
 
-Section -post SEC0001
+# Install snark parameters
+Section -Main SEC0001
+
+SetOutPath "$APPDATA\ZcashParams"
+
+    # Download verifying key
+	download_verifing_key:
+
+	IfFileExists "$APPDATA\ZcashParams\sprout-verifying.key" check_verifing_key_hash 0	
+	DetailPrint "Downloading: sprout-verifying.key..."
+	inetc::get /RESUME "Resume download?" "https://z.cash/downloads/sprout-verifying.key" "$APPDATA\ZcashParams\sprout-verifying.key" /END
+    Pop $0 # return value = exit code, "OK" if OK
+	DetailPrint "Download status...$0"
+
+	${If} $0 != "OK"
+    	MessageBox mb_iconstop "Error downloading sprout-verifying.key. Check the internet connection and run the installer again.$\r$\n $0"
+		Quit
+	${EndIf}
+
+	# Check verifying key
+	# 21e8b499aa84b5920ca0cea260074f34  sprout-verifying.key
+	check_verifing_key_hash:
+	DetailPrint "Verifying sprout-verifying.key..."
+	md5dll::GetMD5File "$APPDATA\ZcashParams\sprout-verifying.key"
+  	Pop $0
+    DetailPrint "sprout-verifying.key hash: [$0]"
+
+	${If} $0 != "${SPROUT_VERIFYING_HASH}"
+    	MessageBox mb_iconstop "Hash check failed for sprout-verifying.key.The installer will try and download again $\r$\n$0" ;Show cancel/error message
+		Delete "$APPDATA\ZcashParams\sprout-verifying.key"
+		Goto download_verifing_key
+	${EndIf}
+	
+	# Download proving key
+	download_proving_key:
+	IfFileExists "$APPDATA\ZcashParams\sprout-proving.key" check_proving_key_hash 0
+	DetailPrint "Downloading: sprout-proving.key..."
+	inetc::get /RESUME "Resume download?" "https://z.cash/downloads/sprout-proving.key" "$APPDATA\ZcashParams\sprout-proving.key" /END
+    Pop $0 # return value = exit code, "OK" if OK
+	DetailPrint "Download status: $0"
+	
+	${If} $0 != "OK"
+    	MessageBox mb_iconstop "Error downloading proving-verifying.key. Check the internet connection and run the installer again.$\r$\n $0"
+		Quit
+	${EndIf}
+
+	# Check proving key
+	# af23e521697ed69d8b8a6b9c53e48300  sprout-proving.key
+	check_proving_key_hash:
+	DetailPrint "Verifying sprout-proving.key..."
+	md5dll::GetMD5File "$APPDATA\ZcashParams\sprout-proving.key"
+  	Pop $0
+    DetailPrint "sprout-proving.key hash: [$0]"
+	${If} $0 != "${SPROUT_PROVING_HASH}"
+    	MessageBox mb_iconstop "Hash check failed for sprout-proving.key. The installer will try and download again $\r$\n$0" ;Show cancel/error message
+		Delete "$APPDATA\ZcashParams\sprout-proving.key"		
+		Goto download_proving_key
+	${EndIf}
+
+	# download_sapling_spend_params
+	download_sapling_spend_params:
+	IfFileExists "$APPDATA\ZcashParams\sapling-spend.params" check_sapling_spend_params 0
+	DetailPrint "Downloading: sapling-spend.params..."
+	inetc::get /RESUME "Resume download?" "https://z.cash/downloads/sapling-spend.params" "$APPDATA\ZcashParams\sapling-spend.params" /END
+    Pop $0 # return value = exit code, "OK" if OK
+	DetailPrint "Download status: $0"
+	
+	${If} $0 != "OK"
+    	MessageBox mb_iconstop "Error downloading sapling-spend.params. Check the internet connection and run the installer again.$\r$\n $0"
+		Quit
+	${EndIf}
+
+	# Check sapling-spend.params
+	# 0f44c12ef115ae019decf18ade583b20  sapling-spend.params
+	check_sapling_spend_params:
+	DetailPrint "Verifying sapling-spend.params..."
+	md5dll::GetMD5File "$APPDATA\ZcashParams\sapling-spend.params"
+  	Pop $0
+    DetailPrint "sapling-spend.params hash: [$0]"
+	${If} $0 != "${SAPLING_SPEND_HASH}"
+    	MessageBox mb_iconstop "Hash check failed for sapling-spend.params. The installer will try and download again $\r$\n$0" ;Show cancel/error message
+		Delete "$APPDATA\ZcashParams\sapling-spend.params"		
+		Goto download_sapling_spend_params
+	${EndIf}
+
+	# download_sapling_output_params
+	download_sapling_output_params:
+	IfFileExists "$APPDATA\ZcashParams\sapling-output.params" check_sapling_output_params 0
+	DetailPrint "Downloading: sapling-output.params..."
+	inetc::get /RESUME "Resume download?" "https://z.cash/downloads/sapling-output.params" "$APPDATA\ZcashParams\sapling-output.params" /END
+    Pop $0 # return value = exit code, "OK" if OK
+	DetailPrint "Download status: $0"
+	
+	${If} $0 != "OK"
+    	MessageBox mb_iconstop "Error downloading sapling-output.params. Check the internet connection and run the installer again.$\r$\n $0"
+		Quit
+	${EndIf}
+
+	# Check sapling-output.params
+	# 924daf81b87a81bbbb9c7d18562046c8  sapling-output.params
+	check_sapling_output_params:
+	DetailPrint "Verifying sapling-output.params..."
+	md5dll::GetMD5File "$APPDATA\ZcashParams\sapling-output.params"
+  	Pop $0
+    DetailPrint "sapling-output.params hash: [$0]"
+	${If} $0 != "${SAPLING_OUTPUT_HASH}"
+    	MessageBox mb_iconstop "Hash check failed for sapling-output.params. The installer will try and download again $\r$\n$0" ;Show cancel/error message
+		Delete "$APPDATA\ZcashParams\sapling-output.params"		
+		Goto download_sapling_output_params
+	${EndIf}
+
+	# download_sprout_groth16_params
+	download_sprout_groth16_params:
+	IfFileExists "$APPDATA\ZcashParams\sprout-groth16.params" check_sprout_groth16_params 0
+	DetailPrint "Downloading: sprout-groth16.params..."
+	inetc::get /RESUME "Resume download?" "https://z.cash/downloads/sprout-groth16.params" "$APPDATA\ZcashParams\sprout-groth16.params" /END
+    Pop $0 # return value = exit code, "OK" if OK
+	DetailPrint "Download status: $0"
+	
+	${If} $0 != "OK"
+    	MessageBox mb_iconstop "Error downloading sprout-groth16.params. Check the internet connection and run the installer again.$\r$\n $0"
+		Quit
+	${EndIf}
+
+	# Check sprout-groth16.params
+	# 00f0cbfc8651ea4003eea5f627b0cd73  sprout-groth16.params
+	check_sprout_groth16_params:
+	DetailPrint "Verifying sprout-groth16.params..."
+	md5dll::GetMD5File "$APPDATA\ZcashParams\sprout-groth16.params"
+  	Pop $0
+    DetailPrint "sprout-groth16.params hash: [$0]"
+	${If} $0 != "${SAPLING_SPROUT_GROTH16_HASH}"
+    	MessageBox mb_iconstop "Hash check failed for sprout-groth16.params. The installer will try and download again $\r$\n$0" ;Show cancel/error message
+		Delete "$APPDATA\ZcashParams\sprout-groth16.params"		
+		Goto download_sprout_groth16_params
+	${EndIf}
+
+SectionEnd
+
+Section -post SEC0002
     WriteRegStr HKCU "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
     WriteUninstaller $INSTDIR\uninstall.exe
@@ -99,18 +246,18 @@ Section -post SEC0001
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayVersion "${VERSION}"
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" Publisher "${COMPANY}"
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" URLInfoAbout "${URL}"
-    WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\uninstall.exe
+    WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon "$\"$INSTDIR\stash-qt.exe$\""
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\uninstall.exe
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
     WriteRegStr HKCR "@PACKAGE_TARNAME@" "URL Protocol" ""
-    WriteRegStr HKCR "@PACKAGE_TARNAME@" "" "URL:Dash"
+    WriteRegStr HKCR "@PACKAGE_TARNAME@" "" "URL:Stash"
     WriteRegStr HKCR "@PACKAGE_TARNAME@\DefaultIcon" "" $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
     WriteRegStr HKCR "@PACKAGE_TARNAME@\shell\open\command" "" '"$INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@" "%1"'
 
-    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'dashcore' now, we had 'dash' hardcoded)
+    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'stashcore' now, we had 'stash' hardcoded)
     # TODO remove this line sometime later
-    DeleteRegKey HKCR "dash"
+    DeleteRegKey HKCR "stash"
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -133,7 +280,8 @@ Section /o -un.Main UNSEC0000
     Delete /REBOOTOK $INSTDIR\readme.txt
     RMDir /r /REBOOTOK $INSTDIR\daemon
     RMDir /r /REBOOTOK $INSTDIR\doc
-    DeleteRegValue HKCU "${REGKEY}\Components" Main
+	DeleteRegValue HKCU "${REGKEY}\Components" Main
+	DeleteRegKey HKCU "SOFTWARE\Stash"
 SectionEnd
 
 Section -un.post UNSEC0001
@@ -141,7 +289,7 @@ Section -un.post UNSEC0001
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall $(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\$(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\@PACKAGE_NAME@ (testnet, @WINDOWS_BITS@-bit).lnk"
-    Delete /REBOOTOK "$SMSTARTUP\Dash.lnk"
+    Delete /REBOOTOK "$SMSTARTUP\Stash.lnk"
     Delete /REBOOTOK $INSTDIR\uninstall.exe
     Delete /REBOOTOK $INSTDIR\debug.log
     Delete /REBOOTOK $INSTDIR\db.log
@@ -150,11 +298,49 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKCU "${REGKEY}\Components"
     DeleteRegKey /IfEmpty HKCU "${REGKEY}"
     DeleteRegKey HKCR "@PACKAGE_TARNAME@"
-    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'dashcore' now, we had 'dash' hardcoded)
+    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'stashcore' now, we had 'stash' hardcoded)
     # TODO remove this line sometime later
-    DeleteRegKey HKCR "dash"
+    DeleteRegKey HKCR "stash"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
     RmDir /REBOOTOK $INSTDIR
+
+# Try to remove the install directory - this will only happen if it is empty
+	rmDir $INSTDIR
+
+	#Remove config folders
+	rmDir /r "$APPDATA\${CONFIG_FOLDER}\blocks"
+	rmDir /r "$APPDATA\${CONFIG_FOLDER}\chainstate"
+	rmDir /r "$APPDATA\${CONFIG_FOLDER}\testnet3\blocks"
+	rmDir /r "$APPDATA\${CONFIG_FOLDER}\testnet3\chainstate"
+
+ 	# Remove mainnet files (does not delete wallet.dat or backups folder)
+	delete "$APPDATA\${CONFIG_FOLDER}\.lock"
+	delete "$APPDATA\${CONFIG_FOLDER}\banlist.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\db.log"
+	delete "$APPDATA\${CONFIG_FOLDER}\debug.log"
+	delete "$APPDATA\${CONFIG_FOLDER}\fee_estimates.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\governance.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\mempool.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\masternode.conf"
+	delete "$APPDATA\${CONFIG_FOLDER}\mncache.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\mnpayments.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\netfulfilled.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\peers.dat"
+
+	# Remove testnet files
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\.lock"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\banlist.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\db.log"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\debug.log"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\fee_estimates.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\governance.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\mempool.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\masternode.conf"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\mncache.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\mnpayments.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\netfulfilled.dat"
+	delete "$APPDATA\${CONFIG_FOLDER}\testnet3\peers.dat"
+		 	
     Push $R0
     StrCpy $R0 $StartMenuGroup 1
     StrCmp $R0 ">" no_smgroup

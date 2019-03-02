@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/dash-config.h"
+#include "config/stash-config.h"
 #endif
 
 #include "optionsdialog.h"
@@ -48,7 +48,16 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
     ui->threadsScriptVerif->setMinimum(-GetNumCores());
-    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
+    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);    
+
+    // STASH disabled for initial release
+    ui->showAdvancedPSUI->setVisible(false);
+    ui->lowKeysWarning->setVisible(false);
+    ui->privateSendMultiSession->setVisible(false);
+    ui->privateSendAmount->setVisible(false);
+    ui->privateSendRounds->setVisible(false);
+    ui->labelPrivateSendRounds->setVisible(false);
+    ui->labelPrivateSendAmount->setVisible(false);    
 
     /* Network elements init */
 #ifndef USE_UPNP
@@ -92,13 +101,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    ui->theme->addItem(QString("DASH-light"), QVariant("light"));
-    ui->theme->addItem(QString("DASH-light-hires"), QVariant("light-hires"));
-    ui->theme->addItem(QString("DASH-light-retro"), QVariant("light-retro"));
-    ui->theme->addItem(QString("DASH-light-hires-retro"), QVariant("light-hires-retro"));
-    ui->theme->addItem(QString("DASH-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("DASH-Crownium"), QVariant("crownium"));
-    ui->theme->addItem(QString("DASH-traditional"), QVariant("trad"));
+    ui->theme->addItem(QString("STASH-blue"), QVariant("drkblue"));
+    ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));    
     
     /* Language selector */
     QDir translations(":translations");

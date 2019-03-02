@@ -8,6 +8,117 @@
 #include "hash.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
+#include "librustzcash.h"
+
+JSDescription::JSDescription(ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& anchor,
+            const std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof,
+            uint256 *esk // payment disclosure
+            ) : vpub_old(vpub_old), vpub_new(vpub_new), anchor(anchor)
+{
+    std::array<libzcash::Note, ZC_NUM_JS_OUTPUTS> notes;
+
+    proof = params.prove(
+        inputs,
+        outputs,
+        notes,
+        ciphertexts,
+        ephemeralKey,
+        pubKeyHash,
+        randomSeed,
+        macs,
+        nullifiers,
+        commitments,
+        vpub_old,
+        vpub_new,
+        anchor,
+        computeProof,
+        esk // payment disclosure
+    );
+}
+
+JSDescription JSDescription::Randomized(
+            ZCJoinSplit& params,
+            const uint256& pubKeyHash,
+            const uint256& anchor,
+			std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+			std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+			std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
+			std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
+            CAmount vpub_old,
+            CAmount vpub_new,
+            bool computeProof,
+            uint256 *esk, // payment disclosure
+            std::function<int(int)> gen
+        )
+{
+    // Randomize the order of the inputs and outputs
+    inputMap = {0, 1};
+    outputMap = {0, 1};
+
+    assert(gen);
+
+    MappedShuffle(inputs.begin(), inputMap.begin(), ZC_NUM_JS_INPUTS, gen);
+    MappedShuffle(outputs.begin(), outputMap.begin(), ZC_NUM_JS_OUTPUTS, gen);
+
+    return JSDescription(
+        params, pubKeyHash, anchor, inputs, outputs,
+        vpub_old, vpub_new, computeProof,
+        esk // payment disclosure
+    );
+}
+
+
+bool JSDescription::Verify(
+    ZCJoinSplit& params,
+    libzcash::ProofVerifier& verifier,
+    const uint256& joinSplitPubKey
+)  const {
+
+	uint256 h_sig = params.h_sig(randomSeed, nullifiers, joinSplitPubKey);
+	return librustzcash_sprout_verify(
+	   proof.begin(),
+	   anchor.begin(),
+	   h_sig.begin(),
+	   macs[0].begin(),
+	   macs[1].begin(),
+	   nullifiers[0].begin(),
+	   nullifiers[1].begin(),
+	   commitments[0].begin(),
+	   commitments[1].begin(),
+	   vpub_old,
+	   vpub_new
+   );
+}
+
+uint256 JSDescription::h_sig(ZCJoinSplit& params, const uint256& pubKeyHash) const
+{
+	return params.h_sig(randomSeed,nullifiers, pubKeyHash);
+}
+
+void JSDescription::debug(const char* title) {
+    printf("%s : JoinSplitt\n",title);
+    printf("==================\n");
+
+    printf("Old: %ld\n",vpub_old);
+    printf("New: %ld\n",vpub_new);
+    printf("Anchor: %s\n",anchor.GetHex().c_str());
+
+    printf("Nullifiers:\n");
+    for (int i = 0; i < ZC_NUM_JS_INPUTS; i++) {
+        printf("    %s\n",nullifiers[i].GetHex().c_str());
+    }
+    printf("Commitments:\n");
+    for (int i = 0; i < ZC_NUM_JS_OUTPUTS; i++) {
+        printf("    %s\n",commitments[i].GetHex().c_str());
+    }
+    printf("==================\n");
+}
 
 std::string COutPoint::ToString() const
 {
@@ -60,8 +171,11 @@ std::string CTxOut::ToString() const
     return strprintf("CTxOut(nValue=%d.%08d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
 }
 
-CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0) {}
-CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime) {}
+CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION),  nExpiryHeight(0), nLockTime(0) {}
+
+CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
+		vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
+        vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig) {}
 
 uint256 CMutableTransaction::GetHash() const
 {
@@ -84,15 +198,42 @@ std::string CMutableTransaction::ToString() const
     return str;
 }
 
-uint256 CTransaction::ComputeHash() const
+void CTransaction::UpdateHash() const
 {
-    return SerializeHash(*this);
+    *const_cast<uint256*>(&hash) = SerializeHash(*this);
 }
 
-/* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
-CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), vin(), vout(), nLockTime(0), hash() {}
-CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), hash(ComputeHash()) {}
-CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nLockTime(tx.nLockTime), hash(ComputeHash()) {}
+CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig() { }
+
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
+															vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
+															vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig){
+    UpdateHash();
+}
+
+// Protected constructor which only derived classes can call.
+// For developer testing only.
+CTransaction::CTransaction(
+    const CMutableTransaction &tx,
+    bool evilDeveloperFlag) : nVersion(tx.nVersion), nExpiryHeight(tx.nExpiryHeight),
+                              vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
+                              vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig)
+{
+    assert(evilDeveloperFlag);
+}
+
+CTransaction& CTransaction::operator=(const CTransaction &tx) {
+    *const_cast<int*>(&nVersion) = tx.nVersion;
+    *const_cast<std::vector<CTxIn>*>(&vin) = tx.vin;
+    *const_cast<std::vector<CTxOut>*>(&vout) = tx.vout;
+    *const_cast<unsigned int*>(&nLockTime) = tx.nLockTime;
+    *const_cast<uint256*>(&hash) = tx.hash;
+    *const_cast<uint32_t*>(&nExpiryHeight) = tx.nExpiryHeight;
+    *const_cast<std::vector<JSDescription>*>(&vjoinsplit) = tx.vjoinsplit;
+    *const_cast<uint256*>(&joinSplitPubKey) = tx.joinSplitPubKey;
+    *const_cast<joinsplit_sig_t*>(&joinSplitSig) = tx.joinSplitSig;
+    return *this;
+}
 
 CAmount CTransaction::GetValueOut() const
 {
@@ -103,7 +244,30 @@ CAmount CTransaction::GetValueOut() const
         if (!MoneyRange(it->nValue) || !MoneyRange(nValueOut))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
-    return nValueOut;
+    for (std::vector<JSDescription>::const_iterator it(vjoinsplit.begin()); it != vjoinsplit.end(); ++it)
+    {
+        // NB: vpub_old "takes" money from the value pool just as outputs do
+        nValueOut += it->vpub_old;
+
+        if (!MoneyRange(it->vpub_old) || !MoneyRange(nValueOut))
+            throw std::runtime_error("CTransaction::GetValueOut(): value out of range");
+    }
+   return nValueOut;
+}
+
+CAmount CTransaction::GetJoinSplitValueIn() const
+{
+    CAmount nValue = 0;
+    for (std::vector<JSDescription>::const_iterator it(vjoinsplit.begin()); it != vjoinsplit.end(); ++it)
+    {
+        // NB: vpub_new "gives" money to the value pool just as inputs do
+        nValue += it->vpub_new;
+
+        if (!MoneyRange(it->vpub_new) || !MoneyRange(nValue))
+            throw std::runtime_error("CTransaction::GetJoinSplitValueIn(): value out of range");
+    }
+
+    return nValue;
 }
 
 double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSize) const
@@ -140,15 +304,26 @@ unsigned int CTransaction::GetTotalSize() const
 std::string CTransaction::ToString() const
 {
     std::string str;
-    str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%u)\n",
+    str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%u, nExpiryHeight=%u)\n",
         GetHash().ToString().substr(0,10),
         nVersion,
         vin.size(),
         vout.size(),
-        nLockTime);
+        nLockTime,
+		nExpiryHeight);
     for (unsigned int i = 0; i < vin.size(); i++)
         str += "    " + vin[i].ToString() + "\n";
     for (unsigned int i = 0; i < vout.size(); i++)
         str += "    " + vout[i].ToString() + "\n";
     return str;
+}
+
+void CTransaction::debug(const char* title) {
+    printf("%s : Transaction\n",title);
+    printf("==================\n");
+
+    for (auto js : vjoinsplit) {
+    	js.debug();
+    }
+    printf("==================\n");
 }

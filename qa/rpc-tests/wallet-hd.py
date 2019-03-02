@@ -30,7 +30,7 @@ class WalletHDTest(BitcoinTestFramework):
             start_node(1, self.options.tmpdir, ['-usehd=0'], redirect_stderr=True)
             raise AssertionError("Must not allow to turn off HD on an already existing HD wallet")
         except Exception as e:
-            assert("dashd exited with status 1 during initialization" in str(e))
+            assert("stashd exited with status 1 during initialization" in str(e))
         # assert_start_raises_init_error(1, self.options.tmpdir, ['-usehd=0'], 'already existing HD wallet')
         # self.nodes[1] = start_node(1, self.options.tmpdir, self.node_args[1])
         self.nodes[1] = start_node(1, self.options.tmpdir, ['-usehd=1', '-keypool=0'], redirect_stderr=True)
@@ -43,7 +43,7 @@ class WalletHDTest(BitcoinTestFramework):
         # create an internal key
         change_addr = self.nodes[1].getrawchangeaddress()
         change_addrV= self.nodes[1].validateaddress(change_addr);
-        assert_equal(change_addrV["hdkeypath"], "m/44'/1'/0'/1/0") #first internal child key
+        assert_equal(change_addrV["hdkeypath"], "m/44'/51966'/0'/1/0") #first internal child key
 
         # Import a non-HD private key in the HD wallet
         non_hd_add = self.nodes[0].getnewaddress()
@@ -61,7 +61,7 @@ class WalletHDTest(BitcoinTestFramework):
         for i in range(num_hd_adds):
             hd_add = self.nodes[1].getnewaddress()
             hd_info = self.nodes[1].validateaddress(hd_add)
-            assert_equal(hd_info["hdkeypath"], "m/44'/1'/0'/0/"+str(i+1))
+            assert_equal(hd_info["hdkeypath"], "m/44'/51966'/0'/0/"+str(i+1))
             assert_equal(hd_info["hdchainid"], chainid)
             self.nodes[0].sendtoaddress(hd_add, 1)
             self.nodes[0].generate(1)
@@ -71,7 +71,7 @@ class WalletHDTest(BitcoinTestFramework):
         # create an internal key (again)
         change_addr = self.nodes[1].getrawchangeaddress()
         change_addrV= self.nodes[1].validateaddress(change_addr);
-        assert_equal(change_addrV["hdkeypath"], "m/44'/1'/0'/1/1") #second internal child key
+        assert_equal(change_addrV["hdkeypath"], "m/44'/51966'/0'/1/1") #second internal child key
 
         self.sync_all()
         assert_equal(self.nodes[1].getbalance(), num_hd_adds + 1)
@@ -88,7 +88,7 @@ class WalletHDTest(BitcoinTestFramework):
         for _ in range(num_hd_adds):
             hd_add_2 = self.nodes[1].getnewaddress()
             hd_info_2 = self.nodes[1].validateaddress(hd_add_2)
-            assert_equal(hd_info_2["hdkeypath"], "m/44'/1'/0'/0/"+str(_+1))
+            assert_equal(hd_info_2["hdkeypath"], "m/44'/51966'/0'/0/"+str(_+1))
             assert_equal(hd_info_2["hdchainid"], chainid)
         assert_equal(hd_add, hd_add_2)
 
@@ -106,7 +106,7 @@ class WalletHDTest(BitcoinTestFramework):
             if out['value'] != 1:
                 keypath = self.nodes[1].validateaddress(out['scriptPubKey']['addresses'][0])['hdkeypath']
 
-        assert_equal(keypath[0:13], "m/44'/1'/0'/1")
+        assert_equal(keypath[0:17], "m/44'/51966'/0'/1")
 
 if __name__ == '__main__':
     WalletHDTest().main ()

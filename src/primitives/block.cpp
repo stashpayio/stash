@@ -15,6 +15,8 @@ uint256 CBlockHeader::GetHash() const
     return HashX11(BEGIN(nVersion), END(nNonce));
 }
 
+
+
 std::string CBlock::ToString() const
 {
     std::stringstream s;
@@ -30,4 +32,16 @@ std::string CBlock::ToString() const
         s << "  " << vtx[i]->ToString() << "\n";
     }
     return s.str();
+}
+
+bool CBlock::isLegacyBlock() const {
+  if (vtx.size() == 1) { // Block has only a coinbase transaction, so it is not a legacy block
+    return false;
+  }
+  for (unsigned int i = 1; i < vtx.size(); i++) {
+     if (!vtx[i]->isLegacyTransaction()) {
+       return false;
+     }
+  }
+  return true;
 }
