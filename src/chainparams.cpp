@@ -304,7 +304,7 @@ static CMainParams mainParams;
  */
 class CTestNetParams : public CChainParams {
 public:
-    CTestNetParams() {
+   CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 525960;
         consensus.nMasternodePaymentsStartBlock = 1000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
@@ -347,7 +347,7 @@ public:
         // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000003be69c34b1244f"); // 143200
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"); // 0
+        consensus.defaultAssumeValid = uint256S("0x0000098bec97458a8b345102a4cc54233e5a8717aa23ebe3395af1c26ad1ad7a"); // 0
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -361,14 +361,14 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1545016533, 498287, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1550820822, 302758, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000098bec97458a8b345102a4cc54233e5a8717aa23ebe3395af1c26ad1ad7a"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         vFixedSeeds.clear();
@@ -412,12 +412,17 @@ public:
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        strSporkAddress = "yV3p8PphQoZNpo7CEXAesrbf6fgCCJ8FPt";
+        // place this key in .conf file as sporkkey=cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
+        // privKey: cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
+        // open debug console and use this command:
+        // spork SPORK_NAME [value]
+
+        strSporkAddress = "yj949n1UH6fDhw6HtVE5VMj2iSTaSWBMcW"; // MPB todo - update with real key
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
-            1545016533, // * UNIX timestamp of last checkpoint block
+            (0, uint256S("0x0000098bec97458a8b345102a4cc54233e5a8717aa23ebe3395af1c26ad1ad7a")),
+            1550820822, // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0         // * estimated number of transactions per day after checkpoint
@@ -433,10 +438,10 @@ public:
         vHashLegacyBlocks = {
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "0007297ceb034981af9f58bbbe826a9138766c1d67fcd06bf29bb8fea797b0b1",
-        "0002831a8490b3bb9743db653abd97795eb81adb6fb9e4fba80707298392ad3d",
-        "00053fcc0186448911cb65a4a6814ee61178a417f2cbb6ec04f36229379f53c6",
-        "000dfd446685cad397cd9652001621572a78c0a2b7d5bbf1c19c9b3a04d004d2",
+        "000ed989820e114ca98139a0c024cefcb3e9b2027461690350b9acd6cc84b3c3",
+        "000d8d61aa97c57809aee2ff7681c59a4ac151318caa07ee64ac8d0a963d508a",
+        "0007294df450fe096a65b773d4974095d5ad09642123ba610dcfb1a3177ca2af",
+        "000bd583c7a232ac55ad78151cc4f2b27776a9e689a2d55c6a1282bcb4ba497a",
 //------------------------------------------------------------------------------
         };
     }
