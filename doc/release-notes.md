@@ -1,4 +1,4 @@
-Stash Core version 0.12.4.0
+Stash Core version 0.12.5.0
 ==========================
 
 Release is now available from:
@@ -13,9 +13,10 @@ Please report bugs using the issue tracker at github:
 
 
 
-0.12.4.0 Change log
+0.12.5.0 Change log
 ===================
 
+- [`ae15a6b58`](https://github.com/stashpayio/stash/commit/ae15a6b58) update checkpoint blocks for mainnet and testnet
 - [`d8e4ba4b2`](https://github.com/stashpayio/stash/commit/d8e4ba4b2) default decimals to 8 places
 - [`e2dd40722`](https://github.com/stashpayio/stash/commit/e2dd40722) update privatesend defaults
 - [`d6ca6d430`](https://github.com/stashpayio/stash/commit/d6ca6d430) update spork keys
