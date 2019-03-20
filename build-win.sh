@@ -26,3 +26,8 @@ CC="${CC}" CXX="${CXX}" make V=1 "$@"
 # https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip -> /usr/share/nsis/Plugins/INetC.dll
 # 
 # pushd share && makensis setup.nsi && popd
+
+VERSION=$( cat ./src/clientversion.h | grep -m4 "#define CLIENT_VERSION" | awk '{ print $NF }' | tr '\n' '.' )
+VERSION=${VERSION::-1}
+
+mv stashcore-${VERSION}-win64-setup.exe ./release

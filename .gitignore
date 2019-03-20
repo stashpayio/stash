@@ -144,3 +144,5 @@ cmake-build-debug
 .disableseeds
 *.csv
 
+# Releases
+/release
