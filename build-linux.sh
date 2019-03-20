@@ -4,22 +4,12 @@ cores=$(nproc)
 VERSION=$( cat ./src/clientversion.h | grep -m4 "#define CLIENT_VERSION" | awk '{ print $NF }' | tr '\n' '.' )
 VERSION=${VERSION::-1}
 
-# Default host to 64-bit 
-if [ -z "$1" ]; then
-  HOST="x86_64-pc-linux-gnu"
-else
-  HOST="$1"
-fi
+HOST="x86_64-linux-gnu"
+#HOST="$(./depends/config.guess)"
+PREFIX="$(pwd)/depends/$HOST/"
 
-# Build the depens
 cd depends/ && make -j$cores V=1 HOST=$HOST "$@" && cd ../
 ./autogen.sh
-
-BUILD="$(./depends/config.guess)"
-echo 'BUILD : '$BUILD
-PREFIX="$(pwd)/depends/$BUILD/"
-echo $PREFIX
-
 ./configure  --prefix="${PREFIX}" --disable-ccache \
                                   --disable-maintainer-mode \
                                   --disable-dependency-tracking \
