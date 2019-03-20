@@ -623,7 +623,7 @@ std::string LicenseInfo()
     const std::string URL_SOURCE_CODE = "<https://github.com/stashpayio/stash>";
     const std::string URL_WEBSITE = "<https://stashpay.io>";
 
-    return CopyrightHolders(_("Copyright (C)"), 2014, COPYRIGHT_YEAR) + "\n" +
+    return CopyrightHolders(_("Copyright (C)"), 2018, COPYRIGHT_YEAR) + "\n" +
            "\n" +
            strprintf(_("Please contribute if you find %s useful. "
                        "Visit %s for further information about the software."),
