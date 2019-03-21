@@ -1,4 +1,4 @@
-Stash Core staging tree 0.12.4
+Stash Core staging tree 0.12.6
 ===============================
 
 `master:` [![Build Status](https://travis-ci.org/stashpay/stash.svg?branch=master)](https://travis-ci.org/stashpay/stash) `develop:` [![Build Status](https://travis-ci.org/stashpay/stash.svg?branch=develop)](https://travis-ci.org/stashpay/stash/branches)
@@ -16,7 +16,7 @@ are carried out collectively by the network. Stash Core is the name of the open
 source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the Stash Core software, see https://www.stashpay.io/get-stash/.
+the Stash Core software, see https://www.stashpay.io/wallet/.
 
 
 License

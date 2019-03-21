@@ -1,4 +1,4 @@
-Stash Core version 0.12.5.0
+Stash Core version 0.12.6.0
 ==========================
 
 Release is now available from:
@@ -12,10 +12,16 @@ Please report bugs using the issue tracker at github:
   <https://github.com/stashpayio/stash/issues>
 
 
-
-0.12.5.0 Change log
+0.12.6.0 Change log
 ===================
 
+- [`2f163bd9e`](https://github.com/stashpayio/stash/commit/2f163bd9e) Genesis block
+- [`15881d40e`](https://github.com/stashpayio/stash/commit/15881d40e) update macosx build script
+- [`0dfc009c1`](https://github.com/stashpayio/stash/commit/0dfc009c1) update windows build script
+- [`ce7abf604`](https://github.com/stashpayio/stash/commit/ce7abf604) update linux build script
+- [`a5ea3aa83`](https://github.com/stashpayio/stash/commit/a5ea3aa83) Update splash and about copyrights
+- [`2212f5dd8`](https://github.com/stashpayio/stash/commit/2212f5dd8) fix for bip39 wordlist
+- [`cbecece7c`](https://github.com/stashpayio/stash/commit/cbecece7c) right align stash qt logo
 - [`ae15a6b58`](https://github.com/stashpayio/stash/commit/ae15a6b58) update checkpoint blocks for mainnet and testnet
 - [`d8e4ba4b2`](https://github.com/stashpayio/stash/commit/d8e4ba4b2) default decimals to 8 places
 - [`e2dd40722`](https://github.com/stashpayio/stash/commit/e2dd40722) update privatesend defaults
