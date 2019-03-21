@@ -178,10 +178,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1517788800; // Feb 5th, 2018
 
        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000002abfa9292c"); // 15410
+        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000000000040e8dd3bd"); // 15410
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("00000080f983cacf8dfa603adcff8593204a3650e497e2070a8c8efeae2fc777"); // 888900
+        consensus.defaultAssumeValid = uint256S("0000001aedbc434e031db5147b3c9b6cc76a65f9031aed32ac0405e628cd1a5f"); // 1444
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -196,7 +196,7 @@ public:
         nDefaultPort = 9999;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1551398400, 191657, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1553119080, 807965, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
@@ -204,7 +204,7 @@ public:
 
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x000000ee06448a3d3c624176d358f2b35636f1cb96bd097a06178cf072e92784"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000008850016c23058c0b4bd1ededb5953fc2702e66ef278d6dbd4ba98e03526"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         if (seedsDisabled()) {
@@ -253,12 +253,12 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  15410, uint256S("00000080f983cacf8dfa603adcff8593204a3650e497e2070a8c8efeae2fc777"))
+            (  1444, uint256S("0000001aedbc434e031db5147b3c9b6cc76a65f9031aed32ac0405e628cd1a5f"))
         };
 
         chainTxData = ChainTxData{
-            1552263166, // * UNIX timestamp of last known number of transactions
-            22519,    // * total number of transactions between genesis and that timestamp
+            1553200247, // * UNIX timestamp of last known number of transactions
+            8553,    // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -267,24 +267,24 @@ public:
 
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "0008fc5afeaffc45179d7ce8f1fdb81ead2d6eff8df9b6ac593ed3759bf113ce",
-        "00097af6c4ba153a303a0affd3f7dde5198afbc0b565770cb3f7efc119092e84",
-        "00058dff35d2f28c7b84ec4e3d35b36be578b9a50525c0ae17dd7e52a06019c8",
-        "000ff832668ca1c89d40c85b87d5ec31a95e521ab6f6d3c1eab52ae8be80319c",
-        "000d55aec900c139c9c0a1cd0fe767332beeaf0e90b0c6d33a91d8e50527ee37",
-        "00019dd161884cb8b5bcfee3e48523201812196651768efb3ed7d9acb6a7f484",
-        "000674544627b71adaf504852b6b28de8b26afeb09612e1856800075d19abadc",
-        "000aae7e5f0a145439a6c8d995d1be0125970d3e54902d52fe327764ba52c156",
-        "0001afc1cdff373d8dcef891deccac155beaa85da1eea7c59903599989ca63f7",
-        "0003359695f95b89cf0e0b3a942b7af973ae8f87285b226dcb14790fa6e469cd",
-        "000e3581d20c42cc2515ecd2fea33beb5e08de24d7f11e02d1866749bce42b9d",
-        "00033aa2bf3a8496c1768d9446005e192dfaa76122961b3734e099658f421ae5",
-        "000e23f82e202a545e099a594aec7dc29271e77ae988cccb3df3bd6ff89f4d77",
-        "000625eefc28c113fadbc9c0b210a9d1a620c95cd80119518008463d8a38c847",
-        "00025de240059d9595e76dda1a2551dd7fe813d8b01e1292470cf87e9cdc6d91",
-        "000deb034ebdcccf57f4edc54dda9e4820d23683b14e0fe827a9aee412bdd312",
-        "00085c22fe636f63a527b3411a06561df64f73a25df95fa78592c41bce73dc19",
-        "000f0447f2f05f08dff3ed60dba9643d0985ba1f82c694b330e29cd22650ded6",
+        "000d4d77bbb3c407751c5364a87fc0205ca9ba0fc423d2a411e7b1c50ee54a79",
+        "000f6d80bd34f72b092fc7a765738571db9ef69cb59f364cf5b7e2a0946aecc1",
+        "0007dd6a4a3d68172ff64e20fb054d0bfc47974755db1c94329e2dd1523f07cd",
+        "00021c6869dce542dcebed1167821ac0304c9b51cdbfb6b7c2a585eb0f4f6348",
+        "000d10b463cf614395e742d473970be016654755dce0e306c3db847c8e8f4a80",
+        "000cf457b25eac488f4cd9d82784d21d0d50c0d7bfa930164d8578bf59931881",
+        "0003935df446c5375aaffa9c8645ebf3f8ba818e043951b0958fefba4a884e13",
+        "0006c9f2ea80f25fb2fdfb9eb23f1eeb80d749221c8283b3e823d11ab35efa12",
+        "000b6f164e3daea42fed55e5ff256d7ca9a210c096ee275179509e508e908e8b",
+        "000ca2cb4b4ff329f83aa1c0bb279068642229bd35817f2953ccd9e81066db75",
+        "0004feb9f3d95baa0f0422ba57b3273ebe57e5131709a981789e29935a3847ee",
+        "000f65bf525c494b9c39b47d0ab5b28aba84477bdc8a56cf8b664e22d8d026f8",
+        "000c6f38b0bb8967f0fe33590ba3476dddff213001e2cb95649e42411e7472f8",
+        "000c380ab17475172c9faada25f906f56adbfec143059fdac2b368aac06b521b",
+        "00019a5d5488c95b1a9dfd6dc036631cc2ec652433338f90eda77961a495cf9d",
+        "000ae8128479c982082c1278740c550528e8a553eee014a6d50ebb344e938161",
+        "00048fb8f470cc9045e73d587a81d4411ead4388416e506bfe0c1c30a754fdde",
+        "0005cd423a7aa17bc0b8b998b958d783ed95006bb2755b71c470a86b8d3a4246",
 //------------------------------------------------------------------------------
 
         };
