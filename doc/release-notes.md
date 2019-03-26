@@ -1,4 +1,4 @@
-Stash Core version 0.12.6.0
+Stash Core version 0.12.6.1
 ==========================
 
 Release is now available from:
@@ -12,9 +12,10 @@ Please report bugs using the issue tracker at github:
   <https://github.com/stashpayio/stash/issues>
 
 
-0.12.6.0 Change log
+0.12.6.1 Change log
 ===================
 
+- [`48ccc0917`](https://github.com/stashpayio/stash/commit/48ccc0917) Update mainnet and testnet checks
 - [`2f163bd9e`](https://github.com/stashpayio/stash/commit/2f163bd9e) Genesis block
 - [`15881d40e`](https://github.com/stashpayio/stash/commit/15881d40e) update macosx build script
 - [`0dfc009c1`](https://github.com/stashpayio/stash/commit/0dfc009c1) update windows build script
