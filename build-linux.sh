@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -ex
+
+# The following dependencies should be installed:
+sudo apt-get -y install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils curl
+
 cores=$(nproc)
 VERSION=$( cat ./src/clientversion.h | grep -m4 "#define CLIENT_VERSION" | awk '{ print $NF }' | tr '\n' '.' )
 VERSION=${VERSION::-1}
