@@ -4,7 +4,7 @@
 # Output will be placed in the ./release folder
 
 # The following dependencies should be installed:
-sudo apt-get -y install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils curl
+sudo apt-get -y install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils curl unzip
 sudo apt-get -y install g++-mingw-w64-x86-64 mingw-w64-x86-64-dev nsis
 
 # Make sure the ‘posix’ compiler variants are selected for gcc and g++ (select option 1 for POSIX)
