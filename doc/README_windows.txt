@@ -1,4 +1,4 @@
-Stash Core 0.12.1
+Stash Core 0.12.6
 =====================
 
 Intro
@@ -19,5 +19,5 @@ depending on the speed of your computer and network connection, the synchronizat
 process can take anywhere from a few hours to a day or more.
 
 See the stash wiki at:
-  https://stashpay.atlassian.net/wiki/
+  https://github.com/stashpayio
 for more help and information.
