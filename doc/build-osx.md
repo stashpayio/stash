@@ -1,5 +1,8 @@
 Mac OS X Build Instructions and Notes
 ====================================
+
+      Note the below instructions have been superseded. Please run ./build-osx.sh from the root directory
+
 The commands in this guide should be executed in a Terminal application.
 The built-in one is located in `/Applications/Utilities/Terminal.app`.
 

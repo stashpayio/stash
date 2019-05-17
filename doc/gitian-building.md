@@ -1,6 +1,8 @@
 Gitian building
 ================
 
+      Note gitian building has not been tested
+
 *Setup instructions for a Gitian build of Stash Core using a Debian VM or physical system.*
 
 Gitian is the deterministic build process that is used to build the Stash

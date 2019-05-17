@@ -2,6 +2,8 @@ UNIX BUILD NOTES
 ====================
 Some notes on how to build Stash Core in Unix.
 
+      Note the below instructions have been superseded. Please run ./build-linux.sh from the root directory
+
 (for OpenBSD specific instructions, see [build-openbsd.md](build-openbsd.md))
 
 Note

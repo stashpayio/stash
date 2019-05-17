@@ -3,6 +3,8 @@ WINDOWS BUILD NOTES
 
 Below are some notes on how to build Stash Core for Windows.
 
+    Note the below instructions have been superseded. Please run ./build-win.sh from the root directory
+
 Most developers use cross-compilation from Ubuntu to build executables for
 Windows. This is also used to build the release binaries.
 
@@ -65,6 +67,11 @@ To build executables for Windows 64-bit, install the following dependencies:
 
     sudo apt-get install g++-mingw-w64-x86-64 mingw-w64-x86-64-dev
 
+Make sure the ‘posix’ compiler variants are selected for gcc and g++
+
+    sudo update-alternatives --config x86_64-w64-mingw32-gcc
+    sudo update-alternatives --config x86_64-w64-mingw32-g++
+
 Then build using:
 
     cd depends
@@ -76,18 +83,7 @@ Then build using:
 
 ## Building for 32-bit Windows
 
-To build executables for Windows 32-bit, install the following dependencies:
-
-    sudo apt-get install g++-mingw-w64-i686 mingw-w64-i686-dev 
-
-Then build using:
-
-    cd depends
-    make HOST=i686-w64-mingw32
-    cd ..
-    ./autogen.sh # not required when building from tarball
-    CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=/
-    make
+32-bit is currently not supported.
 
 ## Depends system
 
