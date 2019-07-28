@@ -587,7 +587,11 @@ void loose_multiplexing_gadget<FieldT>::generate_r1cs_witness()
 {
     /* assumes that idx can be fit in uint64_t; true for our purposes for now */
     const bigint<FieldT::num_limbs> valint = this->pb.val(index).as_bigint();
+#ifdef WIN32
+    uint64_t idx = valint.as_ulong();
+#else
     uint64_t idx = valint.as_uint64();
+#endif
     const bigint<FieldT::num_limbs> arrsize(arr.size());
 
     if (idx >= arr.size() || mpn_cmp(valint.data, arrsize.data, FieldT::num_limbs) >= 0)

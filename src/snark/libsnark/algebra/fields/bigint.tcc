@@ -202,7 +202,11 @@ inline bigint<m> bigint<n>::shorten(const bigint<m>& q, const char *msg) const
         }
     }
     bigint<m> res;
+#ifdef WIN32
+    mpn_copyi(res.data, data, n);
+#else
     mpn_copyi(res.data, data, m);
+#endif
     res.limit(q, msg);
     return res;
 }

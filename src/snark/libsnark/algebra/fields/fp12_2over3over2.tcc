@@ -390,7 +390,11 @@ std::istream& operator>>(std::istream& in, std::vector<Fp12_2over3over2_model<n,
 {
     v.clear();
 
+#ifdef WIN32
+    uint64_t s;
+#else
     size_t s;
+#endif
     in >> s;
 
     char b;

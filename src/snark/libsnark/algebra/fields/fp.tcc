@@ -710,7 +710,11 @@ Fp_model<n,modulus> Fp_model<n,modulus>::sqrt() const
 
     Fp_model<n,modulus> one = Fp_model<n,modulus>::one();
 
+#ifdef WIN32
+    uint64_t v = Fp_model<n,modulus>::s;
+#else
     size_t v = Fp_model<n,modulus>::s;
+#endif
     Fp_model<n,modulus> z = Fp_model<n,modulus>::nqr_to_t;
     Fp_model<n,modulus> w = (*this)^Fp_model<n,modulus>::t_minus_1_over_2;
     Fp_model<n,modulus> x = (*this) * w;
@@ -734,7 +738,11 @@ Fp_model<n,modulus> Fp_model<n,modulus>::sqrt() const
 
     while (b != one)
     {
+#ifdef WIN32
+        uint64_t m = 0;
+#else
         size_t m = 0;
+#endif
         Fp_model<n,modulus> b2m = b;
         while (b2m != one)
         {

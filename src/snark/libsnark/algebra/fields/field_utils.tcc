@@ -21,14 +21,26 @@ FieldT coset_shift()
 }
 
 template<typename FieldT>
+#ifdef WIN32
+FieldT get_root_of_unity(const uint64_t n)
+#else
 FieldT get_root_of_unity(const size_t n)
+#endif
 {
+#ifdef WIN32
+    const uint64_t logn = log2(n);
+#else
     const size_t logn = log2(n);
+#endif
     assert(n == (1u << logn));
     assert(logn <= FieldT::s);
 
     FieldT omega = FieldT::root_of_unity;
+#ifdef WIN32
+    for (uint64_t i = FieldT::s; i > logn; --i)
+#else
     for (size_t i = FieldT::s; i > logn; --i)
+#endif
     {
         omega *= omega;
     }
@@ -37,21 +49,43 @@ FieldT get_root_of_unity(const size_t n)
 }
 
 template<typename FieldT>
+#ifdef WIN32
+std::vector<FieldT> pack_int_vector_into_field_element_vector(const std::vector<uint64_t> &v, const uint64_t w)
+#else
 std::vector<FieldT> pack_int_vector_into_field_element_vector(const std::vector<size_t> &v, const size_t w)
+#endif
 {
+#ifdef WIN32
+    const uint64_t chunk_bits = FieldT::capacity();
+    const uint64_t repacked_size = div_ceil(v.size() * w, chunk_bits);
+#else
     const size_t chunk_bits = FieldT::capacity();
     const size_t repacked_size = div_ceil(v.size() * w, chunk_bits);
+#endif
     std::vector<FieldT> result(repacked_size);
 
+#ifdef WIN32
+    for (uint64_t i = 0; i < repacked_size; ++i)
+#else
     for (size_t i = 0; i < repacked_size; ++i)
+#endif
     {
         bigint<FieldT::num_limbs> b;
+#ifdef WIN32
+        for (uint64_t j = 0; j < chunk_bits; ++j)
+        {
+            const uint64_t word_index = (i * chunk_bits + j) / w;
+            const uint64_t pos_in_word = (i * chunk_bits + j) % w;
+            const uint64_t word_or_0 = (word_index < v.size() ? v[word_index] : 0);
+            const uint64_t bit = (word_or_0 >> pos_in_word) & 1;
+#else
         for (size_t j = 0; j < chunk_bits; ++j)
         {
             const size_t word_index = (i * chunk_bits + j) / w;
             const size_t pos_in_word = (i * chunk_bits + j) % w;
             const size_t word_or_0 = (word_index < v.size() ? v[word_index] : 0);
             const size_t bit = (word_or_0 >> pos_in_word) & 1;
+#endif
 
             b.data[j / GMP_NUMB_BITS] |= bit << (j % GMP_NUMB_BITS);
         }
@@ -62,11 +96,19 @@ std::vector<FieldT> pack_int_vector_into_field_element_vector(const std::vector<
 }
 
 template<typename FieldT>
+#ifdef WIN32
+std::vector<FieldT> pack_bit_vector_into_field_element_vector(const bit_vector &v, const uint64_t chunk_bits)
+#else
 std::vector<FieldT> pack_bit_vector_into_field_element_vector(const bit_vector &v, const size_t chunk_bits)
+#endif
 {
     assert(chunk_bits <= FieldT::capacity());
 
+#ifdef WIN32
+    const uint64_t repacked_size = div_ceil(v.size(), chunk_bits);
+#else
     const size_t repacked_size = div_ceil(v.size(), chunk_bits);
+#endif
     std::vector<FieldT> result(repacked_size);
 
     for (size_t i = 0; i < repacked_size; ++i)
@@ -131,7 +173,11 @@ bit_vector convert_field_element_to_bit_vector(const FieldT &el)
 }
 
 template<typename FieldT>
+#ifdef WIN32
+bit_vector convert_field_element_to_bit_vector(const FieldT &el, const uint64_t bitcount)
+#else
 bit_vector convert_field_element_to_bit_vector(const FieldT &el, const size_t bitcount)
+#endif
 {
     bit_vector result = convert_field_element_to_bit_vector(el);
     result.resize(bitcount);

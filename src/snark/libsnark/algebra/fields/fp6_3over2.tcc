@@ -194,7 +194,11 @@ std::istream& operator>>(std::istream& in, std::vector<Fp6_3over2_model<n, modul
 {
     v.clear();
 
+#ifdef WIN32
+    uint64_t s;
+#else
     size_t s;
+#endif
     in >> s;
 
     char b;

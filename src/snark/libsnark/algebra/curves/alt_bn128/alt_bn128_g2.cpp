@@ -14,8 +14,13 @@ int64_t alt_bn128_G2::add_cnt = 0;
 int64_t alt_bn128_G2::dbl_cnt = 0;
 #endif
 
+#ifdef WIN32
+std::vector<uint64_t> alt_bn128_G2::wnaf_window_table;
+std::vector<uint64_t> alt_bn128_G2::fixed_base_exp_window_table;
+#else
 std::vector<size_t> alt_bn128_G2::wnaf_window_table;
 std::vector<size_t> alt_bn128_G2::fixed_base_exp_window_table;
+#endif
 alt_bn128_G2 alt_bn128_G2::G2_zero;
 alt_bn128_G2 alt_bn128_G2::G2_one;
 

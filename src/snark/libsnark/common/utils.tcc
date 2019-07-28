@@ -13,7 +13,11 @@
 namespace libsnark {
 
 template<typename T>
+#ifdef WIN32
+uint64_t size_in_bits(const std::vector<T> &v)
+#else
 size_t size_in_bits(const std::vector<T> &v)
+#endif
 {
     return v.size() * T::size_in_bits();
 }
