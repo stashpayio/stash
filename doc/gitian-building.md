@@ -201,9 +201,23 @@ To select a different button, press `Tab`.
 
 ![](gitian-building/debian_install_22_finish_installation.png)
 
+Install guest additions
+-----------------------
+
+On the running machine window : devices > insert guest additions
+
+```
+sudo mount /dev/cdrom /media
+/media/VBoxLinuxAdditions.run
+
+```
 
 After Installation
 -------------------
+
+## BAD practice, better use sudo user, e.g. the newly created `debian` user
+## if need be run `usermod debian -G sudo` as root on the VM console
+
 The next step in the guide involves logging in as root via SSH.
 SSH login for root users is disabled by default, so we'll enable that now.
 
@@ -258,8 +272,11 @@ First we need to log in as `root` to set up dependencies and make sure that our
 user can use the sudo command. Type/paste the following in the terminal:
 
 ```bash
+#sudo su
 apt-get install git ruby sudo apt-cacher-ng qemu-utils debootstrap lxc python-cheetah parted kpartx bridge-utils make ubuntu-archive-keyring curl
-adduser debian sudo
+useradd debian
+usermod debian -G sudo
+passwd debian
 ```
 
 Then set up LXC and the rest with the following, which is a complex jumble of settings and workarounds:
@@ -271,13 +288,16 @@ echo "%sudo ALL=NOPASSWD: /usr/bin/lxc-start" > /etc/sudoers.d/gitian-lxc
 echo "%sudo ALL=NOPASSWD: /usr/bin/lxc-execute" >> /etc/sudoers.d/gitian-lxc
 # make /etc/rc.local script that sets up bridge between guest and host
 echo '#!/bin/sh -e' > /etc/rc.local
-echo 'brctl addbr lxcbr0' >> /etc/rc.local
-echo 'ifconfig lxcbr0 10.0.3.2/24 up' >> /etc/rc.local
-echo 'iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> /etc/rc.local
+echo '/sbin/brctl addbr lxcbr0' >> /etc/rc.local
+echo 'ip addr add 10.0.3.2/24 lxcbr0' >> /etc/rc.local
+echo 'ip link set dev lxcbr0 up' >> /etc/rc.local
+echo 'iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE' >> /etc/rc.local
 echo 'echo 1 > /proc/sys/net/ipv4/ip_forward' >> /etc/rc.local
 echo 'exit 0' >> /etc/rc.local
+chmod +x /etc/rc.local
 # make sure that USE_LXC is always set when logging in as debian,
 # and configure LXC IP addresses
+echo 'export LXC_BRIDGE=lxcbr0' >> /home/debian/.profile
 echo 'export USE_LXC=1' >> /home/debian/.profile
 echo 'export GITIAN_HOST_IP=10.0.3.2' >> /home/debian/.profile
 echo 'export LXC_GUEST_IP=10.0.3.5' >> /home/debian/.profile
@@ -312,7 +332,7 @@ Clone the git repositories for Stash Core and Gitian.
 ```bash
 git clone https://github.com/devrandom/gitian-builder.git
 git clone https://github.com/stashpayio/stash
-git clone https://github.com/stashpay/gitian.sigs.git
+git clone https://github.com/stashpayio/gitian.sigs.git
 ```
 
 Setting up the Gitian image

@@ -1,8 +1,62 @@
 #!/usr/bin/env bash
 set -ex
 
-# The following dependencies should be installed:
-sudo apt-get -y install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils curl
+# test distro versions
+centos="7"
+ubuntu="18.04"
+debian="10"
+
+# gather system information
+distro=$(cat /etc/os-release | grep ^ID= | sed -e "s/^ID=//" | sed -e 's/"//g' | sed -e "s/'//g")
+distrov=$(cat /etc/os-release | grep ^VERSION_ID= | sed -e "s/^VERSION_ID=//" | sed -e 's/"//g' | sed -e "s/'//g")
+
+echo "Running on $distro $distrov"
+
+# function to install necessary packages with yum
+with_yum(){
+        echo "Installing dependencies using yum."
+	sudo yum -y install gcc gcc-c++ make libtool automake pkgconfig openssl-devel libevent-devel curl bzip2 patch
+}
+
+# function to install necessary packages with apt-get
+with_apt(){
+        echo "Installing dependencies using apt-get."
+	sudo apt-get -y install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils curl
+}
+
+# logic to select package installer
+# displays warning if not used on a tested version of the distro
+# allows to select yum or apt when distro is not explicitly supported
+case $distro in
+        centos)
+                if [[ "$distrov" != "$centos" ]]; then echo "WARNING : this script has not been tested on version $distrov of $distro.  Continuing to run."; fi
+                with_yum
+                ;;
+        ubuntu)
+                if [[ "$distrov" != "$ubuntu" ]]; then echo "WARNING : this script has not been tested on version $distrov of $distro.  Continuing to run."; fi
+                with_apt
+                ;;
+        debian)
+                if [[ "$distrov" != "$debian" ]]; then echo "WARNING : this script has not been tested on version $distrov of $distro.  Continuing to run."; fi
+                with_apt
+                ;;
+        *)
+                echo "ERROR : $distro is not supported by this script. To try continue anyway, type yum or apt to use as package manager.  Anything else will abort the script."
+                read installer
+
+                case $installer in
+                        yum)
+                                with_yum
+                                ;;
+                        apt)
+                                with_apt
+                                ;;
+                        *)
+                                echo "Exiting script now."
+                                exit
+                                ;;
+                esac
+esac
 
 cores=$(nproc)
 VERSION=$( cat ./src/clientversion.h | grep -m4 "#define CLIENT_VERSION" | awk '{ print $NF }' | tr '\n' '.' )
@@ -51,7 +105,9 @@ gpg --clearsign ${CHECKSUM} && rm -r ${CHECKSUM} || true
 popd
 
 # create tar.gz
-pushd release && find stashcore-${VERSION}-${HOST} -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > stashcore-${VERSION}-${HOST}.tar.gz
-echo $( sha256sum stashcore-${VERSION}-${HOST}.tar.gz ) >> ${CHECKSUM}
+#pushd release && find stashcore-${VERSION}-${HOST} -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > stashcore-${VERSION}-${HOST}.tar.gz
+#echo $( sha256sum stashcore-${VERSION}-${HOST}.tar.gz ) >> ${CHECKSUM}
+pushd release && find stashcore-${VERSION}-${HOST} -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > stashcore-${VERSION}-${HOST}-${distro}${distrov}.tar.gz
+echo $( sha256sum stashcore-${VERSION}-${HOST}-${distro}${distrov}.tar.gz ) >> ${CHECKSUM}
 popd
 rm -r ${DIST} || true
