@@ -731,6 +731,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("superblock", superblockObjArray));
     result.push_back(Pair("superblocks_started", pindexPrev->nHeight + 1 > consensusParams.nSuperblockStartBlock));
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
+    result.push_back(Pair("shielded_tx_enabled", true));
 
     return result;
 }
