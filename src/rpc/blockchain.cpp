@@ -1043,7 +1043,7 @@ UniValue gettxoutsetinfo(const JSONRPCRequest& request)
             "  \"txouts\": n,            (numeric) The number of unspent transaction outputs\n"
             "  \"hash_serialized\": \"hash\",   (string) The serialized hash\n"
             "  \"disk_size\": n,         (numeric) The estimated size of the chainstate on disk\n"
-            "  \"total_amount\": x.xxx          (numeric) The total amount\n"
+            "  \"total_amount\": x.xxx   (numeric) Circulating supply excluding all sheilded transactions. Use getblockchaininfo for actual circulating supply\n"
             "}\n"
             "\nExamples:\n"
             + HelpExampleCli("gettxoutsetinfo", "")
@@ -1249,6 +1249,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
             "  \"headers\": xxxxxx,        (numeric) the current number of headers we have validated\n"
             "  \"bestblockhash\": \"...\", (string) the hash of the currently best block\n"
             "  \"difficulty\": xxxxxx,     (numeric) the current difficulty\n"
+            "  \"circulatingsupply\": xxxxxx, (numeric) the current circulating supply\n"
             "  \"mediantime\": xxxxxx,     (numeric) median time for the current best block\n"
             "  \"verificationprogress\": xxxx, (numeric) estimate of verification progress [0..1]\n"
             "  \"chainwork\": \"xxxx\"     (string) total amount of work in active chain, in hexadecimal\n"
@@ -1286,6 +1287,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("headers",               pindexBestHeader ? pindexBestHeader->nHeight : -1));
     obj.push_back(Pair("bestblockhash",         chainActive.Tip()->GetBlockHash().GetHex()));
     obj.push_back(Pair("difficulty",            (double)GetDifficulty()));
+    obj.push_back(Pair("circulatingsupply",     ValueFromAmount(pindexBestHeader->nMoneySupply)));
     obj.push_back(Pair("mediantime",            (int64_t)chainActive.Tip()->GetMedianTimePast()));
     obj.push_back(Pair("verificationprogress",  GuessVerificationProgress(Params().TxData(), chainActive.Tip())));
     obj.push_back(Pair("chainwork",             chainActive.Tip()->nChainWork.GetHex()));

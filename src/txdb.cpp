@@ -464,6 +464,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
+                pindexNew->nMoneySupply   = diskindex.nMoneySupply;
                 pindexNew->nSproutValue   = diskindex.nSproutValue;
 
                 if (!Params().isLegacyBlock(diskindex.nHeight)) {

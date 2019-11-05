@@ -227,6 +227,9 @@ public:
     //! (memory only) Maximum nTime in the chain upto and including this block.
     unsigned int nTimeMax;
 
+    //! Current circulating supply. Cumulative sum of all coinbase transactions.
+    CAmount nMoneySupply;
+
     void SetNull()
     {
         phashBlock = NULL;
@@ -253,6 +256,7 @@ public:
         nTime          = 0;
         nBits          = 0;
         nNonce         = 0;
+        nMoneySupply   = 0;
     }
 
     CBlockIndex()
@@ -269,6 +273,7 @@ public:
         nTime          = block.nTime;
         nBits          = block.nBits;
         nNonce         = block.nNonce;
+        nMoneySupply   = 0;
     }
 
     CDiskBlockPos GetBlockPos() const {
@@ -421,6 +426,9 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+
+        // Current circulating supply
+        READWRITE(VARINT(nMoneySupply));
 
         // Only read/write nSproutValue if the client version used to create
         // this index was storing them.
