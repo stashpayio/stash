@@ -377,7 +377,7 @@ public:
     // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
     // bumping the default CURRENT_VERSION at which point both CURRENT_VERSION and
     // MAX_STANDARD_VERSION will be equal.
-    static const int32_t MAX_STANDARD_VERSION=2;
+    static const int32_t MAX_STANDARD_VERSION=3;
 
     // The local variables are made const to prevent unintended modification
     // without updating the cached hash value. However, CTransaction is not
@@ -410,12 +410,14 @@ public:
         READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
         READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
-        READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
-        if (vjoinsplit.size() > 0) {
-            READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
-            READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
+        if (this->nVersion < 3) {
+            READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
+            
+            if (vjoinsplit.size() > 0) {
+                READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
+                READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
+            }
         }
-
 
         if (ser_action.ForRead())
             UpdateHash();
@@ -499,13 +501,16 @@ struct CMutableTransaction
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(this->nVersion);
+        nVersion = this->nVersion;
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        READWRITE(vjoinsplit);
-        if (vjoinsplit.size() > 0) {
-            READWRITE(joinSplitPubKey);
-            READWRITE(joinSplitSig);
+        if (nVersion < 3) {
+            READWRITE(vjoinsplit);
+            if (vjoinsplit.size() > 0) {
+                READWRITE(joinSplitPubKey);
+                READWRITE(joinSplitSig);
+            }
         }
     }
 

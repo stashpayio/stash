@@ -1115,20 +1115,22 @@ public:
         // Serialize nLockTime
         ::Serialize(s, txTo.nLockTime);
 
-        // Serialize vjoinsplit
-        //
-        // SIGHASH_* functions will hash portions of
-        // the transaction for use in signatures. This
-        // keeps the JoinSplit cryptographically bound
-        // to the transaction.
-        //
-        ::Serialize(s, txTo.vjoinsplit);
-          if (txTo.vjoinsplit.size() > 0) {
-              ::Serialize(s, txTo.joinSplitPubKey);
+        if (txTo.nVersion < 3) {
+            // Serialize vjoinsplit
+            //
+            // SIGHASH_* functions will hash portions of
+            // the transaction for use in signatures. This
+            // keeps the JoinSplit cryptographically bound
+            // to the transaction.
+            //
+            ::Serialize(s, txTo.vjoinsplit);
+            if (txTo.vjoinsplit.size() > 0) {
+                ::Serialize(s, txTo.joinSplitPubKey);
 
-              CTransaction::joinsplit_sig_t nullSig = {};
-              ::Serialize(s, nullSig);
-          }
+                CTransaction::joinsplit_sig_t nullSig = {};
+                ::Serialize(s, nullSig);
+            }
+        }
     }
 };
 
