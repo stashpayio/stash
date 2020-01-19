@@ -29,10 +29,12 @@ static const int SPORK_14_REQUIRE_SENTINEL_FLAG                         = 10013;
 static const int SPORK_30_STASH_LEGACY_SIGS_ENABLED                     = 10030;
 static const int SPORK_31_STASH_POS_ENABLED                             = 10031;
 static const int SPORK_32_STASH_POS_START_BLOCK                         = 10032;
-
+static const int SPORK_33_STASH_APPROX_RELEASE_HEIGHT                   = 10033;
+static const int SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION                 = 10034;
+static const int SPORK_35_STASH_DEPRECATION_WARN_LIMIT                  = 10035;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_32_STASH_POS_START_BLOCK;
+static const int SPORK_END                                              = SPORK_35_STASH_DEPRECATION_WARN_LIMIT;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern std::map<uint256, CSporkMessage> mapSporks;

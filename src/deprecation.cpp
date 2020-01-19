@@ -8,11 +8,16 @@
 #include "init.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "spork.h"
 
 static const std::string CLIENT_VERSION_STR = FormatVersion(CLIENT_VERSION);
 
 void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
-    int blocksToDeprecation = DEPRECATION_HEIGHT - nHeight;
+    int deprecationHeight = sporkManager.GetSporkValue(SPORK_33_STASH_APPROX_RELEASE_HEIGHT) +
+                            sporkManager.GetSporkValue(SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION) *
+                            7 * 60 * 24; // Average 60 block/hr
+    int deprecationWarning = sporkManager.GetSporkValue(SPORK_35_STASH_DEPRECATION_WARN_LIMIT);
+    int blocksToDeprecation = deprecationHeight - nHeight;
     bool disableDeprecation = (GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
     if (blocksToDeprecation <= 0) {
         // In order to ensure we only log once per process when deprecation is
@@ -23,31 +28,25 @@ void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
         // - The node is starting
         if (blocksToDeprecation == 0 || forceLogging) {
             auto msg = strprintf(_("This version has been deprecated as of block height %d."),
-                                 DEPRECATION_HEIGHT) + " " +
-                       _("You should upgrade to the latest version of Stash.");
-            if (!disableDeprecation) {
-                msg += " " + strprintf(_("To disable deprecation for this version, set %s%s."),
-                                       "-disabledeprecation=", CLIENT_VERSION_STR);
-            }
+                                 deprecationHeight) + " " +
+                       _("You should upgrade to the latest version of Stash.");            
             LogPrintf("*** %s\n", msg);
             uiInterface.ThreadSafeMessageBox(msg, "", CClientUIInterface::MSG_ERROR);
         }
         if (!disableDeprecation) {
             StartShutdown();
         }
-    } else if (blocksToDeprecation == DEPRECATION_WARN_LIMIT ||
-               (blocksToDeprecation < DEPRECATION_WARN_LIMIT && forceLogging)) {
+    } else if (blocksToDeprecation == deprecationWarning ||
+               (blocksToDeprecation < deprecationWarning && forceLogging)) {
         std::string msg;
         if (disableDeprecation) {
             msg = strprintf(_("This version will be deprecated at block height %d."),
-                            DEPRECATION_HEIGHT) + " " +
+                            deprecationHeight) + " " +
                   _("You should upgrade to the latest version of Stash.");
         } else {
             msg = strprintf(_("This version will be deprecated at block height %d, and will automatically shut down."),
-                            DEPRECATION_HEIGHT) + " " +
-                  _("You should upgrade to the latest version of Stash.") + " " +
-                  strprintf(_("To disable deprecation for this version, set %s%s."),
-                            "-disabledeprecation=", CLIENT_VERSION_STR);
+                            deprecationHeight) + " " +
+                  _("You should upgrade to the latest version of Stash.");
         }
         LogPrintf("*** %s\n", msg);
         uiInterface.ThreadSafeMessageBox(msg, "", CClientUIInterface::MSG_WARNING);
