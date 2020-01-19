@@ -3470,17 +3470,24 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
     pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockProof(*pindexNew);
 
-    //ZEN_MOD_START
-    if (pindexNew->pprev){
-        LogPrintf("%s: Mike nChainDelay: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
-        pindexNew->nChainDelay = pindexNew->pprev->nChainDelay + GetBlockDelay(*pindexNew,*(pindexNew->pprev), chainActive.Height(), fIsStartupSyncing);
-    } else {
+    if (sporkManager.GetSporkValue(sporkManager.GetSporkValue(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))) 
+    {
+        //ZEN_MOD_START
+        if (pindexNew->pprev){
+            LogPrintf("%s: nChainDelay: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
+            pindexNew->nChainDelay = pindexNew->pprev->nChainDelay + GetBlockDelay(*pindexNew,*(pindexNew->pprev), chainActive.Height(), fIsStartupSyncing);
+        } else {
+            pindexNew->nChainDelay = 0;
+        }
+        if(pindexNew->nChainDelay != 0) {
+            LogPrintf("%s: Block belong to a chain under punishment Delay VAL: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
+        }
+        //ZEN_MOD_END
+    }
+    else 
+    {
         pindexNew->nChainDelay = 0;
     }
-    if(pindexNew->nChainDelay != 0) {
-    	LogPrintf("%s: Block belong to a chain under punishment Delay VAL: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
-    }
-    //ZEN_MOD_END
 
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == NULL || (pindexBestHeader->nChainWork < pindexNew->nChainWork && pindexNew->nChainDelay==0))    

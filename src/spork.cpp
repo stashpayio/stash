@@ -31,7 +31,9 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_32_STASH_POS_START_BLOCK,         525960},        // TODO harden when block known
     {SPORK_33_STASH_APPROX_RELEASE_HEIGHT,   525960},        // 525960 blocks
     {SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION, 13},            // 13 Weeks
-    {SPORK_35_STASH_DEPRECATION_WARN_LIMIT,  40320}          // 403204 blocks (4 weeks @ 60 bks/hr = 4*7*60*24)
+    {SPORK_35_STASH_DEPRECATION_WARN_LIMIT,  40320},         // 403204 blocks (4 weeks @ 60 bks/hr = 4*7*60*24)
+    {SPORK_36_STASH_CHAIN_PENALTY_ENABLED,   4070908800ULL}, // OFF
+    {SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD, 5}              // 5 blocks
 };
 
 void CSporkManager::ProcessSpork(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
@@ -178,11 +180,12 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_14_REQUIRE_SENTINEL_FLAG")            return SPORK_14_REQUIRE_SENTINEL_FLAG;
     if (strName == "SPORK_30_STASH_LEGACY_SIGS_ENABLED")        return SPORK_30_STASH_LEGACY_SIGS_ENABLED;    
     if (strName == "SPORK_31_STASH_POS_ENABLED")                return SPORK_31_STASH_POS_ENABLED;
-    if (strName == "SPORK_32_STASH_POS_START_BLOCK")            return SPORK_32_STASH_POS_START_BLOCK;
-    
+    if (strName == "SPORK_32_STASH_POS_START_BLOCK")            return SPORK_32_STASH_POS_START_BLOCK;    
     if (strName == "SPORK_33_STASH_APPROX_RELEASE_HEIGHT")      return SPORK_33_STASH_APPROX_RELEASE_HEIGHT;
     if (strName == "SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION")    return SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION;
     if (strName == "SPORK_35_STASH_DEPRECATION_WARN_LIMIT")     return SPORK_35_STASH_DEPRECATION_WARN_LIMIT;
+    if (strName == "SPORK_36_STASH_CHAIN_PENALTY_ENABLED")      return SPORK_36_STASH_CHAIN_PENALTY_ENABLED;
+    if (strName == "SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD")    return SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD;
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
@@ -206,7 +209,9 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_33_STASH_APPROX_RELEASE_HEIGHT:      return "SPORK_33_STASH_APPROX_RELEASE_HEIGHT";
         case SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION:    return "SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION";
         case SPORK_35_STASH_DEPRECATION_WARN_LIMIT:     return "SPORK_35_STASH_DEPRECATION_WARN_LIMIT";
-        
+        case SPORK_36_STASH_CHAIN_PENALTY_ENABLED:      return "SPORK_36_STASH_CHAIN_PENALTY_ENABLED";
+        case SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD:    return "SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD";
+
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

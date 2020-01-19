@@ -2,11 +2,15 @@
 
 int GetBlockDelay(const CBlockIndex& newBlock, const CBlockIndex& prevBlock, const int activeChainHeight, const bool isStartupSyncing)
 {
-    const int PENALTY_THRESHOLD = 5;
+    if (!sporkManager.GetSporkValue(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))
+        return 0;
+    
+    if(isStartupSyncing) 
+        return 0;
+    
+    int penaltyThreshold = sporkManager.GetSporkValue(SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD);
 
-    if(isStartupSyncing) {
-    	return 0;
-    }
+    assert (penaltyThreshold >= 0);
 
     if(newBlock.nHeight < activeChainHeight ) {
       	LogPrintf("Received a delayed block (activeChainHeight: %d, newBlockHeight: %d)!\n", activeChainHeight, newBlock.nHeight);
@@ -27,7 +31,7 @@ int GetBlockDelay(const CBlockIndex& newBlock, const CBlockIndex& prevBlock, con
     } else {
         // Introduce penalty in case we receive a historic block.
         // (uses a threshold value)
-        if (activeChainHeight - newBlock.nHeight > PENALTY_THRESHOLD ){
+        if (activeChainHeight - newBlock.nHeight > penaltyThreshold) {
             return (activeChainHeight - newBlock.nHeight);
         // no delay detected.
         } else {

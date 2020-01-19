@@ -32,9 +32,11 @@ static const int SPORK_32_STASH_POS_START_BLOCK                         = 10032;
 static const int SPORK_33_STASH_APPROX_RELEASE_HEIGHT                   = 10033;
 static const int SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION                 = 10034;
 static const int SPORK_35_STASH_DEPRECATION_WARN_LIMIT                  = 10035;
+static const int SPORK_36_STASH_CHAIN_PENALTY_ENABLED                   = 10036;
+static const int SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD                 = 10037;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_35_STASH_DEPRECATION_WARN_LIMIT;
+static const int SPORK_END                                              = SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern std::map<uint256, CSporkMessage> mapSporks;
