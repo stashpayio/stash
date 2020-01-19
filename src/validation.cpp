@@ -1530,13 +1530,25 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount ret = 0; // start at 0%
+    CAmount ret = 0; // start at 0%    
 
-    int nMNPIBlock = Params().GetConsensus().nMasternodePaymentsStartBlock;
+    int nMNPIBlock = Params().GetConsensus().nMasternodePaymentsStartBlock; 
+
+    if (sporkManager.IsSporkActive(SPORK_31_STASH_POS_ENABLED))
+    {
+        if (nHeight >= Params().GetConsensus().nSubsidyHalvingInterval) 
+        {
+            CAmount minerValue = blockValue / 2;
+            for (int i = Params().GetConsensus().nSubsidyHalvingInterval; i <= nHeight; i += Params().GetConsensus().nSubsidyHalvingInterval) 
+              minerValue -= minerValue/2;                        
+                
+            return blockValue - minerValue; 
+        }
+    }
 
     if(nHeight > nMNPIBlock)
         ret = blockValue / 2; // split block reward evenly between miner and masternode
-    return ret;
+    return ret;    
 }
 
 
