@@ -8,6 +8,7 @@
 #include "messagesigner.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
+#include "spork.h"
 
 bool CMessageSigner::GetKeysFromSecret(const std::string& strSecret, CKey& keyRet, CPubKey& pubkeyRet)
 {
@@ -41,7 +42,21 @@ bool CMessageSigner::VerifyMessage(const CKeyID& keyID, const std::vector<unsign
     ss << strMessageMagic;
     ss << strMessage;
 
-    return CHashSigner::VerifyHash(ss.GetHash(), keyID, vchSig, strErrorRet);
+    if (CHashSigner::VerifyHash(ss.GetHash(), keyID, vchSig, strErrorRet))
+    {
+        return true;
+    }
+    else if (sporkManager.IsSporkActive(SPORK_30_STASH_LEGACY_SIGS_ENABLED))
+    {
+        /* Allow legacy signature magic for backwards compatibility */
+        CHashWriter ssLegacy(SER_GETHASH, 0);
+        ssLegacy << strMessageMagicLegacy;
+        ssLegacy << strMessage;
+
+        return CHashSigner::VerifyHash(ssLegacy.GetHash(), keyID, vchSig, strErrorRet);
+    }
+
+    return false;
 }
 
 bool CHashSigner::SignHash(const uint256& hash, const CKey& key, std::vector<unsigned char>& vchSigRet)

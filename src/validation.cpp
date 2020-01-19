@@ -115,6 +115,7 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 CScript COINBASE_FLAGS;
 
 const std::string strMessageMagic = "Stash Signed Message:\n";
+const std::string strMessageMagicLegacy = "DarkCoin Signed Message:\n";
 
 // Internal stuff
 namespace {
