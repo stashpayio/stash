@@ -1,4 +1,4 @@
-Stash Core 0.12.6.2
+Stash Core 0.12.7.0
 =====================
 
 This is the official reference wallet for Stash digital currency and comprises the backbone of the Stash peer-to-peer network. You can [download Stash Core](https://www.stashpay.io/downloads/) or [build it yourself](#building) using the guides below.
