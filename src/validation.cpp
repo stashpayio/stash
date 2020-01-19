@@ -1536,7 +1536,7 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 
     if (sporkManager.IsSporkActive(SPORK_31_STASH_POS_ENABLED))
     {
-        if (nHeight >= Params().GetConsensus().nSubsidyHalvingInterval) 
+        if (nHeight >= sporkManager.GetSporkValue(SPORK_32_STASH_POS_START_BLOCK)) 
         {
             CAmount minerValue = blockValue / 2;
             for (int i = Params().GetConsensus().nSubsidyHalvingInterval; i <= nHeight; i += Params().GetConsensus().nSubsidyHalvingInterval) 

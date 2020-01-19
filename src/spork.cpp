@@ -26,8 +26,9 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_10_MASTERNODE_PAY_UPDATED_NODES,  4070908800ULL}, // OFF
     {SPORK_12_RECONSIDER_BLOCKS,             0},             // 0 BLOCKS
     {SPORK_14_REQUIRE_SENTINEL_FLAG,         4070908800ULL}, // OFF
-    {SPORK_30_STASH_LEGACY_SIGS_ENABLED,     4070908800ULL}, // OFF    
-    {SPORK_31_STASH_POS_ENABLED,             4070908800ULL}  // OFF    
+    {SPORK_30_STASH_LEGACY_SIGS_ENABLED,     4070908800ULL}, // OFF 
+    {SPORK_31_STASH_POS_ENABLED,             4070908800ULL}, // OFF
+    {SPORK_32_STASH_POS_START_BLOCK,         525960}         // TODO harden when block known
 };
 
 void CSporkManager::ProcessSpork(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
@@ -174,6 +175,7 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_14_REQUIRE_SENTINEL_FLAG")            return SPORK_14_REQUIRE_SENTINEL_FLAG;
     if (strName == "SPORK_30_STASH_LEGACY_SIGS_ENABLED")        return SPORK_30_STASH_LEGACY_SIGS_ENABLED;    
     if (strName == "SPORK_31_STASH_POS_ENABLED")                return SPORK_31_STASH_POS_ENABLED;
+    if (strName == "SPORK_32_STASH_POS_START_BLOCK")            return SPORK_32_STASH_POS_START_BLOCK;
 
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
@@ -194,6 +196,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_14_REQUIRE_SENTINEL_FLAG:            return "SPORK_14_REQUIRE_SENTINEL_FLAG";
         case SPORK_30_STASH_LEGACY_SIGS_ENABLED:        return "SPORK_30_STASH_LEGACY_SIGS_ENABLED";        
         case SPORK_31_STASH_POS_ENABLED:                return "SPORK_31_STASH_POS_ENABLED";
+        case SPORK_32_STASH_POS_START_BLOCK:            return "SPORK_32_STASH_POS_START_BLOCK";
         
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);

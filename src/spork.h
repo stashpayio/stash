@@ -28,9 +28,11 @@ static const int SPORK_12_RECONSIDER_BLOCKS                             = 10011;
 static const int SPORK_14_REQUIRE_SENTINEL_FLAG                         = 10013;
 static const int SPORK_30_STASH_LEGACY_SIGS_ENABLED                     = 10030;
 static const int SPORK_31_STASH_POS_ENABLED                             = 10031;
+static const int SPORK_32_STASH_POS_START_BLOCK                         = 10032;
+
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_31_STASH_POS_ENABLED;
+static const int SPORK_END                                              = SPORK_32_STASH_POS_START_BLOCK;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern std::map<uint256, CSporkMessage> mapSporks;
