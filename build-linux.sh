@@ -58,7 +58,12 @@ case $distro in
                 esac
 esac
 
-cores=$(nproc)
+cores=$(($(nproc)-1))
+
+if [ $cores -eq 0 ]; then
+   cores=1
+fi
+
 VERSION=$( cat ./src/clientversion.h | grep -m4 "#define CLIENT_VERSION" | awk '{ print $NF }' | tr '\n' '.' )
 VERSION=${VERSION::-1}
 
