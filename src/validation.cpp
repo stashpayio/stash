@@ -1539,7 +1539,7 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount ret = 0; // start at 0%    
+    CAmount ret = 0; // start at 0%
 
     int nMNPIBlock = Params().GetConsensus().nMasternodePaymentsStartBlock; 
 
@@ -1548,16 +1548,16 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
         if (nHeight >= sporkManager.GetSporkValue(SPORK_32_STASH_POS_START_BLOCK)) 
         {
             CAmount minerValue = blockValue / 2;
-            for (int i = Params().GetConsensus().nSubsidyHalvingInterval; i <= nHeight; i += Params().GetConsensus().nSubsidyHalvingInterval) 
-              minerValue -= minerValue/2;                        
-                
+            for (int i = Params().GetConsensus().nSubsidyHalvingInterval; i <= nHeight; i += Params().GetConsensus().nSubsidyHalvingInterval)
+              minerValue -= minerValue/2;
+
             return blockValue - minerValue; 
         }
     }
 
     if(nHeight > nMNPIBlock)
         ret = blockValue / 2; // split block reward evenly between miner and masternode
-    return ret;    
+    return ret;
 }
 
 
@@ -3470,7 +3470,7 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
     pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockProof(*pindexNew);
 
-    if (sporkManager.GetSporkValue(sporkManager.GetSporkValue(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))) 
+    if (sporkManager.IsSporkActive(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))
     {
         //ZEN_MOD_START
         if (pindexNew->pprev){

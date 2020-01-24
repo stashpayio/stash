@@ -2,12 +2,12 @@
 
 int GetBlockDelay(const CBlockIndex& newBlock, const CBlockIndex& prevBlock, const int activeChainHeight, const bool isStartupSyncing)
 {
-    if (!sporkManager.GetSporkValue(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))
-        return 0;
-    
     if(isStartupSyncing) 
         return 0;
-    
+
+    if (!sporkManager.IsSporkActive(SPORK_36_STASH_CHAIN_PENALTY_ENABLED))
+        return 0;
+
     int penaltyThreshold = sporkManager.GetSporkValue(SPORK_37_STASH_CHAIN_PENALTY_THRESHOLD);
 
     assert (penaltyThreshold >= 0);

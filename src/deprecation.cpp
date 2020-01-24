@@ -13,12 +13,22 @@
 static const std::string CLIENT_VERSION_STR = FormatVersion(CLIENT_VERSION);
 
 void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
-    int deprecationHeight = sporkManager.GetSporkValue(SPORK_33_STASH_APPROX_RELEASE_HEIGHT) +
-                            sporkManager.GetSporkValue(SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION) *
-                            7 * 60 * 24; // Average 60 block/hr
-    int deprecationWarning = sporkManager.GetSporkValue(SPORK_35_STASH_DEPRECATION_WARN_LIMIT);
-    int blocksToDeprecation = deprecationHeight - nHeight;
-    bool disableDeprecation = (GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
+
+    // Note: spork value will initially be default value when loading block index 
+    // because the spork have values have yet to be synced
+    if (!sporkManager.IsSporkActive(SPORK_33_STASH_APPROX_RELEASE_HEIGHT))
+    {
+        return;
+    }
+
+    int releaseHeight         = sporkManager.GetSporkValue(SPORK_33_STASH_APPROX_RELEASE_HEIGHT);
+    int weeksUntilDeprecation = sporkManager.GetSporkValue(SPORK_34_STASH_WEEKS_UNTIL_DEPRECATION);
+    int deprecationWarning    = sporkManager.IsSporkActive(SPORK_35_STASH_DEPRECATION_WARN_LIMIT) ?
+                                sporkManager.GetSporkValue(SPORK_35_STASH_DEPRECATION_WARN_LIMIT) : 0;
+    int deprecationHeight     = releaseHeight + weeksUntilDeprecation * 7 * 60 * 24; // 60 block/hr on average
+    int blocksToDeprecation   = deprecationHeight - nHeight;
+    bool disableDeprecation   = (GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
+
     if (blocksToDeprecation <= 0) {
         // In order to ensure we only log once per process when deprecation is
         // disabled (to avoid log spam), we only need to log in two cases:
