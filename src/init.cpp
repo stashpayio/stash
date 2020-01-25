@@ -1718,6 +1718,22 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     bool fLoaded = false;
     int64_t nStart = GetTimeMillis();
 
+    // START STASH
+    // load spork cache before loading block index
+
+    //lite mode disables all Stash-specific functionality
+    fLiteMode = GetBoolArg("-litemode", false);
+
+    if (!fLiteMode) {
+        boost::filesystem::path pathDB = GetDataDir();
+        std::string strDBName = "sporks.dat";
+        uiInterface.InitMessage(_("Loading sporks cache..."));
+        CFlatDB<CSporkManager> flatdb6(strDBName, "magicSporkCache");
+        if(!flatdb6.Load(sporkManager)) {
+            return InitError(_("Failed to load sporks cache from") + "\n" + (pathDB / strDBName).string());
+        }
+    }
+
     while (!fLoaded && !fRequestShutdown) {
         bool fReset = fReindex;
         std::string strLoadError;
@@ -1912,8 +1928,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     fMasternodeMode = GetBoolArg("-masternode", false);
     // TODO: masternode should have no wallet
 
-    //lite mode disables all Stash-specific functionality
-    fLiteMode = GetBoolArg("-litemode", false);
 
     if(fLiteMode) {
         InitWarning(_("You are starting in lite mode, all Stash-specific functionality is disabled."));
@@ -2043,12 +2057,16 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
             }
         }*/
 
-        strDBName = "sporks.dat";
+        // START STASH
+
+        /*strDBName = "sporks.dat";
         uiInterface.InitMessage(_("Loading sporks cache..."));
         CFlatDB<CSporkManager> flatdb6(strDBName, "magicSporkCache");
         if(!flatdb6.Load(sporkManager)) {
             return InitError(_("Failed to load sporks cache from") + "\n" + (pathDB / strDBName).string());
-        }
+        }*/
+
+        // END STASH
     }
 
 
