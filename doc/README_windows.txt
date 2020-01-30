@@ -1,4 +1,4 @@
-Stash Core 0.12.6
+Stash Core 0.12.7
 =====================
 
 Intro

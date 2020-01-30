@@ -1,4 +1,4 @@
-Stash Core staging tree 0.12.6
+Stash Core staging tree 0.12.7
 ===============================
 
 `master:` [![Build Status](https://travis-ci.org/stashpay/stash.svg?branch=master)](https://travis-ci.org/stashpay/stash) `develop:` [![Build Status](https://travis-ci.org/stashpay/stash.svg?branch=develop)](https://travis-ci.org/stashpay/stash/branches)

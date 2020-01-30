@@ -178,10 +178,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1517788800; // Feb 5th, 2018
 
        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000232ec0b5a14ef748"); // 91688
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000007def55116954271e"); // 524133
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("00000000000a17e1201ccb74f9f8656761ce8b3d18d1df91c7c7678d629cedf1"); // 91688
+        consensus.defaultAssumeValid = uint256S("000000000012232cdbe34c8c40d598775b001b9081f3ad3744995488365369d1"); // 524133
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -214,6 +214,7 @@ public:
             vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.io", "dnsseed1.stashcoin.io"));
             vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.org", "dnsseed2.stashcoin.org"));
             vSeeds.push_back(CDNSSeedData("dnsseed.stashchat.org", "dnsseed4.stashchat.org"));
+            vSeeds.push_back(CDNSSeedData("dnseeed.stpx.io", "dnseeed1.stpx.io"));
         }
 
         // Stash addresses start with 'X'
@@ -255,11 +256,12 @@ public:
             boost::assign::map_list_of
             (  1444, uint256S("0000001aedbc434e031db5147b3c9b6cc76a65f9031aed32ac0405e628cd1a5f"))
             (  9344, uint256S("0000000000999ddf6416b9d8f7b6011965daf2b3be41e81e76aed294ee60d1da"))
+            (  524133, uint256S("000000000012232cdbe34c8c40d598775b001b9081f3ad3744995488365369d1"))
         };
 
         chainTxData = ChainTxData{
-            1553641345, // * UNIX timestamp of last known number of transactions
-            16513,    // * total number of transactions between genesis and that timestamp
+            1580329919, // * UNIX timestamp of last known number of transactions
+            559961,     // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -341,7 +343,7 @@ public:
         consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000000000000025a79a2d62"); // 41110
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("000005f78be272903f2311c298a5320999628eb26a15c43e99dc5e182195dd50"); // 41110
+        consensus.defaultAssumeValid = uint256S("0000008287fc8c317245b16a22663e858de48533b5e5ac3d4e90336a8def1d9f"); // 286855
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -415,13 +417,14 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (20000, uint256S("0000024ae76f721c26db19b9f50b61e6b5803d2086abb80c95dd05efeaf123a7"))
-            (41110, uint256S("000005f78be272903f2311c298a5320999628eb26a15c43e99dc5e182195dd50"))
+            (  20000, uint256S("0000024ae76f721c26db19b9f50b61e6b5803d2086abb80c95dd05efeaf123a7"))
+            (  41110, uint256S("000005f78be272903f2311c298a5320999628eb26a15c43e99dc5e182195dd50"))
+            ( 286855, uint256S("0000008287fc8c317245b16a22663e858de48533b5e5ac3d4e90336a8def1d9f"))
         };
 
         chainTxData = ChainTxData{
-            1553641068,// * UNIX timestamp of last known number of transactions
-            42443,        // * total number of transactions between genesis and that timestamp
+            1580336035,// * UNIX timestamp of last known number of transactions
+            288222,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.006       // * estimated number of transactions per second after that timestamp
         };
