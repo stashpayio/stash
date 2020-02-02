@@ -47,7 +47,7 @@ Provides some mitigation against 51% attacks via a delayed penalty system, where
 mined in secret and then later published to the network in the attempts to double spend via a chain re-organization. 
 This will be used in combination with ChainLocks in a future release. Switched on via spork SPORK_36_STASH_CHAIN_PENALTY_ENABLED
 
-For more information see <https://www.horizen.global/assets/files/A-Penalty-System-for-Delayed-Block-Submission-by-ZenCash.pdf>
+Read more: https://www.horizen.global/assets/files/A-Penalty-System-for-Delayed-Block-Submission-by-ZenCash.pdf
 
 DIP0002 - Special Transactions (Dash)
 ------------------------------
