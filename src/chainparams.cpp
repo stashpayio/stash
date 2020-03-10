@@ -210,11 +210,8 @@ public:
         if (seedsDisabled()) {
               printf("Seeds disabled on mainnet\n");
         } else {
-            vSeeds.push_back(CDNSSeedData("dnsseed.stash.chat", "dnsseed3.stash.chat"));
-            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.io", "dnsseed1.stashcoin.io"));
-            vSeeds.push_back(CDNSSeedData("dnsseed.stashcoin.org", "dnsseed2.stashcoin.org"));
-            vSeeds.push_back(CDNSSeedData("dnsseed.stashchat.org", "dnsseed4.stashchat.org"));
-            vSeeds.push_back(CDNSSeedData("dnseeed.stpx.io", "dnseeed1.stpx.io"));
+            vSeeds.push_back(CDNSSeedData("dnsseed.stashpay.io", "dnsseed.stashpay.io"));
+            vSeeds.push_back(CDNSSeedData("dnsseed.stpx.io", "dnsseed.stpx.io"));
         }
 
         // Stash addresses start with 'X'
