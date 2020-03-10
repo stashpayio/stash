@@ -212,6 +212,45 @@ public:
         } else {
             vSeeds.push_back(CDNSSeedData("dnsseed.stashpay.io", "dnsseed.stashpay.io"));
             vSeeds.push_back(CDNSSeedData("dnsseed.stpx.io", "dnsseed.stpx.io"));
+            vSeeds.push_back(CDNSSeedData("45.63.114.6", "45.63.114.6"));
+            vSeeds.push_back(CDNSSeedData("45.130.146.83", "45.130.146.83"));
+            vSeeds.push_back(CDNSSeedData("51.15.11.130", "51.15.11.130"));
+            vSeeds.push_back(CDNSSeedData("51.15.95.29", "51.15.95.29"));
+            vSeeds.push_back(CDNSSeedData("51.15.95.30", "51.15.95.30"));
+            vSeeds.push_back(CDNSSeedData("54.38.183.12", "54.38.183.12"));
+            vSeeds.push_back(CDNSSeedData("64.52.162.217", "64.52.162.217"));
+            vSeeds.push_back(CDNSSeedData("64.190.90.159", "64.190.90.159"));
+            vSeeds.push_back(CDNSSeedData("64.190.91.89", "64.190.91.89"));
+            vSeeds.push_back(CDNSSeedData("64.190.91.212", "64.190.91.212"));
+            vSeeds.push_back(CDNSSeedData("64.190.202.224", "64.190.202.224"));
+            vSeeds.push_back(CDNSSeedData("64.190.203.107", "64.190.203.107"));
+            vSeeds.push_back(CDNSSeedData("69.64.32.41", "69.64.32.41"));
+            vSeeds.push_back(CDNSSeedData("78.47.228.96", "78.47.228.96"));
+            vSeeds.push_back(CDNSSeedData("84.198.64.205", "84.198.64.205"));
+            vSeeds.push_back(CDNSSeedData("84.198.64.233", "84.198.64.233"));
+            vSeeds.push_back(CDNSSeedData("84.198.64.246", "84.198.64.246"));
+            vSeeds.push_back(CDNSSeedData("84.198.64.252", "84.198.64.252"));
+            vSeeds.push_back(CDNSSeedData("85.15.179.171", "85.15.179.171"));
+            vSeeds.push_back(CDNSSeedData("95.179.130.58", "95.179.130.58"));
+            vSeeds.push_back(CDNSSeedData("140.205.1.24", "140.205.1.24"));
+            vSeeds.push_back(CDNSSeedData("140.205.1.25", "140.205.1.25"));
+            vSeeds.push_back(CDNSSeedData("140.205.1.26", "140.205.1.26"));
+            vSeeds.push_back(CDNSSeedData("140.205.1.27", "140.205.1.27"));
+            vSeeds.push_back(CDNSSeedData("144.91.111.249", "144.91.111.249"));
+            vSeeds.push_back(CDNSSeedData("144.91.112.10", "144.91.112.10"));
+            vSeeds.push_back(CDNSSeedData("156.224.138.7", "156.224.138.7"));
+            vSeeds.push_back(CDNSSeedData("156.224.138.8", "156.224.138.8"));
+            vSeeds.push_back(CDNSSeedData("156.224.138.9", "156.224.138.9"));
+            vSeeds.push_back(CDNSSeedData("156.224.138.10", "156.224.138.10"));
+            vSeeds.push_back(CDNSSeedData("163.158.116.152", "163.158.116.152"));
+            vSeeds.push_back(CDNSSeedData("163.172.221.82", "163.172.221.82"));
+            vSeeds.push_back(CDNSSeedData("185.244.219.147", "185.244.219.147"));
+            vSeeds.push_back(CDNSSeedData("193.30.120.89", "193.30.120.89"));
+            vSeeds.push_back(CDNSSeedData("198.13.39.94", "198.13.39.94"));
+            vSeeds.push_back(CDNSSeedData("199.217.116.92", "199.217.116.92"));
+            vSeeds.push_back(CDNSSeedData("199.247.24.128", "199.247.24.128"));
+            vSeeds.push_back(CDNSSeedData("204.44.81.13", "204.44.81.13"));
+            vSeeds.push_back(CDNSSeedData("204.44.81.223", "204.44.81.223"));
         }
 
         // Stash addresses start with 'X'
@@ -254,11 +293,12 @@ public:
             (  1444, uint256S("0000001aedbc434e031db5147b3c9b6cc76a65f9031aed32ac0405e628cd1a5f"))
             (  9344, uint256S("0000000000999ddf6416b9d8f7b6011965daf2b3be41e81e76aed294ee60d1da"))
             (  524133, uint256S("000000000012232cdbe34c8c40d598775b001b9081f3ad3744995488365369d1"))
+            (  593697, uint256S("00000000000e28b36f68b4df03fd55597f290b37cecae6380f8d925a234e04ec"))
         };
 
         chainTxData = ChainTxData{
-            1580329919, // * UNIX timestamp of last known number of transactions
-            559961,     // * total number of transactions between genesis and that timestamp
+            1583808398, // * UNIX timestamp of last known number of transactions
+            632294,     // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
