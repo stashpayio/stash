@@ -1,11 +1,12 @@
 Stash Core version 0.12.7.0
 ==========================
+Stash Core 0.12.7.0 is the last major release of the Stash Core 0.12.x.x series.
 
 Release is now available from:
 
   <https://https://github.com/stashpayio/stash/releases>
 
-This is a major release.
+This major release contains new features, improvements and bugfixes.
 
 Please report bugs using the issue tracker at github:
 
@@ -17,7 +18,7 @@ Migrate to Proof of Stake (POS)
 ------------------------------
 
 Introduces an exponential shift in block reward from miner to masternode. With spork 
-SPORK_31_STASH_POS_ENABLED enabled, the miner reward is cut in half every each 525,960 
+SPORK_31_STASH_POS_ENABLED enabled, the miner reward is cut in half every 525,960  
 blocks (1 stash year) and awarded to the masternode.
 
 | Year | Block Start | Block End | Block Reward | MN Reward    | Miner Reward | MN %   | Miner % |
@@ -38,7 +39,7 @@ blocks (1 stash year) and awarded to the masternode.
 * Align with global shift in environmental awareness
 
 
-Note: values in the table above may be a few satoshis off due to difference in programing language rounding
+Note: values in the table above may be a few satoshis off due to difference in programming language rounding
 
 Delay Penalty System (Horizen)
 ------------------------------
@@ -68,7 +69,7 @@ the firmware of most hardware devices. This enhancement allows using a legacy st
 0.12.7.0 Change log
 ===================
 
-See detailed [set of changes](https://github.com/stashpayio/stash/compare/v0.12.6.2...dashpay:v0.12.7.0)
+See detailed [set of changes](https://github.com/stashpayio/stash/compare/v0.12.6.2...v0.12.7.0)
 
 - [`fa29d635b`](https://github.com/stashpayio/stash/commit/fa29d635b) Bump version and update checkpoints
 - [`055153369`](https://github.com/stashpayio/stash/commit/055153369) Re-order when spork cache is loaded from disk
@@ -100,6 +101,7 @@ as well as everyone who submitted issues and reviewed pull requests.
 - Alexander Block <ablock84@gmail.com>
 - BeachM <11566409+BeachM@users.noreply.github.com>
 - cronicc <cronic@zensystem.io>
+- koen84 <koen84@users.noreply.github.com>
 - pierstab <pierstabilini@gmail.com>
 - Reza Barazesh <barazesh@codeparticle.com>
 - gladcow <sergey@dash.org>
