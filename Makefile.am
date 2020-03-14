@@ -254,3 +254,6 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-man
 clean-local:
 	rm -rf coverage_percent.txt test_stash.coverage/ total.coverage/ qa/tmp/ cache/ $(OSX_APP)
 	rm -rf qa/pull-tester/__pycache__
+	rm -f background.tiff
+	rm -f background.tiff.png
+	rm -f background.tiff@2x.png
