@@ -39,7 +39,8 @@ int64_t get_nsec_time()
 int64_t get_nsec_cpu_time()
 {
     ::timespec ts;
-#ifdef __MACH__
+#if defined __MACH__                                                       \
+  && __MAC_OS_X_VERSION_MIN_REQUIRED < 101200 // less than macOS 10.12
     clock_serv_t cclock;
     mach_timespec_t mts;
     host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
