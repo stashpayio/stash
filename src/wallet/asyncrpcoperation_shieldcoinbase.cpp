@@ -283,7 +283,7 @@ void AsyncRPCOperation_shieldcoinbase::sign_send_raw_transaction(UniValue obj)
 
         CDataStream stream(ParseHex(signedtxn), SER_NETWORK, PROTOCOL_VERSION);
         CTransaction tx;
-        stream >> tx;
+        stream >> tx; //CTransaction tx(deserialize, stream);
 
         UniValue o(UniValue::VOBJ);
         o.push_back(Pair("test", 1));
@@ -295,7 +295,7 @@ void AsyncRPCOperation_shieldcoinbase::sign_send_raw_transaction(UniValue obj)
     // Keep the signed transaction so we can hash to the same txid
     CDataStream stream(ParseHex(signedtxn), SER_NETWORK, PROTOCOL_VERSION);
     CTransaction tx;
-    stream >> tx;
+    stream >> tx; //CTransaction tx(deserialize, stream);
     tx_ = tx;
 }
 

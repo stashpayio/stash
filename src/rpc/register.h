@@ -25,6 +25,8 @@ void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC);
 void RegisterMasternodeRPCCommands(CRPCTable &tableRPC);
 /** Register governance RPC commands */
 void RegisterGovernanceRPCCommands(CRPCTable &tableRPC);
+/** Register Evo RPC commands */
+void RegisterEvoRPCCommands(CRPCTable &tableRPC);
 
 
 static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
@@ -36,6 +38,7 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
     RegisterRawTransactionRPCCommands(t);
     RegisterMasternodeRPCCommands(t);
     RegisterGovernanceRPCCommands(t);
+    RegisterEvoRPCCommands(t);
 }
 
 // Common functions that operate on UniValue objects

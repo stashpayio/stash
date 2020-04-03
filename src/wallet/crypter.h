@@ -264,7 +264,7 @@ public:
         }
     }
 
-    bool GetHDChain(CHDChain& hdChainRet) const;
+    virtual bool GetHDChain(CHDChain& hdChainRet) const override;
 
     /**
      * Wallet status (encrypted, locked) changed.

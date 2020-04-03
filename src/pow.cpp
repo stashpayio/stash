@@ -193,6 +193,11 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 {
     return DarkGravityWave(pindexLast, pblock, params);
     /* STASH 
+    // this is only active on devnets
+    if (pindexLast->nHeight < params.nMinimumDifficultyBlocks) {
+        unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
+        return nProofOfWorkLimit;
+    }
 
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {

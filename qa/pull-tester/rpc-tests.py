@@ -109,17 +109,22 @@ if ENABLE_ZMQ:
 
 testScripts = [
     # longest test should go first, to favor running tests in parallel
+    'dip3-deterministicmns.py', # NOTE: needs stash_hash to pass
     'wallet-hd.py',
     'walletbackup.py',
     # vv Tests less than 5m vv
     'p2p-fullblocktest.py', # NOTE: needs stash_hash to pass
     'fundrawtransaction.py',
     'fundrawtransaction-hd.py',
+    'p2p-autoinstantsend.py',
+    'autoix-mempool.py',
     # vv Tests less than 2m vv
+    'p2p-instantsend.py',
     'wallet.py',
     'wallet-accounts.py',
     'wallet-dump.py',
     'listtransactions.py',
+    'multikeysporks.py',
     # vv Tests less than 60s vv
     'sendheaders.py', # NOTE: needs stash_hash to pass
     'zapwallettxes.py',
@@ -197,7 +202,6 @@ testScriptsExt = [
     'invalidateblock.py',
     'maxblocksinflight.py',
     'p2p-acceptblock.py', # NOTE: needs stash_hash to pass
-    # 'replace-by-fee.py', # RBF is disabled in Stash Core
 ]
 
 

@@ -39,7 +39,7 @@ Building Stash Core
 
 ```bash
 $ ./autogen.sh
-$ ./configure --prefix=`pwd`/depends/<host>
+$ ./configure --prefix `pwd`/depends/<host>
 $ make
 $ make install # optional
 ```
@@ -61,15 +61,15 @@ If you want to build for the same host but different distro, add `--enable-glibc
 
 ccache
 ------
-`./configure` of Stash Core will autodetect the presence of ccache and enable use of it. To disable ccache, use
-`./configure --prefix=<prefix> --disable-ccache`. When installed and enabled, [ccache](https://ccache.samba.org/) will
-cache build results on source->object level.
+The depends system also contains [ccache](https://ccache.samba.org/), which caches build results on source->object
+level. `./configure` of Stash Core will autodetect the presence of ccache and enable use of it. To disable ccache, use
+`./configure --prefix=<prefix> --disable-ccache`.
 
 The default maximum cache size is 5G, which might not be enough to cache multiple builds when switching Git branches
 very often. It is advised to increase the maximum cache size:
 
 ```bash
-$ ccache -M20G
+$ ./depends/<host>/native/bin/ccache -M20G
 ```
 
 Additional Configure Flags

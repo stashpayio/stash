@@ -1,8 +1,8 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR, 0)
-define(_CLIENT_VERSION_MINOR, 12)
-define(_CLIENT_VERSION_REVISION, 7)
+define(_CLIENT_VERSION_MINOR, 13)
+define(_CLIENT_VERSION_REVISION, 0)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2020)
@@ -54,8 +54,8 @@ case $host in
      lt_cv_deplibs_check_method="pass_all"
   ;;
 esac
-dnl Require C++11 compiler (no GNU extensions)
-AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory], [nodefault])
+dnl Require C++14 compiler (no GNU extensions)
+AX_CXX_COMPILE_STDCXX([14], [noext], [mandatory], [nodefault])
 dnl Check if -latomic is required for <std::atomic>
 CHECK_ATOMIC
 
@@ -1146,8 +1146,7 @@ AC_SUBST(LEVELDB_ATOMIC_CPPFLAGS)
 AC_SUBST(LEVELDB_ATOMIC_CXXFLAGS)
 AC_SUBST(LIBSNARK_DEPINST)
 AC_SUBST(SODIUM_LIBS)
-AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt/Info.plist src/test/buildenv.py])
-AC_CONFIG_FILES([qa/pull-tester/tests_config.py],[chmod +x qa/pull-tester/tests_config.py])
+
 AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(SSL_LIBS)
 AC_SUBST(EVENT_LIBS)
@@ -1155,6 +1154,8 @@ AC_SUBST(EVENT_PTHREADS_LIBS)
 AC_SUBST(ZMQ_LIBS)
 AC_SUBST(PROTOBUF_LIBS)
 AC_SUBST(QR_LIBS)
+AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt/Info.plist src/test/buildenv.py])
+AC_CONFIG_FILES([qa/pull-tester/tests_config.py],[chmod +x qa/pull-tester/tests_config.py])
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AC_CONFIG_LINKS([qa/pull-tester/rpc-tests.py:qa/pull-tester/rpc-tests.py])
 

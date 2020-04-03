@@ -2140,7 +2140,7 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Bitcoin Core-utvecklarna</translation>
     </message>
     <message>
-        <source>The Dash Core developers</source>
+        <source>The Stash Core developers</source>
         <translation>Stash Core-utvecklarna</translation>
     </message>
     <message>

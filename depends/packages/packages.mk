@@ -40,7 +40,7 @@ rust_crates := \
 rust_packages := rust $(rust_crates) librustzcash
 
 zcash_packages := libgmp libsodium
-packages:=boost openssl libevent  $(zcash_packages) googletest zeromq
+packages:=boost openssl libevent  $(zcash_packages) googletest zeromq gmp chia_bls
 
 native_packages := native_ccache
 

@@ -1132,7 +1132,7 @@ public:
                 ::Serialize(s, nullSig);
             }
         }
-        if (txTo.nVersion >= 3 && txTo.nType != TRANSACTION_NORMAL)
+        if (txTo.nVersion == 3 && txTo.nType != TRANSACTION_NORMAL)
             ::Serialize(s, txTo.vExtraPayload);
     }
 };

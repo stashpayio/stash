@@ -16,8 +16,6 @@
 
 #include <boost/thread.hpp>
 
-using namespace std;
-
 static const char DB_ANCHOR = 'A';
 static const char DB_NULLIFIER = 's';
 static const char DB_COIN = 'C';
@@ -71,14 +69,14 @@ bool CCoinsViewDB::GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree)
         return true;
     }
 
-    bool read = db.Read(make_pair(DB_ANCHOR, rt), tree);
+    bool read = db.Read(std::make_pair(DB_ANCHOR, rt), tree);
 
     return read;
 }
 
 bool CCoinsViewDB::GetNullifier(const uint256 &nf) const {
     bool spent = false;
-    bool read = db.Read(make_pair(DB_NULLIFIER, nf), spent);
+    bool read = db.Read(std::make_pair(DB_NULLIFIER, nf), spent);
 
     return read;
 }
@@ -132,7 +130,6 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
     CDBBatch batch(db);
     this->_BatchWrite(mapCoins,hashBlock,batch);
     return db.WriteBatch(batch);
-
 }
 
 void static BatchWriteAnchor(CDBBatch &batch,
@@ -141,17 +138,17 @@ void static BatchWriteAnchor(CDBBatch &batch,
                              const bool &entered)
 {
     if (!entered)
-        batch.Erase(make_pair(DB_ANCHOR, croot));
+        batch.Erase(std::make_pair(DB_ANCHOR, croot));
     else {
-        batch.Write(make_pair(DB_ANCHOR, croot), tree);
+        batch.Write(std::make_pair(DB_ANCHOR, croot), tree);
     }
 }
 
 void static BatchWriteNullifier(CDBBatch &batch, const uint256 &nf, const bool &entered) {
     if (!entered)
-        batch.Erase(make_pair(DB_NULLIFIER, nf));
+        batch.Erase(std::make_pair(DB_NULLIFIER, nf));
     else
-        batch.Write(make_pair(DB_NULLIFIER, nf), true);
+        batch.Write(std::make_pair(DB_NULLIFIER, nf), true);
 }
 
 void static BatchWriteHashBestAnchor(CDBBatch &batch, const uint256 &hash) {

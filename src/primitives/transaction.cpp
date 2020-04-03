@@ -159,11 +159,11 @@ std::string CTxIn::ToString() const
     return str;
 }
 
-CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
+CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, int nRoundsIn)
 {
     nValue = nValueIn;
     scriptPubKey = scriptPubKeyIn;
-    nRounds = -10;
+    nRounds = nRoundsIn;
 }
 
 std::string CTxOut::ToString() const
@@ -235,8 +235,13 @@ CTransaction& CTransaction::operator=(const CTransaction &tx) {
     *const_cast<std::vector<JSDescription>*>(&vjoinsplit) = tx.vjoinsplit;
     *const_cast<uint256*>(&joinSplitPubKey) = tx.joinSplitPubKey;
     *const_cast<joinsplit_sig_t*>(&joinSplitSig) = tx.joinSplitSig;
+	//*const_cast<std::vector<uint8_t>*>(&vExtraPayload) = tx.vExtraPayload; // MPB do we need this?
     return *this;
 }
+/* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
+/* CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig(), hash() {}
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig), vExtraPayload(tx.vExtraPayload), hash(ComputeHash()) {}
+CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nLockTime(tx.nLockTime), vjoinsplit(std::move(tx.vjoinsplit)), joinSplitPubKey(std::move(tx.joinSplitPubKey)), joinSplitSig((std::move(tx.joinSplitSig)), vExtraPayload(tx.vExtraPayload), hash(ComputeHash()) {} */
 
 CAmount CTransaction::GetValueOut() const
 {
@@ -310,12 +315,12 @@ std::string CTransaction::ToString() const
     str += strprintf("CTransaction(hash=%s, ver=%d, type=%d, vin.size=%u, vout.size=%u, nLockTime=%u, nExpiryHeight=%u, vExtraPayload.size=%d)\n",    
         GetHash().ToString().substr(0,10),
         nVersion,
-        nType,
+	    nType,
         vin.size(),
         vout.size(),
         nLockTime,
 	    nExpiryHeight,
-        vExtraPayload.size());
+	    vExtraPayload.size());
     for (unsigned int i = 0; i < vin.size(); i++)
         str += "    " + vin[i].ToString() + "\n";
     for (unsigned int i = 0; i < vout.size(); i++)

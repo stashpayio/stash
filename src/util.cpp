@@ -12,6 +12,7 @@
 
 #include "support/allocators/secure.h"
 #include "chainparamsbase.h"
+#include "ctpl.h"
 #include "random.h"
 #include "serialize.h"
 #include "sync.h"
@@ -111,7 +112,7 @@ namespace boost {
 
 } // namespace boost
 
-using namespace std;
+
 
 //Stash only features
 bool fMasternodeMode = false;
@@ -979,6 +980,25 @@ std::string GetThreadName()
     return std::string(name);
 }
 
+void RenameThreadPool(ctpl::thread_pool& tp, const char* baseName)
+{
+    auto cond = std::make_shared<std::condition_variable>();
+    auto mutex = std::make_shared<std::mutex>();
+    std::atomic<int> doneCnt(0);
+    for (size_t i = 0; i < tp.size(); i++) {
+        tp.push([baseName, i, cond, mutex, &doneCnt](int threadId) {
+            RenameThread(strprintf("%s-%d", baseName, i).c_str());
+            doneCnt++;
+            std::unique_lock<std::mutex> l(*mutex);
+            cond->wait(l);
+        });
+    }
+    while (doneCnt != tp.size()) {
+        MilliSleep(10);
+    }
+    cond->notify_all();
+}
+
 void SetupEnvironment()
 {
 #ifdef HAVE_MALLOPT_ARENA_MAX
@@ -1033,7 +1053,7 @@ std::string CopyrightHolders(const std::string& strPrefix, unsigned int nStartYe
 {
     std::string strCopyrightHolders = strPrefix + strprintf(" %u-%u ", nStartYear, nEndYear) + strprintf(_(COPYRIGHT_HOLDERS), _(COPYRIGHT_HOLDERS_SUBSTITUTION));
 
-    // Check for untranslated substitution to make sure Bitcoin Core copyright is not removed by accident
+    // Check for untranslated substitution to make sure Dash Core copyright is not removed by accident
     if (strprintf(COPYRIGHT_HOLDERS, COPYRIGHT_HOLDERS_SUBSTITUTION).find("Dash Core") == std::string::npos) {
         strCopyrightHolders += "\n" + strPrefix + strprintf(" %u-%u ", 2014, nEndYear) + "The Dash Core developers";
     }
@@ -1097,11 +1117,11 @@ std::string _dumpBuffer(const char* buffer, size_t length) {
     std::stringstream str;
     size_t offset = 0;
     while (offset < length) {
-        str << setfill('0') << setw(6) << dec <<offset << ": ";
+        str << std::setfill('0') << std::setw(6) << std::dec <<offset << ": ";
         for (size_t i = offset; i < offset+16; i++) {
             if (i < length) {
                 unsigned char ch = buffer[i];
-                str << setfill('0') << setw(2) << hex << (int)ch;
+                str << std::setfill('0') << std::setw(2) << std::hex << (int)ch;
             } else {
                 str << "  ";
             }
@@ -1119,7 +1139,7 @@ std::string _dumpBuffer(const char* buffer, size_t length) {
                 str << " ";
             }
         }
-        str << endl;
+        str << std::endl;
         offset += 16;
     }
     return str.str();

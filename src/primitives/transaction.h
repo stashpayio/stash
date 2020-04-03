@@ -157,6 +157,12 @@ public:
 /** Transaction types */
 enum {
     TRANSACTION_NORMAL = 0,
+    TRANSACTION_PROVIDER_REGISTER = 1,
+    TRANSACTION_PROVIDER_UPDATE_SERVICE = 2,
+    TRANSACTION_PROVIDER_UPDATE_REGISTRAR = 3,
+    TRANSACTION_PROVIDER_UPDATE_REVOKE = 4,
+    TRANSACTION_COINBASE = 5,
+    TRANSACTION_QUORUM_COMMITMENT = 6,
 };
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
@@ -295,7 +301,7 @@ public:
         SetNull();
     }
 
-    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, int nRoundsIn = -10);
 
     ADD_SERIALIZE_METHODS;
 
@@ -322,7 +328,7 @@ public:
         // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units stashees-per-kilobyte.
         // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
         // A typical spendable txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 1000 stashees per kB
+        // i.e. total is 148 + 34 = 182 bytes. Default -minrelaytxfee is 1000 stashees per kB
         // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 stashees.
         // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in stashees)
         // i.e. 182 * 3 = 546 stashees with default -minrelaytxfee = minRelayTxFee = 1000 stashees per kB.
@@ -407,6 +413,7 @@ public:
     CTransaction(const CMutableTransaction &tx);
 
     CTransaction& operator=(const CTransaction& tx);
+    //CTransaction(CMutableTransaction &&tx);
 
     ADD_SERIALIZE_METHODS;
 
@@ -425,7 +432,7 @@ public:
                 READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
             }
         }
-        if (this->nVersion >= 3 && this->nType != TRANSACTION_NORMAL)
+        if (this->nVersion == 3 && this->nType != TRANSACTION_NORMAL)
             READWRITE(*const_cast<std::vector<uint8_t>*>(&this->vExtraPayload));
             
 
@@ -528,7 +535,7 @@ struct CMutableTransaction
                 READWRITE(joinSplitSig);
             }
         }
-        if (this->nVersion >= 3 && this->nType != TRANSACTION_NORMAL) {
+        if (this->nVersion == 3 && this->nType != TRANSACTION_NORMAL) {
             READWRITE(vExtraPayload);
         }
     }

@@ -30,6 +30,8 @@ BITCOIN_INCLUDES += -I$(srcdir)/snark/build/include
 endif
 BITCOIN_INCLUDES += $(UNIVALUE_CFLAGS)
 
+BLS_LIBS=-lchiabls -lgmp
+
 LIBBITCOIN_SERVER=libstash_server.a
 LIBBITCOIN_COMMON=libstash_common.a
 LIBBITCOIN_CONSENSUS=libstash_consensus.a
@@ -99,13 +101,6 @@ EXTRA_LIBRARIES += \
   $(LIBBITCOIN_ZMQ) \
   libzcash.a
 
-if ENABLE_WALLET
-BITCOIN_INCLUDES += $(BDB_CPPFLAGS)
-endif
-if ENABLE_ZMQ
-EXTRA_LIBRARIES += libbitcoin_zmq.a
-endif
-
 lib_LTLIBRARIES = $(LIBBITCOINCONSENSUS)
 
 bin_PROGRAMS =
@@ -140,7 +135,6 @@ BITCOIN_CORE_H = \
   spentindex.h \
   addrman.h \
   alert.h \
-  amount.h \
   arith_uint256.h \
   asyncrpcoperation.h  \
   asyncrpcqueue.h \
@@ -169,6 +163,13 @@ BITCOIN_CORE_H = \
   core_memusage.h \
   cuckoocache.h \
   deprecation.h \
+  ctpl.h \
+  evo/evodb.h \
+  evo/specialtx.h \
+  evo/providertx.h \
+  evo/deterministicmns.h \
+  evo/cbtx.h \
+  evo/simplifiedmns.h \
   privatesend.h \
   privatesend-client.h \
   privatesend-server.h \
@@ -193,6 +194,11 @@ BITCOIN_CORE_H = \
   keystore.h \
   dbwrapper.h \
   limitedmap.h \
+  llmq/quorums_commitment.h \
+  llmq/quorums_blockprocessor.h \
+  llmq/quorums_dummydkg.h \
+  llmq/quorums_utils.h \
+  llmq/quorums_init.h \
   masternode.h \
   masternode-payments.h \
   masternode-sync.h \
@@ -213,7 +219,6 @@ BITCOIN_CORE_H = \
   paymentdisclosuredb.h \
   policy/fees.h \
   policy/policy.h \
-  policy/rbf.h \
   pow.h \
   protocol.h \
   random.h \
@@ -223,8 +228,8 @@ BITCOIN_CORE_H = \
   rpc/server.h \
   rpc/asyncrpcoperation.h \
   rpc/asyncrpcqueue.h.h \
-	rpc/register.h \
-	rpc/zcash.h \
+  rpc/register.h \
+  rpc/zcash.h \
   scheduler.h \
   script/sigcache.h \
   script/sign.h \
@@ -232,6 +237,8 @@ BITCOIN_CORE_H = \
   script/ismine.h \
   spork.h \
   streams.h \
+  support/allocators/mt_pooled_secure.h \
+  support/allocators/pooled_secure.h \
   support/allocators/secure.h \
   support/allocators/zeroafterfree.h \
   support/cleanse.h \
@@ -245,7 +252,6 @@ BITCOIN_CORE_H = \
   txdb.h \
   txmempool.h \
   ui_interface.h \
-  uint256.h \
   uint252.h \
   undo.h \
   util.h \
@@ -267,6 +273,7 @@ BITCOIN_CORE_H = \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
   zmq/zmqpublishnotifier.h
+
 
 obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
@@ -290,6 +297,12 @@ libstash_server_a_SOURCES = \
   checkpoints.cpp \
   deprecation.cpp \
   dsnotificationinterface.cpp \
+  evo/evodb.cpp \
+  evo/specialtx.cpp \
+  evo/providertx.cpp \
+  evo/deterministicmns.cpp \
+  evo/cbtx.cpp \
+  evo/simplifiedmns.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
@@ -301,6 +314,11 @@ libstash_server_a_SOURCES = \
   governance-validators.cpp \
   governance-vote.cpp \
   governance-votedb.cpp \
+  llmq/quorums_commitment.cpp \
+  llmq/quorums_blockprocessor.cpp \
+  llmq/quorums_dummydkg.cpp \
+  llmq/quorums_utils.cpp \
+  llmq/quorums_init.cpp \
   masternode.cpp \
   masternode-payments.cpp \
   masternode-sync.cpp \
@@ -328,6 +346,7 @@ libstash_server_a_SOURCES = \
   rpc/misc.cpp \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
+  rpc/rpcevo.cpp \
   rpc/server.cpp \
   rpc/asyncrpcoperation.cpp \
   rpc/asyncrpcqueue.cpp \
@@ -374,8 +393,7 @@ libstash_wallet_a_SOURCES = \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \
-  wallet/walletdb.cpp \
-  policy/rbf.cpp \
+  wallet/walletdb.cpp \  
   $(BITCOIN_CORE_H)  \
   $(LIBZCASH_H)
 
@@ -433,6 +451,8 @@ libstash_consensus_a_SOURCES = \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
+  bls/bls.cpp \
+  bls/bls.h \
   consensus/merkle.cpp \
   consensus/merkle.h \
   consensus/params.h \
@@ -454,6 +474,7 @@ libstash_consensus_a_SOURCES = \
   script/script_error.cpp \
   script/script_error.h \
   serialize.h \
+  streams.h \
   tinyformat.h \
   uint256.cpp \
   uint256.h \
@@ -483,7 +504,9 @@ libstash_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   warnings.cpp \
-  zen/delay.cpp
+  zen/delay.cpp \
+  $(BITCOIN_CORE_H)
+  
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
@@ -491,6 +514,10 @@ libstash_common_a_SOURCES = \
 libstash_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libstash_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libstash_util_a_SOURCES = \
+  bls/bls_ies.cpp \
+  bls/bls_ies.h \
+  bls/bls_worker.cpp \
+  bls/bls_worker.h \
   support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
@@ -511,6 +538,7 @@ libstash_util_a_SOURCES = \
 
 if GLIBC_BACK_COMPAT
 libstash_util_a_SOURCES += compat/glibc_compat.cpp
+AM_LDFLAGS += -Wl,--wrap=log2f -Wl,--wrap=__divmoddi4
 endif
 
 # cli: shared between stash-cli and stash-qt
@@ -539,6 +567,7 @@ stashd_LDADD = \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
+  $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
@@ -546,24 +575,9 @@ stashd_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
+stashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS)
 
-if ENABLE_ZMQ
-stashd_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
-endif
-
-
-if ENABLE_WALLET
-stashd_LDADD +=   $(LIBBITCOIN_WALLET)
-endif
-
-stashd_LDADD += \
-	$(BOOST_LIBS) \
-	$(BDB_LIBS) \
-	$(SSL_LIBS) \
-	$(CRYPTO_LIBS) \
-	$(MINIUPNPC_LIBS) \
-	$(EVENT_PTHREADS_LIBS) \
-	$(EVENT_LIBS) \
+stashd_LDADD += \	
 	$(LIBZCASH) \
 	$(LIBSNARK) \
 	$(LIBBITCOIN_CRYPTO) \
@@ -583,14 +597,12 @@ stash_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
-  $(BOOST_LIBS) \
-  $(SSL_LIBS) \
-  $(CRYPTO_LIBS) \
-  $(EVENT_LIBS) \
-	$(LIBZCASH) \
-	$(LIBSNARK) \
   $(LIBBITCOIN_CRYPTO) \
-	$(LIBZCASH_LIBS)
+  $(LIBZCASH) \
+  $(LIBSNARK) \
+  $(LIBZCASH_LIBS)
+
+stash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS) $(BLS_LIBS)
 #
 
 # stash-tx binary #
@@ -607,16 +619,14 @@ stash_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
-  $(LIBSECP256K1)  \
-	$(BOOST_LIBS) \
-	$(CRYPTO_LIBS) \
-	$(LIBZCASH) \
-	$(LIBSNARK) \
+  $(LIBZCASH) \
+  $(LIBSNARK) \
+  $(LIBZCASH_LIBS) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
-	$(LIBZCASH_LIBS)
+  $(LIBSECP256K1)
 
-#
+stash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS) $(BLS_LIBS)
 
 # zcash protocol primitives #
 if TARGET_WINDOWS
@@ -644,6 +654,9 @@ libzcash_a_SOURCES = \
   zcash/circuit/prfs.tcc \
   zcash/circuit/utils.tcc
 
+#
+
+# stashconsensus library #
 if BUILD_BITCOIN_LIBS
 include_HEADERS = script/stashconsensus.h
 libstashconsensus_la_SOURCES = $(crypto_libstash_crypto_a_SOURCES) $(libstash_consensus_a_SOURCES)
@@ -653,7 +666,7 @@ if GLIBC_BACK_COMPAT
 endif
 
 libstashconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libstashconsensus_la_LIBADD = $(LIBSECP256K1)
+libstashconsensus_la_LIBADD = $(LIBSECP256K1) $(BLS_LIBS)
 libstashconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
 libstashconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
@@ -681,9 +694,12 @@ CLEANFILES += wallet/*.gcda wallet/*.gcno
 CLEANFILES += wallet/test/*.gcda wallet/test/*.gcno
 CLEANFILES += zmq/*.gcda zmq/*.gcno
 
+IMMER_DIST = immer
+
 DISTCLEANFILES = obj/build.h
 
 EXTRA_DIST = leveldb snark $(CTAES_DIST)
+EXTRA_DIST += $(IMMER_DIST)
 
 config/stash-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
