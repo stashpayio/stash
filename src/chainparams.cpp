@@ -23,7 +23,13 @@
 
 bool seedsDisabled() {    
     LogPrintf("Checking for .disableseeds file in %s\n", boost::filesystem::current_path());
-    return boost::filesystem::exists(".disableseeds");
+    if (boost::filesystem::exists(".disableseeds"))
+    {
+        LogPrintf("Detected .disableseeds file...seeds are now disabled\n");
+        return true;
+    }
+
+    return false;
 }
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
