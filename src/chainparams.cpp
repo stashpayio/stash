@@ -21,7 +21,8 @@
 
 #include "chainparamsseeds.h"
 
-bool seedsDisabled() {
+bool seedsDisabled() {    
+    LogPrintf("Checking for .disableseeds file in %s\n", boost::filesystem::current_path());
     return boost::filesystem::exists(".disableseeds");
 }
 
