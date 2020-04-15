@@ -578,10 +578,10 @@ stashd_LDADD = \
 stashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS)
 
 stashd_LDADD += \	
-	$(LIBZCASH) \
-	$(LIBSNARK) \
-	$(LIBBITCOIN_CRYPTO) \
-	$(LIBZCASH_LIBS)
+  $(LIBZCASH) \
+  $(LIBSNARK) \
+  $(LIBBITCOIN_CRYPTO) \
+  $(LIBZCASH_LIBS)
 
 # stash-cli binary #
 stash_cli_SOURCES = stash-cli.cpp
