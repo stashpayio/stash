@@ -480,7 +480,7 @@ public:
     }
 
     bool isLegacyTransaction() const {
-        return vin.size() == 0 && vjoinsplit.size() == 0;
+        return vin.size() == 0 && vjoinsplit.size() == 0 && nVersion < 3;
     }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
