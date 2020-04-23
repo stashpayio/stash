@@ -718,7 +718,7 @@ bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state,
 
     // Transactions can contain an empty `vin` so long as
     // `vjoinsplit` is non-empty or the transaction is in a legacy block.
-     if (!Params().isLegacyBlock(nHeight) && tx.vin.empty() && tx.vjoinsplit.empty())
+     if (!Params().isLegacyBlock(nHeight) && tx.vin.empty() && tx.vjoinsplit.empty() && tx.nVersion < 3)
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
 
     if (fDIP0003Active_context) {
