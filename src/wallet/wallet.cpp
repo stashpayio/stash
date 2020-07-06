@@ -1666,6 +1666,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     CWalletTx& wtx = mapWallet[hash];
     wtx.BindWallet(this);
     wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
+    UpdateNullifierNoteMapWithTx(mapWallet[hash]);
     AddToSpends(hash);
     BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin) {
         if (mapWallet.count(txin.prevout.hash)) {
