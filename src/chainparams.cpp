@@ -294,6 +294,7 @@ public:
             (  9344, uint256S("0000000000999ddf6416b9d8f7b6011965daf2b3be41e81e76aed294ee60d1da"))
             (  524133, uint256S("000000000012232cdbe34c8c40d598775b001b9081f3ad3744995488365369d1"))
             (  593697, uint256S("00000000000e28b36f68b4df03fd55597f290b37cecae6380f8d925a234e04ec"))
+            (  788625, uint256S("00000000000dcb22e55dde5f3c9863601022832955912e49bcaab25a7a05086a"))
         };
 
         chainTxData = ChainTxData{
@@ -377,10 +378,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1538092800; // September 28th, 2018
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000000000000025a79a2d62"); // 41110
+        consensus.nMinimumChainWork = uint256S(""); //
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0000008287fc8c317245b16a22663e858de48533b5e5ac3d4e90336a8def1d9f"); // 286855
+        consensus.defaultAssumeValid = uint256S("0x000003b3e112e618aafc03f5c4aab234994f9cabd54952dfb439f7706c9bbcf0"); // genesis
 
         pchMessageStart[0] = 0xef;
         pchMessageStart[1] = 0xa2;
@@ -394,14 +395,14 @@ public:
         //nDelayGetHeadersTime = 0; // DTG 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1550820822, 302758, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1594105627, 539600, 0x1e0ffff0, 1, 50 * COIN);
 
         if (genesis.nNonce == 0) {
           GenerateGenesisHash(genesis, strNetworkID);
         }
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000098bec97458a8b345102a4cc54233e5a8717aa23ebe3395af1c26ad1ad7a"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000003b3e112e618aafc03f5c4aab234994f9cabd54952dfb439f7706c9bbcf0"));
         assert(genesis.hashMerkleRoot == uint256S("0x965e2a3e499686a80cc1f990a5b18687cf766a892e8ec37b32de99609eaf5ca3"));
 
         vFixedSeeds.clear();
@@ -409,9 +410,6 @@ public:
         if (seedsDisabled()) {
               printf("Seeds disabled on testnet\n");
         } else {
-        			vSeeds.push_back(CDNSSeedData("testseed1.stashpay.io", "testseed1.stashpay.io"));
-        	        vSeeds.push_back(CDNSSeedData("testseed2.stashpay.io", "testseed1.stashpay.io"));
-        	        vSeeds.push_back(CDNSSeedData("testseed3.stashpay.io", "testseed1.stashpay.io"));
         }
 
         // Testnet Stash addresses start with 'y'
@@ -445,23 +443,16 @@ public:
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        // place this key in .conf file as sporkkey=cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
-        // privKey: cP4EKFyJsHT39LDqgdcB43Y3YXjNyjb5Fuas1GQSeAtjnZWmZEQK
-        // open debug console and use this command:
-        // spork SPORK_NAME [value]
-
-        strSporkAddress = "yj949n1UH6fDhw6HtVE5VMj2iSTaSWBMcW"; // MPB todo - update with real key
+        strSporkAddress = "yj949n1UH6fDhw6HtVE5VMj2iSTaSWBMcW";
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (  20000, uint256S("0000024ae76f721c26db19b9f50b61e6b5803d2086abb80c95dd05efeaf123a7"))
-            (  41110, uint256S("000005f78be272903f2311c298a5320999628eb26a15c43e99dc5e182195dd50"))
-            ( 286855, uint256S("0000008287fc8c317245b16a22663e858de48533b5e5ac3d4e90336a8def1d9f"))
+            (  0, uint256S("0x000003b3e112e618aafc03f5c4aab234994f9cabd54952dfb439f7706c9bbcf0"))
         };
 
         chainTxData = ChainTxData{
-            1580336035,// * UNIX timestamp of last known number of transactions
-            288222,        // * total number of transactions between genesis and that timestamp
+            genesis.GetBlockTime(),// * UNIX timestamp of last known number of transactions
+            0,        // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.006       // * estimated number of transactions per second after that timestamp
         };
@@ -469,10 +460,10 @@ public:
         vHashLegacyBlocks = {
 //------------------------------------------------------------------------------
 // Do not edit manually
-        "000ed989820e114ca98139a0c024cefcb3e9b2027461690350b9acd6cc84b3c3",
-        "000d8d61aa97c57809aee2ff7681c59a4ac151318caa07ee64ac8d0a963d508a",
-        "0007294df450fe096a65b773d4974095d5ad09642123ba610dcfb1a3177ca2af",
-        "000bd583c7a232ac55ad78151cc4f2b27776a9e689a2d55c6a1282bcb4ba497a",
+        "0004db8cb5eec1cda116a965b48efc6d25e8aa7207b4e95e8f284a388d83b9fb",
+        "0003d7a8a5c7838a5fe92f8fc20316386930ed703e972345338326abfc890190",
+        "000d4ecf8338825ffd5d72dd51222f693d521a627c0223de9f2caf9a29d18c42",
+        "0002c8fbe6f2d0847eb99d6f9dcb3ddf46fdb7b70e46a85ecf2b5e7e960f80d4",
 //------------------------------------------------------------------------------
         };
     }
@@ -686,10 +677,7 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0x")),
-              0,
-              0,
-              0
+            ( 0, uint256S("0x000001132a8c3bdb334f682ab11a9fdf49fed1a593f0833aa4f7ff3b5ad091b9")),
         };
 
         chainTxData = ChainTxData{
