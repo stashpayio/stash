@@ -3868,6 +3868,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
     // Enforce rule that the coinbase starts with serialized block height
     if (nHeight >= consensusParams.BIP34Height)
     {
+        // The first 18 blocks should be mined with stashd or else the miner software should be modified to correctly
+        // encode coinbase height. (Small block numbers bug when serializing nHeight)
         CScript expect = CScript() << CScriptCoinbaseHeight(nHeight);
         if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
