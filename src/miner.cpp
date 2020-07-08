@@ -190,10 +190,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // Compute regular coinbase transaction.
     coinbaseTx.vout[0].nValue = blockReward;
 
-    /*MPB Check logic below for DIP0003
-    coinbaseTx.vin[0].scriptSig = CScript() << CScriptCoinbaseHeight(nHeight) << OP_0;
-    */
-
     if (!fDIP0003Active_context) {
         coinbaseTx.vin[0].scriptSig = CScript() << CScriptCoinbaseHeight(nHeight) << OP_0;
     } else {

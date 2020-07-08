@@ -627,12 +627,6 @@ template<typename Stream, typename T> void Serialize(Stream& os, const std::uniq
 template<typename Stream, typename T> void Unserialize(Stream& os, std::unique_ptr<const T>& p);
 
 /**
- * others derived from vector
- */
-template<typename Stream> void Serialize(Stream& os, const CScript& v);
-template<typename Stream> void Unserialize(Stream& is, CScript& v);
-
-/**
  * optional
  */
 template<typename Stream, typename T> void Serialize(Stream& os, const boost::optional<T>& item);
@@ -1049,20 +1043,7 @@ void Unserialize(Stream& is, std::shared_ptr<const T>& p)
     p = std::make_shared<const T>(deserialize, is);
 }
 
-/**
- * others derived from vector
- */
-template<typename Stream>
-void Serialize(Stream& os, const CScript& v)
-{
-    Serialize(os, (const std::vector<unsigned char>&)v);
-}
 
-template<typename Stream>
-void Unserialize(Stream& is, CScript& v)
-{
-    Unserialize(is, (std::vector<unsigned char>&)v);
-}
 
 /**
  * array

@@ -203,15 +203,6 @@ void CTransaction::UpdateHash() const
     *const_cast<uint256*>(&hash) = SerializeHash(*this);
 }
 
-CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig() { }
-
-CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight),
-															vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
-															vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig),
-                                                            vExtraPayload(tx.vExtraPayload) {
-    UpdateHash();
-}
-
 // Protected constructor which only derived classes can call.
 // For developer testing only.
 CTransaction::CTransaction(
@@ -224,6 +215,11 @@ CTransaction::CTransaction(
     assert(evilDeveloperFlag);
 }
 
+/* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
+CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), vjoinsplit(), joinSplitPubKey(), joinSplitSig(), hash() {}
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig), vExtraPayload(tx.vExtraPayload) { UpdateHash(); }
+CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), nType(tx.nType), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nExpiryHeight(tx.nExpiryHeight), nLockTime(tx.nLockTime), vjoinsplit(std::move(tx.vjoinsplit)), joinSplitPubKey(std::move(tx.joinSplitPubKey)), joinSplitSig(std::move(tx.joinSplitSig)), vExtraPayload(tx.vExtraPayload) { UpdateHash(); }
+
 CTransaction& CTransaction::operator=(const CTransaction &tx) {
     *const_cast<int16_t*>(&nVersion) = tx.nVersion;
     *const_cast<int16_t*>(&nType) = tx.nType;
@@ -235,7 +231,7 @@ CTransaction& CTransaction::operator=(const CTransaction &tx) {
     *const_cast<std::vector<JSDescription>*>(&vjoinsplit) = tx.vjoinsplit;
     *const_cast<uint256*>(&joinSplitPubKey) = tx.joinSplitPubKey;
     *const_cast<joinsplit_sig_t*>(&joinSplitSig) = tx.joinSplitSig;
-	//*const_cast<std::vector<uint8_t>*>(&vExtraPayload) = tx.vExtraPayload; // MPB do we need this?
+	*const_cast<std::vector<uint8_t>*>(&vExtraPayload) = tx.vExtraPayload;
     return *this;
 }
 /* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */

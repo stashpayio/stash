@@ -413,7 +413,7 @@ public:
     CTransaction(const CMutableTransaction &tx);
 
     CTransaction& operator=(const CTransaction& tx);
-    //CTransaction(CMutableTransaction &&tx);
+    CTransaction(CMutableTransaction &&tx);
 
     ADD_SERIALIZE_METHODS;
 
@@ -426,15 +426,13 @@ public:
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
         if (this->nVersion < 3) {
             READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
-            
             if (vjoinsplit.size() > 0) {
                 READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
                 READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
             }
         }
         if (this->nVersion == 3 && this->nType != TRANSACTION_NORMAL)
-            READWRITE(*const_cast<std::vector<uint8_t>*>(&this->vExtraPayload));
-            
+            READWRITE(*const_cast<std::vector<uint8_t>*>(&vExtraPayload));
 
         if (ser_action.ForRead())
             UpdateHash();
