@@ -4078,6 +4078,81 @@ UniValue z_shieldcoinbase(const JSONRPCRequest& request)
     return o;
 }
 
+UniValue z_sendfrom(const JSONRPCRequest& request) {
+
+    if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
+        throw runtime_error(
+            " \"fromaddress\" \"toaddress\" amount ( memo ) ( minconf ) ( fee )\n"
+            "\nWrapper function to make easier rpc calls to z_sendmany when there is exactly one recipient address."
+            "\nSend to a single destination address. Amounts are decimal numbers with at most 8 digits of precision."
+            "\nChange generated from a taddr flows to a new taddr address, while change generated from a zaddr returns to itself."
+            "\nWhen sending coinbase UTXOs to a zaddr, change is not allowed. The entire value of the UTXO(s) must be consumed."
+            + strprintf("\nCurrently, the maximum number of zaddr outputs is %d due to transaction size limits.\n", Z_SENDMANY_MAX_ZADDR_OUTPUTS)
+            + HelpRequiringPassphrase() + "\n"
+            "\nArguments:\n"
+            "1. \"fromaddress\"         (string, required) The taddr or zaddr to send the funds from.\n"
+            "2. \"address\"             (string, required) The taddr or zaddr to send the funds to.\n"
+            "3. amount                  (numeric, required) The numeric amount in " + CURRENCY_UNIT + " is the value\n"
+            "4. \"memo\"                (string, optional) If the address is a zaddr, raw data represented in hexadecimal string format\n"
+            "5. minconf                 (numeric, optional, default=1) Only use funds confirmed at least this many times.\n"
+            "6. fee                     (numeric, optional, default="
+            + strprintf("%s", FormatMoney(ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE)) + ") The fee amount to attach to this transaction.\n"
+            "\nResult:\n"
+            "\"operationid\"          (string) An operationid to pass to z_getoperationstatus to get the result of the operation.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("z_sendfrom", "\"t1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" '[{\"address\": \"ztfaW34Gj9FrnGUEf833ywDVL62NWXBM81u6EQnM6VR45eYnXhwztecW1SjxA7JrmAXKJhxhj3vDNEpVCQoSvVoSpmbhtjf\" ,\"amount\": 5.0}]'")
+            + HelpExampleRpc("z_sendfrom", "\"t1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", [{\"address\": \"ztfaW34Gj9FrnGUEf833ywDVL62NWXBM81u6EQnM6VR45eYnXhwztecW1SjxA7JrmAXKJhxhj3vDNEpVCQoSvVoSpmbhtjf\" ,\"amount\": 5.0}]")
+        );
+
+    JSONRPCRequest requestTransformed;
+    requestTransformed.params.setArray();
+
+    // From address
+    UniValue str(UniValue::VSTR);
+    str.setStr(request.params[0].get_str());
+    requestTransformed.params.push_back(str);
+
+    // Pack send To object
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("address", request.params[1]));
+    obj.push_back(Pair("amount", request.params[2]));
+    if (request.params.size() > 3)
+        obj.push_back(Pair("memo", request.params[3]));
+    
+    // Wrap send To object to single array     
+    UniValue arr(UniValue::VARR);    
+    arr.push_back(obj);
+    requestTransformed.params.push_back(arr);
+
+    // minconf (optional)
+    if (request.params.size() > 4) {
+        UniValue minconf(UniValue::VNUM);
+        minconf.setInt(request.params[4].get_int());
+        requestTransformed.params.push_back(minconf);
+    }
+
+    // fee (optional)
+    if (request.params.size() > 5) {
+        UniValue fee(UniValue::VNUM);
+        fee.setFloat(request.params[5].get_real());
+        requestTransformed.params.push_back(fee);
+    }
+
+    // Call z_sendmany
+    UniValue opids(UniValue::VARR);
+    opids.push_back(z_sendmany(requestTransformed));
+
+    // Get the opid
+    JSONRPCRequest requestResult;
+    requestResult.params.setArray();
+    requestResult.params.push_back(opids);
+
+    // Tiny delay to allow time for z_getoperationstatus to detect any immediate errors
+    MilliSleep(1);
+
+    // Return operation status filtered on txid
+    return z_getoperationstatus(requestResult);
+}
 
 UniValue z_listoperationids(const JSONRPCRequest& request)
 {
@@ -4232,6 +4307,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "z_getbalance",           &z_getbalance,           false, {} },
     { "wallet",             "z_gettotalbalance",      &z_gettotalbalance,      false, {} },
     { "wallet",             "z_sendmany",             &z_sendmany,             false, {} },
+    { "wallet",             "z_sendfrom",             &z_sendfrom,             false, {"fromaddress","toaddress","amount"} },
     { "wallet",             "z_shieldcoinbase",       &z_shieldcoinbase,       false, {} },
     { "wallet",             "z_getoperationstatus",   &z_getoperationstatus,   true,  {} },
     { "wallet",             "z_getoperationresult",   &z_getoperationresult,   true,  {} },

@@ -258,8 +258,8 @@ bool AsyncRPCOperation_sendmany::main_impl() {
 
     if (isfromtaddr_ && (t_inputs_total < targetAmount)) {
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS,
-            strprintf("Insufficient transparent funds, have %s, need %s",
-            FormatMoney(t_inputs_total), FormatMoney(targetAmount)));
+            strprintf("Insufficient transparent funds, have %s, need %s. Did you mean to send %s ?",
+            FormatMoney(t_inputs_total), FormatMoney(targetAmount), FormatMoney(t_inputs_total - minersFee)));
     }
 
     if (isfromzaddr_ && (z_inputs_total < targetAmount)) {
