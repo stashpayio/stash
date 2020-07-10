@@ -1,4 +1,4 @@
-Stash Core 0.13.0
+Stash Core 0.14.0
 =====================
 
 This is the official reference wallet for Stash digital currency and comprises the backbone of the Stash peer-to-peer network. You can [download Stash Core](https://www.stashpay.io/downloads/) or [build it yourself](#building) using the guides below.
@@ -24,10 +24,12 @@ Drag Stash-Qt to your applications folder, and then run Stash-Qt.
 
 ### Need Help?
 
-* See the [Stash documentation](https://stashpay.atlassian.net/wiki/display/DOC)
+* See the [Stash documentation](https://docs.stash.org)
 for help and more information.
+* See the [Stash Developer Documentation](https://stash-docs.github.io/) 
+for technical specifications and implementation details.
 * Ask for help on [Stash Nation Discord](http://stashchat.org)
-* Ask for help on the [Stash Forum](https://stashpay.io/forum)
+* Ask for help on the [Stash Forum](https://stash.org/forum)
 
 Building
 ---------------------

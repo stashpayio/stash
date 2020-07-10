@@ -103,7 +103,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     /* Theme selector */
     ui->theme->addItem(QString("STASH-blue"), QVariant("drkblue"));
     ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));    
-    
+
     /* Language selector */
     QDir translations(":translations");
 

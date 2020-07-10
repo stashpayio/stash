@@ -2,21 +2,20 @@
 # Copyright (c) 2015-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+"""Test node responses to invalid blocks.
+
+In this test we connect to one node over p2p, and test block requests:
+1) Valid blocks should be requested and become chain tip.
+2) Invalid block with duplicated transaction should be re-requested.
+3) Invalid block with bad coinbase value should be rejected and not
+re-requested.
+"""
 
 from test_framework.test_framework import ComparisonTestFramework
 from test_framework.util import *
 from test_framework.comptool import TestManager, TestInstance, RejectResult
 from test_framework.blocktools import *
 import copy
-
-
-'''
-In this test we connect to one node over p2p, and test block requests:
-1) Valid blocks should be requested and become chain tip.
-2) Invalid block with duplicated transaction should be re-requested.
-3) Invalid block with bad coinbase value should be rejected and not
-re-requested.
-'''
 
 # Use the ComparisonTestFramework with 1 node: only use --testbinary.
 class InvalidBlockRequestTest(ComparisonTestFramework):
@@ -103,7 +102,7 @@ class InvalidBlockRequestTest(ComparisonTestFramework):
         '''
         block3 = create_block(self.tip, create_coinbase(height), self.block_time)
         self.block_time += 1
-        block3.vtx[0].vout[0].nValue = 1000 * COIN # Too high!
+        block3.vtx[0].vout[0].nValue = 10000 * COIN # Too high!
         block3.vtx[0].sha256=None
         block3.vtx[0].calc_sha256()
         block3.hashMerkleRoot = block3.calc_merkle_root()

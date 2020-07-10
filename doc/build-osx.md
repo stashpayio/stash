@@ -25,7 +25,7 @@ brew install automake libtool pkg-config
 
 If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG
 ```bash
-    brew install librsvg
+brew install librsvg
 ```
 
 Building

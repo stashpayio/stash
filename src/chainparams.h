@@ -25,6 +25,12 @@ struct SeedSpec6 {
     uint16_t port;
 };
 
+typedef std::map<int, uint256> MapCheckpoints;
+
+struct CCheckpointData {
+    MapCheckpoints mapCheckpoints;
+};
+
 struct ChainTxData {
     int64_t nTime;
     int64_t nTxCount;
@@ -85,9 +91,10 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     int ExtCoinType() const { return nExtCoinType; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
-    const Checkpoints::CCheckpointData& Checkpoints() const { return checkpointData; }
+    const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
-    int PoolMaxTransactions() const { return nPoolMaxTransactions; }
+    int PoolMinParticipants() const { return nPoolMinParticipants; }
+    int PoolMaxParticipants() const { return nPoolMaxParticipants; }
     int FulfilledRequestExpireTime() const { return nFulfilledRequestExpireTime; }
     const std::vector<std::string>& SporkAddresses() const { return vSporkAddresses; }
     int MinSporkKeys() const { return nMinSporkKeys; }
@@ -115,10 +122,11 @@ protected:
     bool fMineBlocksOnDemand;
     bool fAllowMultipleAddressesFromGroup;
     bool fAllowMultiplePorts;
-    Checkpoints::CCheckpointData checkpointData;
+    CCheckpointData checkpointData;
     ChainTxData chainTxData;
-    int nPoolMaxTransactions;
-    int nFulfilledRequestExpireTime;    
+    int nPoolMinParticipants;
+    int nPoolMaxParticipants;
+    int nFulfilledRequestExpireTime;
     std::vector<std::string> vHashLegacyBlocks;
     std::vector<std::string> vSporkAddresses;
     int nMinSporkKeys;
@@ -145,7 +153,27 @@ void SelectParams(const std::string& chain);
 /**
  * Allows modifying the BIP9 regtest parameters.
  */
-void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
+void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout, int64_t nWindowSize, int64_t nThreshold);
+
+/**
+ * Allows modifying the DIP3 activation height
+ */
+void UpdateRegtestDIP3EnforcementHeight(int nHeight);
+
+/**
+ * Allows modifying the budget regtest parameters.
+ */
+void UpdateRegtestBudgetParameters(int nMasternodePaymentsStartBlock, int nBudgetPaymentsStartBlock, int nSuperblockStartBlock);
+
+/**
+ * Allows modifying the subsidy and difficulty devnet parameters.
+ */
+void UpdateDevnetSubsidyAndDiffParams(int nMinimumDifficultyBlocks, int nHighSubsidyBlocks, int nHighSubsidyFactor);
+
+/**
+ * Allows modifying the LLMQ type for ChainLocks.
+ */
+void UpdateDevnetLLMQChainLocks(Consensus::LLMQType llmqType);
 
 /**
  * Allows modifying the budget regtest parameters.

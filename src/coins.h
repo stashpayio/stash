@@ -79,14 +79,14 @@ public:
     }
 };
 
-class SaltedHasher
+class SaltedOutpointHasher
 {
 private:
     /** Salt */
     const uint64_t k0, k1;
 
 public:
-    SaltedHasher();
+    SaltedOutpointHasher();
 
     /**
      * This *must* return size_t. With Boost 1.46 on 32-bit systems the
@@ -148,9 +148,9 @@ struct CNullifiersCacheEntry
     CNullifiersCacheEntry() : entered(false), flags(0) {}
 };
 
-typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedHasher> CCoinsMap;
-typedef boost::unordered_map<uint256, CAnchorsCacheEntry, SaltedHasher> CAnchorsMap;
-typedef boost::unordered_map<uint256, CNullifiersCacheEntry, SaltedHasher> CNullifiersMap;
+typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher> CCoinsMap;
+typedef std::unordered_map<uint256, CAnchorsCacheEntry, SaltedOutpointHasher> CAnchorsMap;
+typedef std::unordered_map<uint256, CNullifiersCacheEntry, SaltedOutpointHasher> CNullifiersMap;
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor
@@ -240,7 +240,7 @@ public:
                     const uint256 &hashAnchor,
                     CAnchorsMap &mapAnchors,
                     CNullifiersMap &mapNullifiers) override;
-   CCoinsViewCursor *Cursor() const override;
+    CCoinsViewCursor *Cursor() const override;
     size_t EstimateSize() const override;
 };
 
@@ -361,13 +361,6 @@ public:
 
     //! Check whether all joinsplit requirements (anchors/nullifiers) are satisfied
     bool HaveJoinSplitRequirements(const CTransaction& tx) const;
-
-    /**
-     * Return priority of tx at height nHeight. Also calculate the sum of the values of the inputs
-     * that are already in the chain.  These are the inputs that will age and increase priority as
-     * new blocks are added to the chain.
-     */
-    double GetPriority(const CTransaction &tx, int nHeight, CAmount &inChainInputValue) const;
 
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint) const;

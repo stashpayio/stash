@@ -328,10 +328,10 @@ public:
         // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units stashees-per-kilobyte.
         // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
         // A typical spendable txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 34 = 182 bytes. Default -minrelaytxfee is 1000 stashees per kB
-        // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 stashees.
-        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in stashees)
-        // i.e. 182 * 3 = 546 stashees with default -minrelaytxfee = minRelayTxFee = 1000 stashees per kB.
+        // i.e. total is 148 + 34 = 182 bytes. Default -minrelaytxfee is 1000 duffs per kB
+        // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 duffs.
+        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in duffs)
+        // i.e. 182 * 3 = 546 duffs with default -minrelaytxfee = minRelayTxFee = 1000 duffs per kB.
         if (scriptPubKey.IsUnspendable())
             return 0;
 
@@ -426,6 +426,7 @@ public:
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
         if (this->nVersion < 3) {
             READWRITE(*const_cast<std::vector<JSDescription>*>(&vjoinsplit));
+
             if (vjoinsplit.size() > 0) {
                 READWRITE(*const_cast<uint256*>(&joinSplitPubKey));
                 READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
@@ -478,7 +479,7 @@ public:
     }
 
     bool isLegacyTransaction() const {
-        return vin.size() == 0 && vjoinsplit.size() == 0 && nVersion < 3;
+        return vin.size() == 0 && vjoinsplit.size() == 0 && nVersion < 3; // MPB
     }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)

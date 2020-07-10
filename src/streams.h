@@ -135,12 +135,10 @@ public:
         Init(nTypeIn, nVersionIn);
     }
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1300
     CBaseDataStream(const char* pbegin, const char* pend, int nTypeIn, int nVersionIn) : vch(pbegin, pend)
     {
         Init(nTypeIn, nVersionIn);
     }
-#endif
 
     CBaseDataStream(const vector_type& vchIn, int nTypeIn, int nVersionIn) : vch(vchIn.begin(), vchIn.end())
     {
@@ -223,7 +221,6 @@ public:
             vch.insert(it, first, last);
     }
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1300
     void insert(iterator it, const char* first, const char* last)
     {
         if (last == first) return;
@@ -237,7 +234,6 @@ public:
         else
             vch.insert(it, first, last);
     }
-#endif
 
     iterator erase(iterator it)
     {
@@ -394,10 +390,8 @@ public:
     CDataStream(const_iterator pbegin, const_iterator pend, int nTypeIn, int nVersionIn) :
             CBaseDataStream(pbegin, pend, nTypeIn, nVersionIn) { }
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1300
     CDataStream(const char* pbegin, const char* pend, int nTypeIn, int nVersionIn) :
             CBaseDataStream(pbegin, pend, nTypeIn, nVersionIn) { }
-#endif
 
     CDataStream(const vector_type& vchIn, int nTypeIn, int nVersionIn) :
             CBaseDataStream(vchIn, nTypeIn, nVersionIn) { }
@@ -592,11 +586,11 @@ protected:
             readNow = nAvail;
         if (readNow == 0)
             return false;
-        size_t read = fread((void*)&vchBuf[pos], 1, readNow, src);
-        if (read == 0) {
+        size_t nBytes = fread((void*)&vchBuf[pos], 1, readNow, src);
+        if (nBytes == 0) {
             throw std::ios_base::failure(feof(src) ? "CBufferedFile::Fill: end of file" : "CBufferedFile::Fill: fread failed");
         } else {
-            nSrcPos += read;
+            nSrcPos += nBytes;
             return true;
         }
     }

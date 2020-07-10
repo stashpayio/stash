@@ -83,7 +83,7 @@ libconftest.dylib*
 Makefile
 stash-qt
 Stash-Qt.app
-
+!/depends/Makefile
 # Unit-tests
 Makefile.test
 stash-qt_test
@@ -112,6 +112,7 @@ linux-coverage-build
 linux-build
 win32-build
 qa/pull-tester/tests_config.py
+qa/pull-tester/tests_config.ini
 qa/cache/*
 
 !src/leveldb*/Makefile

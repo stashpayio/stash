@@ -212,4 +212,12 @@ public:
 typedef CBitcoinExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CBitcoinExtKey;
 typedef CBitcoinExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CBitcoinExtPubKey;
 
+std::string EncodeDestination(const CTxDestination& dest);
+CTxDestination DecodeDestination(const std::string& str);
+bool IsValidDestinationString(const std::string& str);
+bool IsValidDestinationString(const std::string& str, const CChainParams& params);
+
+std::string EncodePaymentAddress(const libzcash::PaymentAddress& zaddr);
+boost::optional<libzcash::PaymentAddress> DecodePaymentAddress(const std::string& str);
+
 #endif // BITCOIN_BASE58_H

@@ -258,8 +258,8 @@ bool AsyncRPCOperation_sendmany::main_impl() {
 
     if (isfromtaddr_ && (t_inputs_total < targetAmount)) {
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS,
-            strprintf("Insufficient transparent funds, have %s, need %s. Did you mean to send %s ?",
-            FormatMoney(t_inputs_total), FormatMoney(targetAmount), FormatMoney(t_inputs_total - minersFee)));
+            strprintf("Insufficient transparent funds, have %s, need %s",
+            FormatMoney(t_inputs_total), FormatMoney(targetAmount)));
     }
 
     if (isfromzaddr_ && (z_inputs_total < targetAmount)) {
@@ -497,7 +497,7 @@ bool AsyncRPCOperation_sendmany::main_impl() {
     }
 
     // Keep track of treestate within this transaction
-    boost::unordered_map<uint256, ZCIncrementalMerkleTree, SaltedHasher> intermediates;
+    boost::unordered_map<uint256, ZCIncrementalMerkleTree, SaltedOutpointHasher> intermediates;
     std::vector<uint256> previousCommitments;
 
     while (!vpubNewProcessed) {
@@ -1107,7 +1107,7 @@ void AsyncRPCOperation_sendmany::add_taddr_change_output_to_tx(CAmount amount) {
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwalletMain);
     CReserveKey keyChange(pwalletMain);
     CPubKey vchPubKey;
     bool ret = keyChange.GetReservedKey(vchPubKey, true);

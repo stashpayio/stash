@@ -57,9 +57,9 @@ class map_transient;
  */
 template <typename K,
           typename T,
-          typename Hash          = std::hash<K>,
-          typename Equal         = std::equal_to<K>,
-          typename MemoryPolicy  = default_memory_policy,
+          typename Hash           = std::hash<K>,
+          typename Equal          = std::equal_to<K>,
+          typename MemoryPolicy   = default_memory_policy,
           detail::hamts::bits_t B = default_bits>
 class map
 {
@@ -174,6 +174,7 @@ public:
      * Returns the number of elements in the container.  It does
      * not allocate memory and its complexity is @f$ O(1) @f$.
      */
+
     size_type size() const { return impl_.size; }
 
     /*!

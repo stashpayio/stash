@@ -10,6 +10,29 @@ AM_CXXFLAGS = $(HARDENED_CXXFLAGS) $(ERROR_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
 EXTRA_LIBRARIES =
 
+if ENABLE_STACKTRACES
+if STACKTRACE_WRAPPED_CXX_ABI
+# Wrap internal C++ ABI's so that we can attach stacktraces to exceptions
+LDFLAGS_WRAP_EXCEPTIONS = -Wl,-wrap,__cxa_allocate_exception -Wl,-wrap,__cxa_free_exception
+if TARGET_WINDOWS
+LDFLAGS_WRAP_EXCEPTIONS += -Wl,-wrap,_assert -Wl,-wrap,_wassert
+else
+LDFLAGS_WRAP_EXCEPTIONS += -Wl,-wrap,__assert_fail
+endif
+endif
+
+if RDYNAMIC_SUPPORTED
+# This gives better stacktraces
+AM_CXXFLAGS += -rdynamic
+endif
+
+if TARGET_WINDOWS
+BACKTRACE_LIB = -ldbghelp -lbacktrace
+else
+BACKTRACE_LIB = -lbacktrace
+endif
+endif
+
 if EMBEDDED_UNIVALUE
 LIBUNIVALUE = univalue/libunivalue.la
 
@@ -139,6 +162,7 @@ BITCOIN_CORE_H = \
   asyncrpcoperation.h  \
   asyncrpcqueue.h \
   base58.h \
+  batchedlogger.h \
   bip39.h \
   bip39_english.h \
   blockencodings.h \
@@ -164,12 +188,14 @@ BITCOIN_CORE_H = \
   cuckoocache.h \
   deprecation.h \
   ctpl.h \
-  evo/evodb.h \
-  evo/specialtx.h \
-  evo/providertx.h \
-  evo/deterministicmns.h \
+  cxxtimer.hpp \
   evo/cbtx.h \
+  evo/deterministicmns.h \
+  evo/evodb.h \
+  evo/mnauth.h \
+  evo/providertx.h \
   evo/simplifiedmns.h \
+  evo/specialtx.h \
   privatesend.h \
   privatesend-client.h \
   privatesend-server.h \
@@ -194,16 +220,23 @@ BITCOIN_CORE_H = \
   keystore.h \
   dbwrapper.h \
   limitedmap.h \
-  llmq/quorums_commitment.h \
+  llmq/quorums.h \
   llmq/quorums_blockprocessor.h \
-  llmq/quorums_dummydkg.h \
-  llmq/quorums_utils.h \
+  llmq/quorums_commitment.h \
+  llmq/quorums_chainlocks.h \
+  llmq/quorums_debug.h \
+  llmq/quorums_dkgsessionhandler.h \
+  llmq/quorums_dkgsessionmgr.h \
+  llmq/quorums_dkgsession.h \
   llmq/quorums_init.h \
-  masternode.h \
+  llmq/quorums_instantsend.h \
+  llmq/quorums_signing.h \
+  llmq/quorums_signing_shares.h \
+  llmq/quorums_utils.h \
+  masternode-meta.h \
   masternode-payments.h \
   masternode-sync.h \
-  masternodeman.h \
-  masternodeconfig.h \
+  masternode-utils.h \
   memusage.h \
   merkleblock.h \
   messagesigner.h \
@@ -230,12 +263,14 @@ BITCOIN_CORE_H = \
   rpc/asyncrpcqueue.h.h \
   rpc/register.h \
   rpc/zcash.h \
+  saltedhasher.h \
   scheduler.h \
   script/sigcache.h \
   script/sign.h \
   script/standard.h \
   script/ismine.h \
   spork.h \
+  stacktraces.h \
   streams.h \
   support/allocators/mt_pooled_secure.h \
   support/allocators/pooled_secure.h \
@@ -254,6 +289,7 @@ BITCOIN_CORE_H = \
   ui_interface.h \
   uint252.h \
   undo.h \
+  unordered_lru_cache.h \
   util.h \
   utilmoneystr.h \
   utiltime.h \
@@ -289,6 +325,7 @@ libstash_server_a_SOURCES = \
   addrman.cpp \
   addrdb.cpp \
   alert.cpp \
+  batchedlogger.cpp \
   asyncrpcoperation.h  \
   asyncrpcqueue.h \
   bloom.cpp \
@@ -297,12 +334,13 @@ libstash_server_a_SOURCES = \
   checkpoints.cpp \
   deprecation.cpp \
   dsnotificationinterface.cpp \
-  evo/evodb.cpp \
-  evo/specialtx.cpp \
-  evo/providertx.cpp \
-  evo/deterministicmns.cpp \
   evo/cbtx.cpp \
+  evo/deterministicmns.cpp \
+  evo/evodb.cpp \
+  evo/mnauth.cpp \
+  evo/providertx.cpp \
   evo/simplifiedmns.cpp \
+  evo/specialtx.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
@@ -314,16 +352,23 @@ libstash_server_a_SOURCES = \
   governance-validators.cpp \
   governance-vote.cpp \
   governance-votedb.cpp \
-  llmq/quorums_commitment.cpp \
+  llmq/quorums.cpp \
   llmq/quorums_blockprocessor.cpp \
-  llmq/quorums_dummydkg.cpp \
-  llmq/quorums_utils.cpp \
+  llmq/quorums_commitment.cpp \
+  llmq/quorums_chainlocks.cpp \
+  llmq/quorums_debug.cpp \
+  llmq/quorums_dkgsessionhandler.cpp \
+  llmq/quorums_dkgsessionmgr.cpp \
+  llmq/quorums_dkgsession.cpp \
   llmq/quorums_init.cpp \
-  masternode.cpp \
+  llmq/quorums_instantsend.cpp \
+  llmq/quorums_signing.cpp \
+  llmq/quorums_signing_shares.cpp \
+  llmq/quorums_utils.cpp \
+  masternode-meta.cpp \
   masternode-payments.cpp \
   masternode-sync.cpp \
-  masternodeconfig.cpp \
-  masternodeman.cpp \
+  masternode-utils.cpp \
   merkleblock.cpp \
   messagesigner.cpp \
   miner.cpp \
@@ -347,6 +392,7 @@ libstash_server_a_SOURCES = \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
   rpc/rpcevo.cpp \
+  rpc/rpcquorums.cpp \
   rpc/server.cpp \
   rpc/asyncrpcoperation.cpp \
   rpc/asyncrpcqueue.cpp \
@@ -500,6 +546,7 @@ libstash_common_a_SOURCES = \
   netaddress.cpp \
   netbase.cpp \
   protocol.cpp \
+  saltedhasher.cpp \
   scheduler.cpp \
   script/sign.cpp \
   script/standard.cpp \
@@ -514,6 +561,7 @@ libstash_common_a_SOURCES = \
 libstash_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libstash_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libstash_util_a_SOURCES = \
+  bls/bls_batchverifier.h \
   bls/bls_ies.cpp \
   bls/bls_ies.h \
   bls/bls_worker.cpp \
@@ -526,6 +574,7 @@ libstash_util_a_SOURCES = \
   compat/strnlen.cpp \
   random.cpp \
   rpc/protocol.cpp \
+  stacktraces.cpp \
   support/cleanse.cpp \
   sync.cpp \
   threadinterrupt.cpp \
@@ -556,7 +605,7 @@ nodist_libstash_util_a_SOURCES = $(srcdir)/obj/build.h
 stashd_SOURCES = stashd.cpp
 stashd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 stashd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-stashd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+stashd_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
 stashd_SOURCES += stashd-res.rc
@@ -575,7 +624,7 @@ stashd_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-stashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS)
+stashd_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS)
 
 stashd_LDADD += \	
   $(LIBZCASH) \
@@ -587,7 +636,7 @@ stashd_LDADD += \
 stash_cli_SOURCES = stash-cli.cpp
 stash_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
 stash_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-stash_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+stash_cli_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
 stash_cli_SOURCES += stash-cli-res.rc
@@ -601,15 +650,14 @@ stash_cli_LDADD = \
   $(LIBZCASH) \
   $(LIBSNARK) \
   $(LIBZCASH_LIBS)
-
-stash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS) $(BLS_LIBS)
+stash_cli_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS) $(BLS_LIBS)
 #
 
 # stash-tx binary #
 stash_tx_SOURCES = stash-tx.cpp
 stash_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 stash_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-stash_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+stash_tx_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
 stash_tx_SOURCES += stash-tx-res.rc
@@ -626,7 +674,7 @@ stash_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-stash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS) $(BLS_LIBS)
+stash_tx_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(CRYPTO_LIBS) $(BLS_LIBS)
 
 # zcash protocol primitives #
 if TARGET_WINDOWS
@@ -697,6 +745,9 @@ CLEANFILES += zmq/*.gcda zmq/*.gcno
 IMMER_DIST = immer
 
 DISTCLEANFILES = obj/build.h
+
+EXTRA_DIST = $(CTAES_DIST)
+EXTRA_DIST += $(IMMER_DIST)
 
 EXTRA_DIST = leveldb snark $(CTAES_DIST)
 EXTRA_DIST += $(IMMER_DIST)

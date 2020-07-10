@@ -110,7 +110,7 @@ Please report bugs using the issue tracker at github:
 - [`8eb08555f`](https://github.com/stashpayio/stash/commit/8eb08555f) Added code for legacy blocks
 - [`7788f69a7`](https://github.com/stashpayio/stash/commit/7788f69a7) remove legacy code
 - [`ecd55dac1`](https://github.com/stashpayio/stash/commit/ecd55dac1) Reset mainnet genesis
-- [`87ab49e6e`](https://github.com/stashpayio/stash/commit/87ab49e6e) fix renamed DASH comments
+- [`87ab49e6e`](https://github.com/stashpayio/stash/commit/87ab49e6e) fix renamed STASH comments
 - [`a89865c26`](https://github.com/stashpayio/stash/commit/a89865c26) Update old wallet themes
 - [`39f4dae6f`](https://github.com/stashpayio/stash/commit/39f4dae6f) update SuperblockStartHash
 - [`f01df6d7a`](https://github.com/stashpayio/stash/commit/f01df6d7a) remove old configure mac os file
@@ -155,7 +155,7 @@ Please report bugs using the issue tracker at github:
 - [`dc10e28d5`](https://github.com/stashpayio/stash/commit/dc10e28d5) update parameters for initial mining
 - [`8ca1af536`](https://github.com/stashpayio/stash/commit/8ca1af536) Fixed RPC call z_validateaddress
 - [`ab59b75b1`](https://github.com/stashpayio/stash/commit/ab59b75b1) Fixed 'Witness for note commitment is null' problem
-- [`4a1a70fb1`](https://github.com/stashpayio/stash/commit/4a1a70fb1) Get dash-qt to build
+- [`4a1a70fb1`](https://github.com/stashpayio/stash/commit/4a1a70fb1) Get stash-qt to build
 - [`4fbcfab1e`](https://github.com/stashpayio/stash/commit/4fbcfab1e) Added debugging code
 - [`5f22ca781`](https://github.com/stashpayio/stash/commit/5f22ca781) Fixed import/export of wallet and hide some debugging code
 - [`07e9c9916`](https://github.com/stashpayio/stash/commit/07e9c9916) Fixed problem with witnesses not being save by the wallet
@@ -200,7 +200,7 @@ Please report bugs using the issue tracker at github:
 - [`b7c326115`](https://github.com/stashpayio/stash/commit/b7c326115) Do not create mnb until sync is finished (#2122)
 - [`b98643c27`](https://github.com/stashpayio/stash/commit/b98643c27) Split sentinel expiration in CMasternode::Check() in two parts (timeout and version) (#2121)
 - [`5669fc880`](https://github.com/stashpayio/stash/commit/5669fc880) Fix typos and rpc help text (#2120)
-- [`e2e40bd76`](https://github.com/stashpayio/stash/commit/e2e40bd76) Removed supprt for old Dash blocks
+- [`e2e40bd76`](https://github.com/stashpayio/stash/commit/e2e40bd76) Removed supprt for old Stash blocks
 - [`d076ad4ce`](https://github.com/stashpayio/stash/commit/d076ad4ce) Update release notes and staging tree in README (#2116)
 - [`806d7f049`](https://github.com/stashpayio/stash/commit/806d7f049) Fix rpc tests broken by 2110 (#2118)
 - [`836e10471`](https://github.com/stashpayio/stash/commit/836e10471) Bump proto to 70210 (#2109)
@@ -218,7 +218,7 @@ Please report bugs using the issue tracker at github:
 - [`dbbedc031`](https://github.com/stashpayio/stash/commit/dbbedc031) Fix JoinExistingQueue bug (#2100)
 - [`4901c6f3e`](https://github.com/stashpayio/stash/commit/4901c6f3e) Fixed issues with zCash addresses
 - [`a269de593`](https://github.com/stashpayio/stash/commit/a269de593) Initial port of ZCashPaymentAPI
-- [`7b43720f0`](https://github.com/stashpayio/stash/commit/7b43720f0) Fix copying of final binaries into dashcore-binaries (#2090)
+- [`7b43720f0`](https://github.com/stashpayio/stash/commit/7b43720f0) Fix copying of final binaries into stashcore-binaries (#2090)
 - [`ca2eae6e6`](https://github.com/stashpayio/stash/commit/ca2eae6e6) 12.3 release notes draft (#2045)
 - [`faeb4480a`](https://github.com/stashpayio/stash/commit/faeb4480a) Update manpages with ./contrib/devtools/gen-manpages.sh (#2088)
 - [`cc593615e`](https://github.com/stashpayio/stash/commit/cc593615e) Bump copyright year to 2018 (#2087)
@@ -242,12 +242,12 @@ Please report bugs using the issue tracker at github:
 - [`1dbf5a0f6`](https://github.com/stashpayio/stash/commit/1dbf5a0f6) Fix transaction/block versions for devnet genesis blocks (#2056)
 - [`5a273ab7e`](https://github.com/stashpayio/stash/commit/5a273ab7e) Modified block & transaction formata and fixed build
 - [`adf14687a`](https://github.com/stashpayio/stash/commit/adf14687a) More changes to integrate zcash code and snark library
-- [`309d361a9`](https://github.com/stashpayio/stash/commit/309d361a9) Modified existing Dash code to support zcash code
+- [`309d361a9`](https://github.com/stashpayio/stash/commit/309d361a9) Modified existing Stash code to support zcash code
 - [`989d674da`](https://github.com/stashpayio/stash/commit/989d674da) Added zcash code and updated build
 - [`f878e6a9e`](https://github.com/stashpayio/stash/commit/f878e6a9e) Added Snark library and fixed build
 - [`8a09e69c8`](https://github.com/stashpayio/stash/commit/8a09e69c8) Updated build to include Snark library
 - [`85029db9f`](https://github.com/stashpayio/stash/commit/85029db9f) Changed chain parameters to work with test network
-- [`f22d73e51`](https://github.com/stashpayio/stash/commit/f22d73e51) Removed long hash to make the block header the same as Dash and added memory-based Merkle tree
+- [`f22d73e51`](https://github.com/stashpayio/stash/commit/f22d73e51) Removed long hash to make the block header the same as Stash and added memory-based Merkle tree
 - [`76a138d67`](https://github.com/stashpayio/stash/commit/76a138d67) Added support for 32-byte nonce in block header
 - [`e113ad8aa`](https://github.com/stashpayio/stash/commit/e113ad8aa) Some simple initial changes
 

@@ -22,6 +22,7 @@ uint64_t GetRand(uint64_t nMax);
 int GetRandInt(int nMax);
 uint256 GetRandHash();
 
+bool GetRandBool(double rate);
 
 /**
  * Function to gather random data from multiple sources, failing whenever any
@@ -56,22 +57,27 @@ public:
     uint32_t Rw;
 };
 
+/* Number of random bytes returned by GetOSRand.
+ * sure that the underlying OS APIs for all platforms support the number.
+ * (many cap out at 256 bytes).
+ */
+static const ssize_t NUM_OS_RANDOM_BYTES = 32;
 
 /**
  * Identity function for MappedShuffle, so that elements retain their original order.
  */
- int GenIdentity(int n);
+int GenIdentity(int n);
 
-/**
- * Rearranges the elements in the range [first,first+len) randomly, assuming
- * that gen is a uniform random number generator. Follows the same algorithm as
- * std::shuffle in C++11 (a Durstenfeld shuffle).
- *
- * The elements in the range [mapFirst,mapFirst+len) are rearranged according to
- * the same permutation, enabling the permutation to be tracked by the caller.
- *
- * gen takes an integer n and produces a uniform random output in [0,n).
+/** Get 32 bytes of system entropy. Do not use this in application code: use
+ * GetStrongRandBytes instead.
  */
+void GetOSRand(unsigned char *ent32);
+
+/** Check that OS randomness is available and returning the requested number
+ * of bytes.
+ */
+bool Random_SanityCheck();
+
 template <typename RandomAccessIterator, typename MapRandomAccessIterator>
 void MappedShuffle(RandomAccessIterator first,
                    MapRandomAccessIterator mapFirst,
@@ -86,6 +92,5 @@ void MappedShuffle(RandomAccessIterator first,
         std::swap(mapFirst[i], mapFirst[r]);
     }
 }
-
 
 #endif // BITCOIN_RANDOM_H

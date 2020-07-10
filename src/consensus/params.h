@@ -19,8 +19,9 @@ enum DeploymentPos
     /* START STASH ALREADY ACTIVATED
     DEPLOYMENT_DIP0001, // Deployment of DIP0001 and lower transaction fees.
     DEPLOYMENT_BIP147, // Deployment of BIP147 (NULLDUMMY)
-    END STASH */
+	END STASH ALREADY ACTIVATED */
     DEPLOYMENT_DIP0003, // Deployment of DIP0002 and DIP0003 (txv3 and deterministic MN lists)
+    DEPLOYMENT_DIP0008, // Deployment of ChainLock enforcement
     // NOTE: Also add new deployments to VersionBitsDeploymentInfo in versionbits.cpp
     MAX_VERSION_BITS_DEPLOYMENTS
 };
@@ -99,6 +100,19 @@ struct LLMQParams {
     // should at the same time not be too large so that not too much space is wasted with null commitments in case a DKG
     // session failed.
     int dkgMiningWindowEnd;
+
+    // In the complaint phase, members will vote on other members being bad (missing valid contribution). If at least
+    // dkgBadVotesThreshold have voted for another member to be bad, it will considered to be bad by all other members
+    // as well. This serves as a protection against late-comers who send their contribution on the bring of
+    // phase-transition, which would otherwise result in inconsistent views of the valid members set
+    int dkgBadVotesThreshold;
+
+    // Number of quorums to consider "active" for signing sessions
+    int signingActiveQuorumCount;
+
+    // Used for inter-quorum communication. This is the number of quorums for which we should keep old connections. This
+    // should be at least one more then the active quorums set.
+    int keepOldConnections;
 };
 
 /**
@@ -113,6 +127,8 @@ struct Params {
     //int nMasternodePaymentsIncreasePeriod; STASH not used
     int nInstantSendConfirmationsRequired; // in blocks
     int nInstantSendKeepLock; // in blocks
+    int nInstantSendSigsRequired;
+    int nInstantSendSigsTotal;
     int nBudgetPaymentsStartBlock;
     //int nBudgetPaymentsCycleBlocks; STASH not used
     //int nBudgetPaymentsWindowBlocks; STASH not used
@@ -130,6 +146,11 @@ struct Params {
     int BIP66Height;
     /** Block height at which DIP0001 becomes active */
     int DIP0001Height;
+    /** Block height at which DIP0003 becomes active */
+    int DIP0003Height;
+    /** Block height at which DIP0003 becomes enforced */
+    int DIP0003EnforcementHeight;
+    uint256 DIP0003EnforcementHash;
     /**
      * Minimum blocks including miner confirmation of the total of nMinerConfirmationWindow blocks in a retargeting period,
      * (nPowTargetTimespan / nPowTargetSpacing) which is also used for BIP9 deployments.
@@ -158,7 +179,8 @@ struct Params {
     int nHighSubsidyFactor{1};
 
     std::map<LLMQType, LLMQParams> llmqs;
-    bool fLLMQAllowDummyCommitments;
+    LLMQType llmqChainLocks;
+    LLMQType llmqForInstantSend{LLMQ_NONE};
 };
 } // namespace Consensus
 

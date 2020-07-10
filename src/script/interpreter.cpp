@@ -1143,7 +1143,7 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
 {
     if (nIn >= txTo.vin.size() && nIn != NOT_AN_INPUT) {
         //  nIn out of range
-    	throw logic_error("input index is out of range");
+    	throw logic_error("input index is out of range"); // MPB
     }
 
     // Check for invalid use of SIGHASH_SINGLE

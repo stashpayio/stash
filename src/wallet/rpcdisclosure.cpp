@@ -71,7 +71,7 @@ UniValue z_getpaymentdisclosure(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwalletMain);
 
     // Check wallet knows about txid
     string txid = params[0].get_str();
@@ -172,7 +172,7 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwalletMain);
 
     // Verify the payment disclosure input begins with "zpd:" prefix.
     string strInput = params[0].get_str();

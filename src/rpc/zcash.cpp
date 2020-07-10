@@ -55,7 +55,6 @@ static const CRPCCommand commands[] =
     { "wallet",             "z_importviewingkey",     &z_importviewingkey,     true,  {} },
     { "wallet",             "z_exportwallet",         &z_exportwallet,         true,  {} },
     { "wallet",             "z_importwallet",         &z_importwallet,         true,  {} },
-
 };
 
 void RegisterZCashRPCCommands(CRPCTable &t)
