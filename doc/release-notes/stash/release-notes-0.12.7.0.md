@@ -50,14 +50,14 @@ This will be used in combination with ChainLocks in a future release. Switched o
 
 Read more: https://www.horizen.global/assets/files/A-Penalty-System-for-Delayed-Block-Submission-by-ZenCash.pdf
 
-DIP0002 - Special Transactions (Dash)
+DIP0002 - Special Transactions (Stash)
 ------------------------------
 
 Provides a new generic, multi-purpose special transaction with paylaod. The payload is hashed into the transaction signature.
 Special transactions allow for implemention of new on-chain features and consensus mechanisms which do not fit into the concept of
 financial transactions
 
-Read more: https://github.com/dashpay/dips/blob/master/dip-0002.
+Read more: https://github.com/stashpayio/dips/blob/master/dip-0002.
 
 Legacy message signing
 ------------------------------
@@ -77,7 +77,7 @@ See detailed [set of changes](https://github.com/stashpayio/stash/compare/v0.12.
 - [`fae305e00`](https://github.com/stashpayio/stash/commit/fae305e00) Save/load spork cache (#2206)
 - [`c8cbb4c03`](https://github.com/stashpayio/stash/commit/c8cbb4c03) Protect CSporkManager with critical section (#2213)
 - [`f9615df32`](https://github.com/stashpayio/stash/commit/f9615df32) iterator cleanup in several places (#2164)
-- [`bc022de7f`](https://github.com/stashpayio/stash/commit/bc022de7f) remove boost dependency from Dash-specific code (#2072)
+- [`bc022de7f`](https://github.com/stashpayio/stash/commit/bc022de7f) remove boost dependency from Stash-specific code (#2072)
 - [`de03a46b0`](https://github.com/stashpayio/stash/commit/de03a46b0) Fix spork logic
 - [`82d82be31`](https://github.com/stashpayio/stash/commit/82d82be31) Allow dynamic tuning of block delay penalty threshold
 - [`32223ded8`](https://github.com/stashpayio/stash/commit/32223ded8) Merge pull request #113 from ZencashOfficial/delaypenalty
@@ -104,7 +104,7 @@ as well as everyone who submitted issues and reviewed pull requests.
 - koen84 <koen84@users.noreply.github.com>
 - pierstab <pierstabilini@gmail.com>
 - Reza Barazesh <barazesh@codeparticle.com>
-- gladcow <sergey@dash.org>
+- gladcow <sergey@stash.org>
 - Jack Grigg <jack@z.cash>
 - Nathan Marley <nathan.marley@gmail.com>
 - UdjinM6 <UdjinM6@users.noreply.github.com>

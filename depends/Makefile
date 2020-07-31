@@ -14,7 +14,6 @@ PATCHES_PATH = $(BASEDIR)/patches
 BASEDIR = $(CURDIR)
 HASH_LENGTH:=11
 DOWNLOAD_CONNECT_TIMEOUT:=10
-DOWNLOAD_RETRIES:=3
 CRATE_REGISTRY:=vendored-sources
 HOST_ID_SALT ?= salt
 BUILD_ID_SALT ?= salt
@@ -22,7 +21,6 @@ BUILD_ID_SALT ?= salt
 host:=$(BUILD)
 ifneq ($(HOST),)
 host:=$(HOST)
-host_toolchain:=$(HOST)-
 endif
 
 ifneq ($(DEBUG),)

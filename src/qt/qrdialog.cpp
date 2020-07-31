@@ -68,7 +68,7 @@ void QRGeneralImageWidget::saveImage()
 {
     if(!pixmap())
         return;
-    QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Image (*.png)"), NULL);
+    QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Image (*.png)"), nullptr);
     if (!fn.isEmpty())
     {
         exportImage().save(fn);
@@ -136,6 +136,10 @@ void QRDialog::update()
 
     setWindowTitle(strWindowtitle);
     ui->button_saveImage->setEnabled(false);
+    if (strTextInfo.isEmpty()) {
+        ui->outUri->setVisible(false);
+        adjustSize();
+    }
     ui->outUri->setText(strTextInfo);
 
 #ifdef USE_QRCODE

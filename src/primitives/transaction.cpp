@@ -159,11 +159,11 @@ std::string CTxIn::ToString() const
     return str;
 }
 
-CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
+CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, int nRoundsIn)
 {
     nValue = nValueIn;
     scriptPubKey = scriptPubKeyIn;
-    nRounds = -10;
+    nRounds = nRoundsIn;
 }
 
 std::string CTxOut::ToString() const
@@ -203,15 +203,6 @@ void CTransaction::UpdateHash() const
     *const_cast<uint256*>(&hash) = SerializeHash(*this);
 }
 
-CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig() { }
-
-CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight),
-															vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime),
-															vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig),
-                                                            vExtraPayload(tx.vExtraPayload) {
-    UpdateHash();
-}
-
 // Protected constructor which only derived classes can call.
 // For developer testing only.
 CTransaction::CTransaction(
@@ -224,6 +215,14 @@ CTransaction::CTransaction(
     assert(evilDeveloperFlag);
 }
 
+
+                                                       
+
+/* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
+CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), vjoinsplit(), joinSplitPubKey(), joinSplitSig(), hash() {}
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig), vExtraPayload(tx.vExtraPayload) { UpdateHash(); }
+CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), nType(tx.nType), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nExpiryHeight(tx.nExpiryHeight), nLockTime(tx.nLockTime), vjoinsplit(std::move(tx.vjoinsplit)), joinSplitPubKey(std::move(tx.joinSplitPubKey)), joinSplitSig(std::move(tx.joinSplitSig)), vExtraPayload(tx.vExtraPayload) { UpdateHash(); }
+
 CTransaction& CTransaction::operator=(const CTransaction &tx) {
     *const_cast<int16_t*>(&nVersion) = tx.nVersion;
     *const_cast<int16_t*>(&nType) = tx.nType;
@@ -235,16 +234,20 @@ CTransaction& CTransaction::operator=(const CTransaction &tx) {
     *const_cast<std::vector<JSDescription>*>(&vjoinsplit) = tx.vjoinsplit;
     *const_cast<uint256*>(&joinSplitPubKey) = tx.joinSplitPubKey;
     *const_cast<joinsplit_sig_t*>(&joinSplitSig) = tx.joinSplitSig;
+	*const_cast<std::vector<uint8_t>*>(&vExtraPayload) = tx.vExtraPayload;
     return *this;
 }
+/* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
+/* CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), nType(TRANSACTION_NORMAL), nExpiryHeight(0), vin(), vout(), nLockTime(0), joinSplitPubKey(), joinSplitSig(), hash() {}
+CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), vjoinsplit(tx.vjoinsplit), joinSplitPubKey(tx.joinSplitPubKey), joinSplitSig(tx.joinSplitSig), vExtraPayload(tx.vExtraPayload), hash(ComputeHash()) {}
+CTransaction::CTransaction(CMutableTransaction &&tx) : nVersion(tx.nVersion), nType(tx.nType), nExpiryHeight(tx.nExpiryHeight), vin(std::move(tx.vin)), vout(std::move(tx.vout)), nLockTime(tx.nLockTime), vjoinsplit(std::move(tx.vjoinsplit)), joinSplitPubKey(std::move(tx.joinSplitPubKey)), joinSplitSig((std::move(tx.joinSplitSig)), vExtraPayload(tx.vExtraPayload), hash(ComputeHash()) {} */
 
 CAmount CTransaction::GetValueOut() const
 {
     CAmount nValueOut = 0;
-    for (std::vector<CTxOut>::const_iterator it(vout.begin()); it != vout.end(); ++it)
-    {
-        nValueOut += it->nValue;
-        if (!MoneyRange(it->nValue) || !MoneyRange(nValueOut))
+    for (const auto& tx_out : vout) {
+        nValueOut += tx_out.nValue;
+        if (!MoneyRange(tx_out.nValue) || !MoneyRange(nValueOut))
             throw std::runtime_error(std::string(__func__) + ": value out of range");
     }
     for (std::vector<JSDescription>::const_iterator it(vjoinsplit.begin()); it != vjoinsplit.end(); ++it)
@@ -310,16 +313,16 @@ std::string CTransaction::ToString() const
     str += strprintf("CTransaction(hash=%s, ver=%d, type=%d, vin.size=%u, vout.size=%u, nLockTime=%u, nExpiryHeight=%u, vExtraPayload.size=%d)\n",    
         GetHash().ToString().substr(0,10),
         nVersion,
-        nType,
+	    nType,
         vin.size(),
         vout.size(),
         nLockTime,
 	    nExpiryHeight,
         vExtraPayload.size());
-    for (unsigned int i = 0; i < vin.size(); i++)
-        str += "    " + vin[i].ToString() + "\n";
-    for (unsigned int i = 0; i < vout.size(); i++)
-        str += "    " + vout[i].ToString() + "\n";
+    for (const auto& tx_in : vin)
+        str += "    " + tx_in.ToString() + "\n";
+    for (const auto& tx_out : vout)
+        str += "    " + tx_out.ToString() + "\n";
     return str;
 }
 

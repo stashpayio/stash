@@ -19,6 +19,12 @@
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 
+#include "governance/governance-object.h"
+#include "governance/governance-vote.h"
+
+#include "llmq/quorums_chainlocks.h"
+#include "llmq/quorums_instantsend.h"
+
 void zmqError(const char *str);
 
 #endif // BITCOIN_ZMQ_ZMQCONFIG_H

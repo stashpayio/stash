@@ -27,6 +27,19 @@
 
 #include <boost/variant.hpp>
 
+// Sapling transaction version
+static const int32_t SPROUT_TX_VERSION = 2;
+// Sapling transaction version
+static const int32_t SAPLING_TX_VERSION = 4;
+
+// These constants are defined in the protocol § 7.1:
+// https://zips.z.cash/protocol/protocol.pdf#txnencoding
+#define OUTPUTDESCRIPTION_SIZE 948
+#define SPENDDESCRIPTION_SIZE 384
+
+static inline size_t JOINSPLIT_SIZE(int transactionVersion) {
+    return transactionVersion >= SAPLING_TX_VERSION ? 1698 : 1802;
+}
 
 class JSDescription
 {
@@ -157,6 +170,12 @@ public:
 /** Transaction types */
 enum {
     TRANSACTION_NORMAL = 0,
+    TRANSACTION_PROVIDER_REGISTER = 1,
+    TRANSACTION_PROVIDER_UPDATE_SERVICE = 2,
+    TRANSACTION_PROVIDER_UPDATE_REGISTRAR = 3,
+    TRANSACTION_PROVIDER_UPDATE_REVOKE = 4,
+    TRANSACTION_COINBASE = 5,
+    TRANSACTION_QUORUM_COMMITMENT = 6,
 };
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
@@ -166,8 +185,8 @@ public:
     uint256 hash;
     uint32_t n;
 
-    COutPoint() { SetNull(); }
-    COutPoint(uint256 hashIn, uint32_t nIn) { hash = hashIn; n = nIn; }
+    COutPoint(): n((uint32_t) -1) { }
+    COutPoint(const uint256& hashIn, uint32_t nIn): hash(hashIn), n(nIn) { }
 
     ADD_SERIALIZE_METHODS;
 
@@ -251,7 +270,7 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(prevout);
-        READWRITE(*(CScriptBase*)(&scriptSig));
+        READWRITE(scriptSig);
         READWRITE(nSequence);
     }
 
@@ -295,14 +314,14 @@ public:
         SetNull();
     }
 
-    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn, int nRoundsIn = -10);
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         READWRITE(nValue);
-        READWRITE(*(CScriptBase*)(&scriptPubKey));
+        READWRITE(scriptPubKey);
     }
 
     void SetNull()
@@ -315,27 +334,6 @@ public:
     bool IsNull() const
     {
         return (nValue == -1);
-    }
-
-    CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
-    {
-        // "Dust" is defined in terms of CTransaction::minRelayTxFee, which has units stashees-per-kilobyte.
-        // If you'd pay more than 1/3 in fees to spend something, then we consider it dust.
-        // A typical spendable txout is 34 bytes big, and will need a CTxIn of at least 148 bytes to spend
-        // i.e. total is 148 + 32 = 182 bytes. Default -minrelaytxfee is 1000 stashees per kB
-        // and that means that fee per spendable txout is 182 * 1000 / 1000 = 182 stashees.
-        // So dust is a spendable txout less than 546 * minRelayTxFee / 1000 (in stashees)
-        // i.e. 182 * 3 = 546 stashees with default -minrelaytxfee = minRelayTxFee = 1000 stashees per kB.
-        if (scriptPubKey.IsUnspendable())
-            return 0;
-
-        size_t nSize = GetSerializeSize(*this, SER_DISK, 0)+148u;
-        return 3*minRelayTxFee.GetFee(nSize);
-    }
-
-    bool IsDust(const CFeeRate &minRelayTxFee) const
-    {
-        return (nValue < GetDustThreshold(minRelayTxFee));
     }
 
     friend bool operator==(const CTxOut& a, const CTxOut& b)
@@ -407,6 +405,7 @@ public:
     CTransaction(const CMutableTransaction &tx);
 
     CTransaction& operator=(const CTransaction& tx);
+    CTransaction(CMutableTransaction &&tx);
 
     ADD_SERIALIZE_METHODS;
 
@@ -425,9 +424,8 @@ public:
                 READWRITE(*const_cast<joinsplit_sig_t*>(&joinSplitSig));
             }
         }
-        if (this->nVersion >= 3 && this->nType != TRANSACTION_NORMAL)
-            READWRITE(*const_cast<std::vector<uint8_t>*>(&this->vExtraPayload));
-            
+        if (this->nVersion == 3 && this->nType != TRANSACTION_NORMAL)
+            READWRITE(*const_cast<std::vector<uint8_t>*>(&vExtraPayload));
 
         if (ser_action.ForRead())
             UpdateHash();
@@ -473,7 +471,19 @@ public:
     }
 
     bool isLegacyTransaction() const {
-        return vin.size() == 0 && vjoinsplit.size() == 0;
+        return vin.size() == 0 && vjoinsplit.size() == 0 && nVersion < 3;
+    }
+
+    bool IsPureShielded() const {
+        return HasShielded() && vin.size() == 0 && vout.size() == 0;
+    }
+
+    bool HasShielded() const {
+        return vjoinsplit.size() > 0;
+    }
+
+    bool HasInputs() const {
+        return vin.size() > 0;
     }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
@@ -528,7 +538,7 @@ struct CMutableTransaction
                 READWRITE(joinSplitSig);
             }
         }
-        if (this->nVersion >= 3 && this->nType != TRANSACTION_NORMAL) {
+        if (this->nVersion == 3 && this->nType != TRANSACTION_NORMAL) {
             READWRITE(vExtraPayload);
         }
     }

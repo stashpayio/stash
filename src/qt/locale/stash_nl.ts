@@ -22,6 +22,14 @@
         <translation>&amp;Kopiëren</translation>
     </message>
     <message>
+        <source>Show QR code for the currently selected address</source>
+        <translation>Toon QR-code voor het momenteel geselecteerde adres</translation>
+    </message>
+    <message>
+        <source>&amp;Show QR code</source>
+        <translation>Toon QR-Code</translation>
+    </message>
+    <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Verwijder het geselecteerde adres van de lijst</translation>
     </message>
@@ -59,7 +67,7 @@
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Ontvanstgadressen</translation>
+        <translation>Ontvangstadressen</translation>
     </message>
     <message>
         <source>These are your Stash addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
@@ -71,15 +79,23 @@
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>Kopieer adres</translation>
+        <translation>&amp;Kopiëer Adres</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Kopieer label</translation>
+        <translation>Kopiëer &amp;Label</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>Bewerken</translation>
+        <translation>&amp;Bewerken</translation>
+    </message>
+    <message>
+        <source>&amp;Show address QR code</source>
+        <translation>Toon adres QR-code</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>QR-code</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -95,7 +111,7 @@
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation>Er was een probleem tijdens het opslaan van de adressenlijst naar %1. Probeer het alstublieft opnieuw.</translation>
+        <translation>Er is een fout is opgetreden tijdens het opslaan van deze adreslijst naar %1. Probeer het opnieuw.</translation>
     </message>
 </context>
 <context>
@@ -125,11 +141,11 @@
     </message>
     <message>
         <source>New passphrase</source>
-        <translation>Nieuw wachtwoordzin</translation>
+        <translation>Nieuwe wachtwoordzin</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>Herhaal nieuw wachtwoordzin</translation>
+        <translation>Herhaal nieuwe wachtwoordzin</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -283,7 +299,7 @@
     </message>
     <message>
         <source>&amp;Transactions</source>
-        <translation>&amp;Transactis</translation>
+        <translation>&amp;Transacties</translation>
     </message>
     <message>
         <source>Browse transaction history</source>
@@ -438,14 +454,6 @@
         <translation>Open configuratie bestand</translation>
     </message>
     <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Open &amp;Masternode configuratie bestand</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Open Masternode configuratie bestand</translation>
-    </message>
-    <message>
         <source>Show Automatic &amp;Backups</source>
         <translation>Toon automatische &amp;backups</translation>
     </message>
@@ -535,15 +543,15 @@
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
-        <translation>Bezig met indexeren van blokken op harde schijf...</translation>
+        <translation>Bezig met indexeren van blocks op harde schijf...</translation>
     </message>
     <message>
         <source>Processing blocks on disk...</source>
-        <translation>Bezig met verwerken van blokken op harde schijf...</translation>
+        <translation>Bezig met verwerken van blocks op harde schijf...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
-        <translation>Bezig met herindexeren van blokken op harde schijf...</translation>
+        <translation>Bezig met herindexeren van blocks op harde schijf...</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -551,7 +559,7 @@
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>%n blok van transactiehistorie verwerkt.</numerusform><numerusform>%n blokken van transactiehistorie verwerkt.</numerusform></translation>
+        <translation><numerusform>%n blok van transactiehistorie verwerkt.</numerusform><numerusform>%n blocks van transactiehistorie verwerkt.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -588,6 +596,30 @@
     <message>
         <source>Information</source>
         <translation>Informatie</translation>
+    </message>
+    <message>
+        <source>Received and sent multiple transactions</source>
+        <translation>Meerdere transacties ontvangen en verstuurd</translation>
+    </message>
+    <message>
+        <source>Sent multiple transactions</source>
+        <translation>Meerdere transacties verstuurd</translation>
+    </message>
+    <message>
+        <source>Received multiple transactions</source>
+        <translation>Meerdere transacties ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent Amount: %1
+</source>
+        <translation>Verstuurd bedrag: %1
+</translation>
+    </message>
+    <message>
+        <source>Received Amount: %1
+</source>
+        <translation>Ontvangen bedrag: %1
+</translation>
     </message>
     <message>
         <source>Date: %1
@@ -641,22 +673,11 @@
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt; for mixing only</source>
-        <translation>Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;ontgrendeld&lt;/b&gt; enkel voor mixing</translation>
+        <translation>Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;ontgrendeld&lt;/b&gt; enkel voor mixen</translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Portemonnee is &lt;b&gt;versleuteld&lt;/b&gt; en momenteel &lt;b&gt;vergrendeld&lt;/b&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>ClientModel</name>
-    <message>
-        <source>Total: %1 (PS compatible: %2 / Enabled: %3)</source>
-        <translation>Totaal: %1 (PS compatibel: %2 / ingeschakeld: %3)</translation>
-    </message>
-    <message>
-        <source>Network Alert</source>
-        <translation>Netwerkwaarschuwing</translation>
     </message>
 </context>
 <context>
@@ -794,8 +815,8 @@
         <translation>Schakel over naar "Lijst mode" om deze functie te gebruiken.</translation>
     </message>
     <message>
-        <source>Non-anonymized input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-nonymized inputs first and then check PrivateSend checkbox again.</source>
-        <translation>Niet-anoniem invoer geselecteerd. &lt;b&gt;PrivateSend wordt afgesloten. &lt;/b&gt;&lt;br&gt;&lt;br&gt; Indien u toch PrivateSend wenst te gebruiken, deselecteer dan eerst alle niet-anonieme invoer. Vink daarna PrivateSend opnieuw aan.</translation>
+        <source>Non-mixed input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-mixed inputs first and then check the PrivateSend checkbox again.</source>
+        <translation>Niet-anonieme invoer geselecteerd. &lt;b&gt;PrivateSend wordt uitgeschakeld. &lt;/b&gt;&lt;br&gt;&lt;br&gt; Indien u toch PrivateSend wenst te gebruiken, deselecteer dan eerst alle niet-anonieme invoer. Vink daarna PrivateSend opnieuw aan.</translation>
     </message>
     <message>
         <source>(%1 locked)</source>
@@ -832,73 +853,6 @@
     <message>
         <source>n/a</source>
         <translation>N.v.t.</translation>
-    </message>
-</context>
-<context>
-    <name>DarksendConfig</name>
-    <message>
-        <source>Configure PrivateSend</source>
-        <translation>Configureer PrivateSend</translation>
-    </message>
-    <message>
-        <source>Basic Privacy</source>
-        <translation>Eenvoudige Privacy</translation>
-    </message>
-    <message>
-        <source>High Privacy</source>
-        <translation>Hoge Privacy</translation>
-    </message>
-    <message>
-        <source>Maximum Privacy</source>
-        <translation>Maximum Privacy</translation>
-    </message>
-    <message>
-        <source>Please select a privacy level.</source>
-        <translation>Kies een privacyniveau</translation>
-    </message>
-    <message>
-        <source>Use 2 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>Gebruik 2 verschillende masternodes om tot en met  100 Stash te mixen</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>Gebruik 8 verschillende masternodes om tot en met  1000 Stash te mixen</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Gebruik 16 verschillende masternodes</translation>
-    </message>
-    <message>
-        <source>This option is the quickest and will cost about ~0.025 STASH to anonymize 1000 STASH</source>
-        <translation>Deze optie is het snelst en kost ongeveer ~0.025 D om 1000 D te anonimiseren</translation>
-    </message>
-    <message>
-        <source>This option is moderately fast and will cost about 0.05 STASH to anonymize 1000 STASH</source>
-        <translation>Deze optie is relatief snel en zal ongeveer 0.05 STASH kosten om 1000 STASH te anonimiseren </translation>
-    </message>
-    <message>
-        <source>0.1 STASH per 1000 STASH you anonymize.</source>
-        <translation>0.1 STASH per 1000 STASH die je anonimiseert.</translation>
-    </message>
-    <message>
-        <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
-        <translation>Deze optie is het langzaamst en meest veilig. Maximimum anonimiteit kost</translation>
-    </message>
-    <message>
-        <source>PrivateSend Configuration</source>
-        <translation>PrivateSend configuratie</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend is succesvol ingesteld op basis (%1 en 2 rondes). U kunt dit op elk gewenst moment wijzigen door het Stash configuratiescherm te openen.</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend is succesvol ingesteld op hoog (%1 en 8 rondes). U kunt dit op elk gewenst moment wijzigen door het Stash configuratiescherm te openen.</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend is succesvol ingesteld op maximaal (%1 en 16 rondes). U kunt dit op elk gewenst moment wijzigen door het Stash configuratiescherm te openen.</translation>
     </message>
 </context>
 <context>
@@ -1038,8 +992,8 @@
         <translation>PrivateSend informatie</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be anonymized. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more info see &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;         </source>
-        <translation>&lt;h3&gt;Basics van PrivateSend&lt;/h3&gt; PrivateSend geeft u echte financiële privacy door de oorsprong van uw geld te verbergen. Alle Stash in uw wallet bestaat uit verschillende "inputs" die u kunt beschouwen als afzonderlijke, discrete munten.&lt;br&gt; PrivateSend maakt gebruik van een innovatief proces om uw input te mengen met de input van twee andere mensen, zonder dat uw munten ooit uw wallet verlaten . U behoudt te alle tijden de controle over uw geld. &lt;hr&gt; &lt;b&gt;Het PrivateSend-proces werkt als volgt: &lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begint door uw transactie-inputs in standaard denominaties op te breken. Deze denominaties zijn 0,01 STASH, 0,1 STASH, 1 STASH en 10 STASH - eigenlijk net zoals de muntstukken van contant geld dat u elke dag gebruikt.&lt;/li&gt; Uw wallet stuurt daarna verzoeken naar speciaal geconfigureerde softwarenodes op het netwerk, zogenaamde "masternodes." Deze masternodes worden daarmee op de hoogte gesteld dat u geïnteresseerd bent in het mixen van een bepaalde denominatie. Er wordt geen identificeerbare informatie naar de masternodes gestuurd, ze kunnen dus niet weten wie u bent.&lt;/li&gt; &lt;li&gt;Wanneer twee andere mensen vergelijkbare berichten sturen, waarin ze aangeven dat ze dezelfde denominaties willen mixen, begint een mixsessie. De masternode mixt alle invoeren en instrueert de wallets van alle drie de gebruikers om de nu getransformeerde input aan zichzelf terug te betalen. Uw wallet betaalt die denominaties rechtstreeks naar zichzelf, maar met een ander adres (een wisselgeldadres genoemd).&lt;/li&gt; &lt;li&gt;Om uw geld volledig te verbergen, moet uw portemonnee dit proces een aantal keer herhalen voor elke denominatie. Iedere keer dat het proces wordt voltooid, wordt een 'ronde' genoemd. Elke ronde van PrivateSend maakt het exponentieel moeilijker om de herkomst van uw geld te bepalen.&lt;/li&gt; &lt;li&gt;Dit mixproces gebeurt op de achtergrond zonder enige tussenkomst van uw kant. Wanneer u een transactie wenst uit te voeren, zijn uw fondsen al geanonimiseerd. Er is geen extra wachttijd nodig.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;BELANGRIJK:&lt;/b&gt; Uw wallet bevat slechts 1000 van deze "wisselgeldadressen". Elke keer dat er een mixsessie plaatsvindt, worden maximaal 9 van uw adressen opgebruikt. Dit betekent dat deze 1000 adressen volstaan voor ongeveer 100 mixsessies. Wanneer er 900 adressen zijn opgebruikt, moet uw wallet nieuwe adressen aanmaken. Dit kan alleen maar als u automatische back-ups hebt ingeschakeld.&lt;br&gt; Daarom is voor gebruikers die back-ups hebben uitgeschakeld, ook PrivateSend uitgeschakeld. &lt;hr&gt;Voor meer informatie kijk op&lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https: //stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;</translation>
+        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.001 STASH, 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be mixed. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more information, see the &lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;PrivateSend documentation&lt;/a&gt;.</source>
+        <translation>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend geeft u een echte financiële privacy door de oorsprong van uw geld te verschuilen. Alle Stash in uw portefeuille bestaat uit verschillende "inputs" die u kunt beschouwen als afzonderlijke, discrete munten.&lt;br&gt; PrivateSend maakt gebruik van een innovatief proces om uw invoer te mengen met de invoer van twee andere mensen, zonder dat uw munten ooit uw portemonnee verlaten . U behoudt de controle over uw geld te allen tijde. &lt;hr&gt; &lt;b&gt;Het PrivateSend-proces werkt als volgt: &lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begint door uw transactie-inputs in de standaard denominaties te breken. Deze denominaties zijn 0,001 STASH, 0,01 STASH, 0,1 STASH, 1 STASH en 10 STASH - zoals het papiergeld dat u elke dag gebruikt.&lt;/li&gt; &lt;li&gt;Uw portemonnee stuurt dan verzoeken naar speciaal geconfigureerde software nodes op het netwerk, genaamd "masternodes." Deze masternodes worden dan op de hoogte gesteld dat u geïnteresseerd bent in het mengen van een bepaalde denominaties. Er wordt geen identificeerbare informatie naar de masternodes gestuurd, zodat ze nooit weten wie u bent.&lt;/li&gt; &lt;li&gt;Wanneer twee andere mensen dezelfde berichten sturen, die aanduiden dat ze dezelfde denominaties willen vermengen, begint een mengsessie. De masternode mengt alle invoeren en instrueert de portefeuilles van alle drie de gebruikers om de nu getransformeerde invoer aan zichzelf terug te betalen. Uw portemonnee betaalt die denominaties rechtstreeks naar zichzelf, maar met een ander adres (een wijzigingadres genoemd).&lt;/li&gt; &lt;li&gt;Om uw geld volledig te verschuilen, moet uw portemonnee dit proces een aantal keren herhalen voor alle denominaties. Elke keer dat het proces wordt voltooid, heet dit een 'ronde'. Elke ronde van PrivateSend maakt het exponentieel moeilijker om te bepalen waar uw geld van afkomstig is.&lt;/li&gt; &lt;li&gt;Dit mengproces gebeurt op de achtergrond zonder enige interventie van uw kant. Wanneer u een transactie wenst uit te voeren, is uw saldo al geanonimiseerd. Er is geen extra wachttijd nodig.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;BELANGRIJK:&lt;/b&gt; Uw portemonnee bevat slechts 1000 van deze "wijzigingsadressen". Elke keer dat er een mengsessie plaatsvindt, worden maximaal 9 van uw adressen opgebruikt. Dit betekent dat deze 1000 adressen voor ongeveer 100 mengsessies volstaat. Wanneer er 900 zijn verbruikt, moet uw portemonnee meer adressen aanmaken. Dit kan alleen maar als u automatische back-ups hebt ingeschakeld.&lt;br&gt; Daarom zodra gebruikers die back-ups hebben uitgeschakeld, ook PrivateSend is uitgeschakeld. &lt;hr&gt;Voor meer informatie zie de &lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;PrivateSend documentatie&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -1057,8 +1011,16 @@
         <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Stash block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 zal een kopie van de Stash-blockchain downloaden en opslaan. Ten minste %2GB aan data zal worden opgeslagen in deze folder, dit zal toenemen in de toekomst. De portemonnee zal ook in deze folder worden opgeslagen.</translation>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Als u op OK klikt, dan zal %1 beginnen met downloaden en verwerken van de volledige %4 blokketen (%2GB) startend met de eerste transacties in %3 toen %4 initeel werd gestart.</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>Deze initiële synchronisatie is heel veeleisend, en kan hardware problemen met uw computer blootleggen die voorheen onopgemerkt bleven. Elke keer dat %1 gebruikt word, zal verdergegaan worden waar gebleven is.</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>Als u gekozen heeft om de blokketenopslag te beperken (pruning), dan moet de historische data nog steeds gedownload en verwerkt worden, maar zal verwijderd worden naderhand om schijf gebruik zo laag mogelijk te houden.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1067,6 +1029,22 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Tenminste %1 GB aan data zal worden opgeslagen in deze map, en dit zal naarmate de tijd voortschrijdt groeien.</translation>
+    </message>
+    <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>Gemiddeld %1 GB aan data zal worden opgeslagen in deze map.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Stash block chain.</source>
+        <translation>%1 zal een kopie van de blokketen van Stash downloaden en opslaan.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1092,76 +1070,12 @@
         <translation>Formulier</translation>
     </message>
     <message>
-        <source>My Masternodes</source>
-        <translation>Mijn Masternodes</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your masternode should be running but you still do not see "ENABLED" in "Status" field.</source>
-        <translation>Opmerking: Status van uw masternodes in de lokale portemonnee kan mogelijk licht afwijkend zijn.&lt;br /&gt;Wacht steeds tot de portemonnee extra gegevens synchroniseert en controleer daarna een ander knooppunt&lt;br /&gt;Als jouw masternode moet werken, maar je ziet nog steeds niet 'Ingeschakeld' in het 'Status' veld.</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Alias</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protocol</translation>
-    </message>
-    <message>
         <source>Status</source>
         <translation>Status</translation>
     </message>
     <message>
-        <source>Active</source>
-        <translation>Actief</translation>
-    </message>
-    <message>
-        <source>Last Seen</source>
-        <translation>Laatst gezien</translation>
-    </message>
-    <message>
-        <source>Payee</source>
-        <translation>Begunstigde</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>S&amp;tart alias</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>Start &amp;alle</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>Start &amp;ONTBREKEND</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;Vernieuw status</translation>
-    </message>
-    <message>
-        <source>Show additional Masternode information</source>
-        <translation>Toon aanvullende Masternode informatie</translation>
-    </message>
-    <message>
-        <source>Show &amp;Info...</source>
-        <translation>Toon &amp;Info...</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>Status wordt automatisch bijgewerkt in (sec):</translation>
-    </message>
-    <message>
         <source>0</source>
         <translation>0</translation>
-    </message>
-    <message>
-        <source>All Masternodes</source>
-        <translation>Alle Masternodes</translation>
     </message>
     <message>
         <source>Filter List:</source>
@@ -1176,72 +1090,92 @@
         <translation>Aantal Nodes:</translation>
     </message>
     <message>
-        <source>Start alias</source>
-        <translation>Start alias</translation>
+        <source>Show only masternodes this wallet has keys for.</source>
+        <translation>Toon alleen masternodes waar deze portemonnee sleutels voor heeft.</translation>
     </message>
     <message>
-        <source>Confirm masternode start</source>
-        <translation>Bevestig opstarten van Masternode</translation>
+        <source>My masternodes only</source>
+        <translation>Alleen mijn masternodes</translation>
     </message>
     <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Weet u zeker dat u Masternode %1 wenst op te starten?</translation>
+        <source>Service</source>
+        <translation>Service</translation>
     </message>
     <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Bevestig het opstarten van alle Masternodes</translation>
+        <source>PoSe Score</source>
+        <translation>PoSe Score</translation>
     </message>
     <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Weet u zeker dat u ALLE masternodes wenst te starten?</translation>
+        <source>Registered</source>
+        <translation>Geregistreerd</translation>
     </message>
     <message>
-        <source>Command is not available right now</source>
-        <translation>Dit commando is momenteel niet beschikbaar</translation>
+        <source>Last Paid</source>
+        <translation>Laatst Betaald</translation>
     </message>
     <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>U kunt dit commando niet gebruiken totdat de Masternode lijst is gesynchroniseerd</translation>
+        <source>Next Payment</source>
+        <translation>Volgende betaling</translation>
     </message>
     <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Bevestig starten van ontbrekende masternodes</translation>
+        <source>Payout Address</source>
+        <translation>Betalingsadres</translation>
     </message>
     <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Weet u zeker dat u de ONTBREKENDE masternodes wenst te starten?</translation>
+        <source>Operator Reward</source>
+        <translation>Vergoeding voor Bediener</translation>
     </message>
     <message>
-        <source>Additional information for Masternode %1</source>
-        <translation>Aanvullende informatie voor Masternode %1</translation>
+        <source>Collateral Address</source>
+        <translation>Onderpand adres</translation>
     </message>
     <message>
-        <source>Masternode Private Key</source>
-        <translation>Geheime sleutel van de Masternode</translation>
+        <source>Owner Address</source>
+        <translation>Adres eigenaar</translation>
     </message>
     <message>
-        <source>Private Key</source>
-        <translation>Geheime sleutel</translation>
+        <source>Voting Address</source>
+        <translation>Stemadres</translation>
     </message>
     <message>
-        <source>Collateral</source>
-        <translation>Onderpand</translation>
+        <source>Copy ProTx Hash</source>
+        <translation>Kopieer ProTx Hash</translation>
     </message>
     <message>
-        <source>IP</source>
-        <translation>IP</translation>
+        <source>Copy Collateral Outpoint</source>
+        <translation>Kopieer Onderpand Outpoint</translation>
     </message>
     <message>
-        <source>Version</source>
-        <translation>Versie</translation>
+        <source>ENABLED</source>
+        <translation>INGESCHAKELD</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Onbekend</translation>
+        <source>POSE_BANNED</source>
+        <translation>POSE_BANNED</translation>
     </message>
     <message>
-        <source>Sentinel</source>
-        <translation>Sentinel</translation>
+        <source>UNKNOWN</source>
+        <translation>ONBEKEND</translation>
+    </message>
+    <message>
+        <source>to %1</source>
+        <translation>naar %1</translation>
+    </message>
+    <message>
+        <source>to UNKNOWN</source>
+        <translation>naar ONBEKEND</translation>
+    </message>
+    <message>
+        <source>but not claimed</source>
+        <translation>naar niet gevorderd</translation>
+    </message>
+    <message>
+        <source>NONE</source>
+        <translation>GEEN</translation>
+    </message>
+    <message>
+        <source>Additional information for DIP3 Masternode %1</source>
+        <translation>Extra informatie voor DIP3 Masternode %1</translation>
     </message>
 </context>
 <context>
@@ -1260,7 +1194,7 @@
     </message>
     <message>
         <source>Number of blocks left</source>
-        <translation>Aantal blokken resterend.</translation>
+        <translation>Aantal blocks resterend.</translation>
     </message>
     <message>
         <source>Unknown...</source>
@@ -1345,10 +1279,6 @@
         <translation>(0 = auto, &lt;0 = laat dit aantal kernen vrij)</translation>
     </message>
     <message>
-        <source>Amount of Stash to keep anonymized</source>
-        <translation>Aantal Stash om geanonimiseerd te houden</translation>
-    </message>
-    <message>
         <source>W&amp;allet</source>
         <translation>W&amp;allet</translation>
     </message>
@@ -1378,7 +1308,7 @@
     </message>
     <message>
         <source>Whether to use experimental PrivateSend mode with multiple mixing sessions per block.&lt;br/&gt;Note: You must use this feature carefully.&lt;br/&gt;Make sure you always have recent wallet (auto)backup in a safe place!</source>
-        <translation>Of je de experimentele PrivateSend-modus wenst te gebruiken met meerdere mengingssessies per blok.&lt;br/&gt;Nota: Je moet deze functie zorgvuldig gebruiken.&lt;br/&gt;Zorg ervoor dat je steeds een recente (auto)backup van jouw portemonnee op een veilige plek hebt!</translation>
+        <translation>Of je de experimentele PrivateSend-modus wenst te gebruiken met meerdere mixsessies per blok.&lt;br/&gt;Nota: Je moet deze functie zorgvuldig gebruiken.&lt;br/&gt;Zorg ervoor dat je steeds een recente (auto)backup van jouw portemonnee op een veilige plek hebt!</translation>
     </message>
     <message>
         <source>Enable PrivateSend &amp;multi-session</source>
@@ -1398,16 +1328,12 @@ Dit heeft ook invloed op de manier waarop uw saldo wordt berekend.</translation>
         <translation>Dit bedrag fungeert als een drempel om PrivateSend uit te schakelen zodra het werd bereikt.</translation>
     </message>
     <message>
+        <source>Target PrivateSend balance</source>
+        <translation>Target PrivateSend Saldo</translation>
+    </message>
+    <message>
         <source>Automatically open the Stash Core client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <translation>Open automatisch de Stash client poort op de router. Dit werkt alleen als uw router UPnP ondersteunt en dit is ingeschakeld.</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside</source>
-        <translation>Laat uitgaande verbindingen toe.</translation>
-    </message>
-    <message>
-        <source>Allow incoming connections</source>
-        <translation>Laat binnenkomende verbindingen toe</translation>
     </message>
     <message>
         <source>Connect to the Stash network through a SOCKS5 proxy.</source>
@@ -1416,6 +1342,10 @@ Dit heeft ook invloed op de manier waarop uw saldo wordt berekend.</translation>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
         <translation>&amp;Verbind via een SOCKS-proxy (standaardproxy):</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Toont of de opgegeven standaard SOCK5 proxy gebruikt is om peers via dit netwerk type te bereiken.</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1428,11 +1358,6 @@ Dit heeft ook invloed op de manier waarop uw saldo wordt berekend.</translation>
     <message>
         <source>Expert</source>
         <translation>Expert</translation>
-    </message>
-    <message>
-        <source>This setting determines the amount of individual masternodes that an input will be anonymized through.&lt;br/&gt;More rounds of anonymization gives a higher degree of privacy, but also costs more in fees.</source>
-        <translation>Deze instelling bepaalt het aantal individuele masternodes waardoor een input zal worden geanonimiseerd. 
-Meer anonimisatie rondes geeft een hoger niveau van privacy, maar kost ook meer aan vergoedingen.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1451,8 +1376,20 @@ Meer anonimisatie rondes geeft een hoger niveau van privacy, maar kost ook meer 
         <translation>Coin &amp;Control activeren</translation>
     </message>
     <message>
+        <source>Show system popups for PrivateSend mixing transactions&lt;br/&gt;just like for all other transaction types.</source>
+        <translation>Toon systeem popups voor PrivateSend mixtransacties &lt;br/&gt;, net zoals voor alle andere transactie types.</translation>
+    </message>
+    <message>
+        <source>Show popups for PrivateSend transactions</source>
+        <translation>Toon popups voor PrivateSend transacties</translation>
+    </message>
+    <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Spendeer onbevestigd wisselgeld</translation>
+    </message>
+    <message>
+        <source>This setting determines the amount of individual masternodes that an input will be mixed through.&lt;br/&gt;More rounds of mixing gives a higher degree of privacy, but also costs more in fees.</source>
+        <translation>Deze instelling bepaalt het aantal individuele masternodes waardoor een input zal worden geanonimiseerd.&lt;br/&gt;Meer mixrondes geeft een hoger niveau van privacy, maar kost ook meer aan vergoedingen.</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1461,6 +1398,14 @@ Meer anonimisatie rondes geeft een hoger niveau van privacy, maar kost ook meer 
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Portmapping via &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside</source>
+        <translation>Laat uitgaande verbindingen toe.</translation>
+    </message>
+    <message>
+        <source>Allow incoming connections</source>
+        <translation>Laat binnenkomende verbindingen toe</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1481,10 +1426,6 @@ Meer anonimisatie rondes geeft een hoger niveau van privacy, maar kost ook meer 
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Gebruikt om peers te bereiken via:</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Toont of de opgegeven standaard SOCK5 proxy gebruikt is om peers via dit netwerk type te bereiken</translation>
     </message>
     <message>
         <source>IPv4</source>
@@ -1704,22 +1645,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Voltooiing:</translation>
     </message>
     <message>
-        <source>Try to manually submit a PrivateSend request.</source>
-        <translation>Probeer handmatig een PrivateSend verzoek in te dienen</translation>
-    </message>
-    <message>
-        <source>Reset the current status of PrivateSend (can interrupt PrivateSend if it's in the process of Mixing, which can cost you money!)</source>
-        <translation>Reset de huidige status van PrivateSend (kan PrivateSend onderbreken indien het Mix proces bezig is, wat u geld kan kosten!)</translation>
-    </message>
-    <message>
-        <source>Information about PrivateSend and Mixing</source>
-        <translation>Informatie over PrivateSend en mixen</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Informatie</translation>
-    </message>
-    <message>
         <source>Amount and Rounds:</source>
         <translation>Bedrag en Rondes:</translation>
     </message>
@@ -1741,7 +1666,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Start/Stop Mixing</source>
-        <translation>Start/Stop met Mixen</translation>
+        <translation>Start/Stop met mixen</translation>
     </message>
     <message>
         <source>PrivateSend Balance:</source>
@@ -1757,14 +1682,6 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
         <translation>(Laatste Bericht)</translation>
     </message>
     <message>
-        <source>Try Mix</source>
-        <translation>Probeer te Mixen</translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation>Reset</translation>
-    </message>
-    <message>
         <source>out of sync</source>
         <translation>niet gesynchroniseerd</translation>
     </message>
@@ -1774,11 +1691,11 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Start Mixing</source>
-        <translation>Start met Mixen</translation>
+        <translation>Start met mixen</translation>
     </message>
     <message>
         <source>Stop Mixing</source>
-        <translation>Stop met Mixen</translation>
+        <translation>Stop met mixen</translation>
     </message>
     <message>
         <source>No inputs detected</source>
@@ -1805,12 +1722,12 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
         <translation>Gedenomineerd</translation>
     </message>
     <message>
-        <source>Mixed</source>
-        <translation>Gemixt</translation>
+        <source>Partially mixed</source>
+        <translation>Gedeeltelijk gemengd</translation>
     </message>
     <message>
-        <source>Anonymized</source>
-        <translation>Geanonimiseerd</translation>
+        <source>Mixed</source>
+        <translation>Gemixt</translation>
     </message>
     <message numerus="yes">
         <source>Denominated inputs have %5 of %n rounds on average</source>
@@ -1834,7 +1751,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Note: You can turn this message off in options.</source>
-        <translation>Opmerking: Dit bericht kan kan worden uitgeschakeld in de instellingen</translation>
+        <translation>Opmerking: Dit bericht kan kan worden uitgeschakeld in de instellingen.</translation>
     </message>
     <message>
         <source>WARNING! Something went wrong on automatic backup</source>
@@ -1865,14 +1782,6 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
 </source>
         <translation>Laatste PrivateSend bericht:
 </translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N.v.t.</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully reset.</source>
-        <translation>PrivateSend is succesvol gereset</translation>
     </message>
     <message>
         <source>If you don't want to see internal PrivateSend fees/transactions select "Most Common" as Type on the "Transactions" tab.</source>
@@ -2000,16 +1909,8 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
 <context>
     <name>QObject</name>
     <message>
-        <source>Stash Core</source>
-        <translation>Stash Core</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 sloot nog niet veilig af...</translation>
-    </message>
-    <message>
-        <source>Error reading masternode configuration file: %1</source>
-        <translation>Fout in het lezen van masternode configuratie bestand: %1</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2200,7 +2101,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Current number of blocks</source>
-        <translation>Huidig aantal blokken</translation>
+        <translation>Huidig aantal blocks </translation>
     </message>
     <message>
         <source>Client version</source>
@@ -2243,10 +2144,6 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
         <translation>&amp;Netwerkverkeer</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Wissen</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>Totalen</translation>
     </message>
@@ -2260,7 +2157,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>&amp;Peers</source>
-        <translation>$Peers</translation>
+        <translation>&amp;Peers</translation>
     </message>
     <message>
         <source>Banned peers</source>
@@ -2292,7 +2189,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Synced Blocks</source>
-        <translation>Gesynchroniseerde blokken</translation>
+        <translation>Gesynchroniseerde blocks </translation>
     </message>
     <message>
         <source>Wallet Path</source>
@@ -2311,12 +2208,20 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
         <translation>Open het %1 debug-logbestand van de huidige gegevensmap. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
+        <source>InstantSend locks</source>
+        <translation>InstantSend vergrendelingen</translation>
+    </message>
+    <message>
         <source>Decrease font size</source>
         <translation>Verklein lettergrootte</translation>
     </message>
     <message>
         <source>Increase font size</source>
         <translation>Vergroot lettergrootte</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Reset</translation>
     </message>
     <message>
         <source>Services</source>
@@ -2364,7 +2269,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Salvage wallet</source>
-        <translation>Gerede portemonnee</translation>
+        <translation>Herstel portemonnee</translation>
     </message>
     <message>
         <source>Rescan blockchain files</source>
@@ -2372,15 +2277,15 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Recover transactions 1</source>
-        <translation>Herstelde transacties 1</translation>
+        <translation>Herstel transacties 1</translation>
     </message>
     <message>
         <source>Recover transactions 2</source>
-        <translation>Herstelde transacties 2</translation>
+        <translation>Herstel transacties 2</translation>
     </message>
     <message>
         <source>Upgrade wallet format</source>
-        <translation>Upgrade portemonnee formaat</translation>
+        <translation>Upgrade portemonnee</translation>
     </message>
     <message>
         <source>The buttons below will restart the wallet with command-line options to repair the wallet, fix issues with corrupt blockhain files or missing/obsolete transactions.</source>
@@ -2388,7 +2293,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>-salvagewallet: Attempt to recover private keys from a corrupt wallet.dat.</source>
-        <translation>-red portemonnee: Poging om geheime sleutels terug te halen uit het beschadigede portemonnee bestand (wallet.dat.)</translation>
+        <translation>-herstel portemonnee: Poging om geheime sleutels terug te halen uit het beschadigde portemonnee bestand (wallet.dat.)</translation>
     </message>
     <message>
         <source>-rescan: Rescan the block chain for missing wallet transactions.</source>
@@ -2396,15 +2301,15 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>-zapwallettxes=1: Recover transactions from blockchain (keep meta-data, e.g. account owner).</source>
-        <translation>-zapwallettxes=1: Herstelde transacties van de blokketen (behoud metadata; bv. accounteigenaar)</translation>
+        <translation>-zapwallettxes=1: Herstel transacties van de blocks (behoud metadata; bv. accounteigenaar)</translation>
     </message>
     <message>
         <source>-zapwallettxes=2: Recover transactions from blockchain (drop meta-data).</source>
-        <translation>-zapwallettxed=2: Herstelde transacties vanuit de blokketen (laat metadata vervallen)</translation>
+        <translation>-zapwallettxes=2: Herstel transacties van de blocks (laat metadata vervallen)</translation>
     </message>
     <message>
         <source>-upgradewallet: Upgrade wallet to latest format on startup. (Note: this is NOT an update of the wallet itself!)</source>
-        <translation>-upgrade portemonnee= Upgrade portemonnee naar het laatste formaat bij het starten: (Noot: dit is GEEN update van de portemonnee zelf!)</translation>
+        <translation>-upgrade portemonnee= Upgrade portemonnee naar het laatste formaat bij het starten: (Let op: dit is GEEN update van de portemonnee zelf!)</translation>
     </message>
     <message>
         <source>Wallet repair options.</source>
@@ -2412,7 +2317,7 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     </message>
     <message>
         <source>Rebuild index</source>
-        <translation>Herbouw de index</translation>
+        <translation>Herbouw index</translation>
     </message>
     <message>
         <source>-reindex: Rebuild block chain index from current blk000??.dat files.</source>
@@ -2451,16 +2356,16 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
         <translation>Welkom bij de %1 RPC-console.</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Gebruik de pijltjestoetsen om door de geschiedenis te navigeren, en &lt;b&gt;Ctrl-L&lt;/b&gt; om het scherm leeg te maken.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Typ &lt;b&gt;help&lt;/b&gt; voor een overzicht van de beschikbare commando's.</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>WAARSCHUWING: Er zijn oplichters die gebruikers hier commando's in laten voeren om zo de inhoud van hun portemonnee te stelen. Gebruik deze console niet zonder dat u de gevolgen van uw commando's volledig begrijpt.</translation>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Gebruik de pijl toetsen om door de geschiedenis te navigeren, en %1 om het scherm te wissen.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
+        <translation>PAS OP: Oplichters zijn actief, die proberen om gebruikers hier opdrachten te typen, waardoor de inhoud van de portemonnee gestolen kan worden. Gebruik deze console niet zonder de consequenties van een opdracht volledig te begrijpen.</translation>
     </message>
     <message>
         <source>In:</source>
@@ -2473,6 +2378,10 @@ Om te mixen moeten andere gebruikers exact dezelfde denominaties inbrengen.</tra
     <message>
         <source>Network activity disabled</source>
         <translation>Netwerkactiviteit uitgeschakeld</translation>
+    </message>
+    <message>
+        <source>Total: %1 (Enabled: %2)</source>
+        <translation>Totaal: %1 (Ingeschakeld: %2)</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -2581,10 +2490,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Wissen</translation>
     </message>
     <message>
-        <source>Request InstantSend</source>
-        <translation>Verzoek InstantSend</translation>
-    </message>
-    <message>
         <source>Requested payments history</source>
         <translation>Geschiedenis van de betalingsverzoeken</translation>
     </message>
@@ -2666,18 +2571,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Message</source>
         <translation>Bericht</translation>
-    </message>
-    <message>
-        <source>InstantSend</source>
-        <translation>InstantSend</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
@@ -2786,14 +2679,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Kies...</translation>
     </message>
     <message>
-        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation>Het gebruik van de terugvalvergoeding kan resulteren in het verzenden van een transactie die meerdere uren of dagen (of nooit) nodig heeft om bevestigd te worden. Overweeg om handmatig een vergoeding te kiezen of wacht totdat de volledige blockchain gevalideerd is.</translation>
-    </message>
-    <message>
-        <source>Warning: Fee estimation is currently not possible.</source>
-        <translation>Waarschuwing: Schatting van de transactiekosten is momenteel niet mogelijk.</translation>
-    </message>
-    <message>
         <source>collapse fee-settings</source>
         <translation>Klap de vergoedinginstellingen dicht</translation>
     </message>
@@ -2806,32 +2691,28 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>PrivateSend</translation>
     </message>
     <message>
-        <source>InstantSend</source>
-        <translation>InstantSend</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Als de aangepaste vergoeding is ingesteld op 1000 stashees en de transactie is maar 250 bytes, dan wordt bij "per kilobyte" 250 stashees aan toeslag berekend, &lt;br /&gt;terwijl er bij "tenminste" 1000 stashees worden berekend. Voor transacties die groter zijn dan een kilobyte, wordt in beide gevallen per kilobyte de toeslag berekend.</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "total at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Als de aangepaste toeslag is ingesteld op 1000 stashees en de transactie is maar 250 bytes, dan wordt bij "per kilobyte" 250 stashees aan toeslag berekend, &lt;br /&gt;terwijl er bij "totaal tenminste" 1000 stashees worden berekend. Voor transacties die groter zijn dan een kilobyte, wordt in beide gevallen per kilobyte de toeslag berekend.</translation>
+        <source>If the custom fee is set to 1000 duffs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 duffs in fee,&lt;br /&gt;while "at least" pays 1000 duffs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Als de aangepaste vergoeding is ingesteld op 1000 duffs en de transactie is maar 250 bytes, dan wordt bij "per kilobyte" 250 duffs aan toeslag berekend, &lt;br /&gt;terwijl er bij "tenminste" 1000 duffs worden berekend. Voor transacties die groter zijn dan een kilobyte, wordt in beide gevallen per kilobyte de toeslag berekend.</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for stash transactions than the network can process.</source>
-        <translation>Het betalen van de minimale vergoeding is prima zo lang er minder transactie volume is dan ruimte in de blokken. &lt;br /&gt;Maar houd er rekening mee dat dit kan eindigen in een nooit bevestigde transactie zodra er meer vraag is voor Stash transacties fdan het netwerk kan verwerken.</translation>
+        <translation>Het betalen van de minimale vergoeding is prima zo lang er minder transactie volume is dan ruimte in de blocks. &lt;br /&gt;Maar houd er rekening mee dat dit kan eindigen in een nooit bevestigde transactie zodra er meer vraag is voor Stash transacties fdan het netwerk kan verwerken.</translation>
     </message>
     <message>
         <source>per kilobyte</source>
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Verbergen</translation>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>Het gebruik van de terugval vergoeding kan resulteren in het verzenden van een transactie die enkele uren of dagen (of nooit) duurt om te bevestigen. Overweeg uw tarief handmatig te kiezen of wacht tot u de volledige keten hebt gevalideerd.</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>minimaal totaal</translation>
+        <source>Note: Not enough data for fee estimation, using the fallback fee instead.</source>
+        <translation>Opmerking: niet genoeg gegevens voor het schatten van de transactievergoeding, in plaats daarvan wordt de terugval vergoeding gebruikte.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Verbergen</translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
@@ -2847,15 +2728,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation>(Slimme kosten zijn nog niet geïnitialiseerd Dit duurt meestal een paar blokken...)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>normaal</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>snel</translation>
+        <translation>(Slimme kosten zijn nog niet geïnitialiseerd Dit duurt meestal een paar blocks ...)</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2914,24 +2787,12 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Kopieer wijziging</translation>
     </message>
     <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 blokken)</translation>
+    </message>
+    <message>
         <source>using</source>
         <translation>gebruiken</translation>
-    </message>
-    <message>
-        <source>anonymous funds</source>
-        <translation>anonieme geldmiddelen</translation>
-    </message>
-    <message>
-        <source>(privatesend requires this amount to be rounded up to the nearest %1).</source>
-        <translation>(PrivateSend vereist dat dit bedrag afgerond wordt naar dedichtstbijzijnde %1)</translation>
-    </message>
-    <message>
-        <source>any available funds (not anonymous)</source>
-        <translation>Al het beschikbare geldmiddelen (niet anoniem)</translation>
-    </message>
-    <message>
-        <source>and InstantSend</source>
-        <translation>en InstantSend</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2952,6 +2813,34 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>&lt;b&gt;(%1 of %2 entries displayed)&lt;/b&gt;</source>
         <translation>&lt;b&gt;(%1 van de %2 items weergegeven)&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>PrivateSend funds only</source>
+        <translation>Allen PrivateSend saldo</translation>
+    </message>
+    <message>
+        <source>any available funds</source>
+        <translation>Beschikbare fondsen</translation>
+    </message>
+    <message>
+        <source>(PrivateSend transactions have higher fees usually due to no change output being allowed)</source>
+        <translation>(PrivateSend-transacties hebben hogere kosten doordat er geen wisselgeld output is toegestaan)</translation>
+    </message>
+    <message>
+        <source>Transaction size: %1</source>
+        <translation>Transactiegrootte: %1</translation>
+    </message>
+    <message>
+        <source>Fee rate: %1</source>
+        <translation>Transactievergoeding: %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>This transaction will consume %n input(s)</source>
+        <translation><numerusform>Deze transactie verbruikt %n inputs</numerusform><numerusform>Deze transactie verbruikt %n inputs</numerusform></translation>
+    </message>
+    <message>
+        <source>Warning: Using PrivateSend with %1 or more inputs can harm your privacy and is not recommended</source>
+        <translation>Waarschuwing: het gebruik van PrivateSend met %1 of meer ingangen kan uw privacy schaden en wordt niet aanbevolen</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2993,17 +2882,13 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <source>Payment request expired.</source>
         <translation>Betalingsverzoek verlopen.</translation>
     </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n blok</numerusform><numerusform>%n blokken</numerusform></translation>
-    </message>
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Betaal alleen de verplichte transactie vergoeding van %1</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Schatting is dat bevestiging begint binnen %n blok.</numerusform><numerusform>Schatting is dat bevestiging begint binnen %n blokken.</numerusform></translation>
+        <translation><numerusform>Schatting is dat bevestiging begint binnen %n blok.</numerusform><numerusform>Schatting is dat bevestiging begint binnen %n blocks.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Stash address</source>
@@ -3288,7 +3173,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
+        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blocks</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3327,16 +3212,12 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>%1 bevestigingen</translation>
     </message>
     <message>
-        <source>verified via InstantSend</source>
-        <translation>geverifieerd met InstantSend</translation>
+        <source>locked via LLMQ based ChainLocks</source>
+        <translation>vergrendeld door LLMQ-gebaseerde ChainLocks</translation>
     </message>
     <message>
-        <source>InstantSend verification in progress - %1 of %2 signatures</source>
-        <translation>Bezig met InstantSend verficatie - %1 van %2 ondertekeningen</translation>
-    </message>
-    <message>
-        <source>InstantSend verification failed</source>
-        <translation>InstantSend verificatie mislukt</translation>
+        <source>verified via LLMQ based InstantSend</source>
+        <translation>vergrendeld door LLMQ-gebaseerde InstandSend</translation>
     </message>
     <message>
         <source>Status</source>
@@ -3392,7 +3273,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>komt beschikbaar na %n nieuw blok</numerusform><numerusform>komt beschikbaar na %n nieuwe blokken</numerusform></translation>
+        <translation><numerusform>komt beschikbaar na %n nieuw blok</numerusform><numerusform>komt beschikbaar na %n nieuwe blocks</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3444,7 +3325,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Gegenereerde munten moeten %1 blokken rijpen voordat ze kunnen worden besteed. Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blokketen toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status te veranderen naar "niet geaccepteerd" en zal het niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een blok genereert binnen een paar seconden na die van u.</translation>
+        <translation>Gegenereerde munten moeten %1 blocks rijpen voordat ze kunnen worden besteed. Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blocks toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status te veranderen naar "niet geaccepteerd" en zal het niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een block genereert binnen een paar seconden na die van u.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -3498,7 +3379,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
+        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blocks</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3613,6 +3494,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Of er een alleen-bekijken-adres is betrokken bij deze transactie.</translation>
     </message>
     <message>
+        <source>Whether or not this transaction was locked by InstantSend.</source>
+        <translation>Of deze transactie wel of niet was vastgezet door InstantSend.</translation>
+    </message>
+    <message>
         <source>User-defined intent/purpose of the transaction.</source>
         <translation>Door gebruiker gedefinieerde intentie/doel van de transactie.</translation>
     </message>
@@ -3626,6 +3511,14 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>All</source>
         <translation>Alles</translation>
+    </message>
+    <message>
+        <source>Locked by InstantSend</source>
+        <translation>Geblokkeerd door InstantSend</translation>
+    </message>
+    <message>
+        <source>Not locked by InstantSend</source>
+        <translation>Niet geblokkeerd door InstantSend</translation>
     </message>
     <message>
         <source>Today</source>
@@ -3740,6 +3633,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Toon transactiedetails</translation>
     </message>
     <message>
+        <source>Show address QR code</source>
+        <translation>Toon adres QR-code</translation>
+    </message>
+    <message>
         <source>Export Transaction History</source>
         <translation>Exporteer transactiegeschiedenis</translation>
     </message>
@@ -3792,6 +3689,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>De transactiegeschiedenis was succesvol bewaard in %1.</translation>
     </message>
     <message>
+        <source>QR code</source>
+        <translation>QR code</translation>
+    </message>
+    <message>
         <source>Range:</source>
         <translation>Bereik:</translation>
     </message>
@@ -3819,14 +3720,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Send Coins</source>
         <translation>Verstuur munten</translation>
-    </message>
-    <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>InstantSend ondersteund het verzenden van zulke hoge bedragen nog niet. Transacties zijn momenteel gelimiteerd tot %1 Stash.</translation>
-    </message>
-    <message>
-        <source>Used way too many inputs (&gt;%1) for this InstantSend transaction, fees could be huge.</source>
-        <translation>Er worden veel te veel inputs (&gt;%1) gebruikt voor deze InstantSend transactie, de vergoeding kan enorm zijn.</translation>
     </message>
 </context>
 <context>
@@ -3895,10 +3788,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Naam om url te vormen voor de KeePass invoer die de wachtwoordzin van de wallet opslaat</translation>
     </message>
     <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>Stel de maximale grote in van hoge prioriteit/lage kosten transacties in bytes (default: %d)</translation>
-    </message>
-    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Kies het aantal scriptverificatie processen (%u tot %d, 0 = auto, &lt;0 = laat dit aantal kernen vrij, standaard: %d)</translation>
     </message>
@@ -3915,16 +3804,8 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Waarschuwing: Het lijkt erop dat we geen consensus kunnen vinden met onze peers! Mogelijk dient u te upgraden, of andere nodes moeten wellicht upgraden.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>U moet een geheime sleutel van een Masternode invoeren. Raadpleeg de documentatie voor hulp.</translation>
-    </message>
-    <message>
         <source>Accept command line and JSON-RPC commands</source>
         <translation>Ontvang command-lijn en JSON-RPC commando's.</translation>
-    </message>
-    <message>
-        <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>Voeg een node toe om mee te verbinden en probeer de verbinding open te houden.</translation>
     </message>
     <message>
         <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
@@ -4039,10 +3920,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Bind aan opgegeven adres en keur peers die ermee verbinden goed. Gebruik [host]:poort notatie voor IPv6</translation>
     </message>
     <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>Bind aan opgegeven adres om te luisteren naar JSON-RPC connecties. Gebruik [host]:port notatie voor IPv6. Deze instelling kan meerdere keren worden opgegeven (standaard: bind aan alle interfaces)</translation>
-    </message>
-    <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
         <translation>Creër nieuwe bestanden met standaard systeem bestandsrechten in plaats van umask 077 (alleen effectief met uitgeschakelde portemonnee functionaliteit)</translation>
     </message>
@@ -4051,8 +3928,12 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Verwijder alle transacties van de portemonnee en herstel alleen de delen van de blokketen door -rescan tijdens het opstarten</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
-        <translation>Fout bij het laden van %s: U kunt HD niet inschakelen op een al bestaande non-HD wallet</translation>
+        <source>Enable publish raw transactions of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>Inschakelen van ruwe transacties van pogingen van InstantSend double spend in&lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish transaction hashes of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>Inschakelen van het publiceren van transactiehashes van pogingen van InstantSend double spend in &lt;address&gt;</translation>
     </message>
     <message>
         <source>Found unconfirmed denominated outputs, will wait till they confirm to continue.</source>
@@ -4060,11 +3941,11 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
-        <translation>Hoe grondig de blokverificatie van -checkblocks is (0-4, standaard: %u)</translation>
+        <translation>Hoe grondig de blockverificatie van -checkblocks is (0-4, standaard: %u)</translation>
     </message>
     <message>
         <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
-        <translation>Als paytxfee niet is ingesteld, voeg voldoende vergoeding toe zodat transacties starten met bevestigingen binnen n blokken (standaard: %u)</translation>
+        <translation>Als paytxfee niet is ingesteld, voeg voldoende vergoeding toe zodat transacties starten met bevestigingen binnen n blocks (standaard: %u)</translation>
     </message>
     <message>
         <source>If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)</source>
@@ -4079,10 +3960,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Onderhoud een volledige transactieindex, gebruikt door de getrawtransaction rpc call (standaard: %u)</translation>
     </message>
     <message>
-        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you verified that wallet works!</source>
-        <translation>Zorg ervoor dat u uw wallet versleuteld, verwijder alle niet versleutelde backups nadat u getest hebt dat de nieuwe wallet werkt!</translation>
-    </message>
-    <message>
         <source>Maximum size of data in data carrier transactions we relay and mine (default: %u)</source>
         <translation>Maximale grootte van de gegevens in gegevensdragertransacties die we doorgeven en mijnen (standaard: %u)</translation>
     </message>
@@ -4093,6 +3970,18 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Output extra debugginginformatie (standaard: %u, het leveren van &lt;categorie&gt; is optioneel)</translation>
+    </message>
+    <message>
+        <source>Overrides minimum spork signers to change spork value. Only useful for regtest and devnet. Using this on mainnet or testnet will ban you.</source>
+        <translation>Overschrijf minimum spork ondertekenaars om de spork waarde te veranderen. Alleen bruikbaar bij regtest en devnet. Door dit te gebruiken op mainnet of testnet zal een ban opleveren.</translation>
+    </message>
+    <message>
+        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to mix some more coins.</source>
+        <translation>PrivateSend gebruikt exact genoemde bedragen om geld te verzenden. Wellicht moet u gewoon wat meer munten mixen.</translation>
+    </message>
+    <message>
+        <source>Use N separate masternodes in parallel to mix funds (%u-%u, default: %u)</source>
+        <translation>Gebruik N verschillende masternodes tegelijk om saldo te mixen (%u-%u, standaard: %u)</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -4109,10 +3998,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
         <translation>Goedgekeurde peers kunnen niet ge-DoS-banned worden en hun transacties worden altijd doorgegeven, zelfs als ze reeds in de mempool aanwezig zijn, nuttig voor bijv. een gateway</translation>
-    </message>
-    <message>
-        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation>U moet de database herbouwen met -reindex-chainstate om -txindex aan te passen</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4143,16 +4028,8 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Verbind naar KeePassHttps via poort &lt;port&gt; (standaard: %u)</translation>
     </message>
     <message>
-        <source>Enable the client to act as a masternode (0-1, default: %u)</source>
-        <translation>Stel de client toe om te handelen als een masternode (0-1, standaard: %u)</translation>
-    </message>
-    <message>
         <source>Entry exceeds maximum size.</source>
         <translation>Invoer overschrijdt de maximale grootte.</translation>
-    </message>
-    <message>
-        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
-        <translation>Fout bij het laden van %s: U kunt HD niet uitschakelen op een al bestaande HD wallet</translation>
     </message>
     <message>
         <source>Failed to load fulfilled requests cache from</source>
@@ -4167,10 +4044,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Fout bij het inladen van de masternode cache uit</translation>
     </message>
     <message>
-        <source>Failed to load masternode payments cache from</source>
-        <translation>Fout bij het inladen van de masternode betalingen cache uit</translation>
-    </message>
-    <message>
         <source>Found enough users, signing ( waiting %s )</source>
         <translation>Voldoende gebruikers gevonden, aan het ondertekenen ( wacht %s )</translation>
     </message>
@@ -4180,7 +4053,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>How many blocks to check at startup (default: %u, 0 = all)</source>
-        <translation>Aantal te checken blokken bij het opstarten (standaard: %u, 0 = allemaal)</translation>
+        <translation>Aantal te checken blocks bij het opstarten (standaard: %u, 0 = allemaal)</translation>
     </message>
     <message>
         <source>Importing...</source>
@@ -4215,16 +4088,24 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Ontoereikend saldo.</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Ongeldig -onion adres: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Ongeldig -proxy adres: '%s'</translation>
+        <source>Invalid amount for -discardfee=&lt;amount&gt;: '%s'</source>
+        <translation>Ongeldig bedrag voor -discardfee = &lt;amount&gt;: '%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
         <translation>Ongeldig bedrag voor -paytxfee=&lt;bedrag&gt;: '%s' (Minimum %s)</translation>
+    </message>
+    <message>
+        <source>Invalid minimum number of spork signers specified with -minsporkkeys</source>
+        <translation>Ongeldig minumum aantal spork ondertekenaars zoals ingesteld met -minsporkkeys</translation>
+    </message>
+    <message>
+        <source>Keep N STASH mixed (%u-%u, default: %u)</source>
+        <translation>Houdt N STASH gemixt (%u-%u, standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
+        <translation>Bewaar maximaal &lt;n&gt; niet-koppelbare transacties in het geheugen (standaard: %u)</translation>
     </message>
     <message>
         <source>Keypool ran out, please call keypoolrefill first</source>
@@ -4251,16 +4132,8 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Laden masternode cache...</translation>
     </message>
     <message>
-        <source>Loading masternode payment cache...</source>
-        <translation>Laden masternode payment cache...</translation>
-    </message>
-    <message>
         <source>Lock is already in place.</source>
         <translation>Vergrendeling is al op zijn plaats.</translation>
-    </message>
-    <message>
-        <source>Lock masternodes from masternode configuration file (default: %u)</source>
-        <translation>Vergrendel masternodes vanuit het masternode configuratiebestand (standaard: %u)</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
@@ -4291,16 +4164,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Geen compatibele Masternode gevonden.</translation>
     </message>
     <message>
+        <source>Not enough funds to mix.</source>
+        <translation>Onvoldoende fondsen om te mixen.</translation>
+    </message>
+    <message>
         <source>Not in the Masternode list.</source>
         <translation>Niet in de Masternode lijst.</translation>
     </message>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Verbind alleen met nodes in netwerk &lt;net&gt; (ipv4, ipv6 of onion)</translation>
-    </message>
-    <message>
-        <source>Port: %d</source>
-        <translation>Poort: %d</translation>
     </message>
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
@@ -4312,15 +4185,11 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Rebuild chain state from the currently indexed blocks</source>
-        <translation>Herbouw ketenstaat vanuit de huidige geindexeerde blokken</translation>
+        <translation>Herbouw ketenstaat vanuit de huidige geindexeerde blocks</translation>
     </message>
     <message>
         <source>Send trace/debug info to debug.log file (default: %u)</source>
         <translation>Stuur traceer-/debuginformatie naar debug.log (standaard: %u)</translation>
-    </message>
-    <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>Verstuur transacties als nul-vergoedingtransacties indien mogelijk (standaard: %u)</translation>
     </message>
     <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
@@ -4339,10 +4208,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Specificeer de time-out tijd in milliseconden (minimum: 1, standaard: %d)</translation>
     </message>
     <message>
-        <source>Specify masternode configuration file (default: %s)</source>
-        <translation>Kies masternodeconfiguratiebeastand (standaard: %s)</translation>
-    </message>
-    <message>
         <source>Specify pid file (default: %s)</source>
         <translation>Specificeer pid-bestand (standaard: %s)</translation>
     </message>
@@ -4351,20 +4216,8 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Besteed onbevestigd wisselgeld bij het doen van transacties (standaard: %u)</translation>
     </message>
     <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>De volgende gegevens zijn ingediend bij masternode: %u / %d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>Ingediend bij masternode, wachtende op meer gegevens (%u / %d ) %s</translation>
-    </message>
-    <message>
         <source>Submitted to masternode, waiting in queue %s</source>
         <translation>Ingediend bij masternode, wachten in de wachtrij %s</translation>
-    </message>
-    <message>
-        <source>Synchroning blockchain...</source>
-        <translation>Blockchain synchroniseren...</translation>
     </message>
     <message>
         <source>Synchronization failed</source>
@@ -4375,20 +4228,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Synchronisatie voltooid</translation>
     </message>
     <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>Masternodes synchroniseren...</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>Dit is geen Masternode.</translation>
-    </message>
-    <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
         <translation>Drempel om verbinding te verbreken naar zich misdragende peers (standaard: %u)</translation>
     </message>
     <message>
         <source>Too many %f denominations, removing.</source>
         <translation>Te veel %f denominaties, verwijderen.</translation>
+    </message>
+    <message>
+        <source>Too many %f denominations, skipping.</source>
+        <translation>Te veel %f denominaties, overgeslagen.</translation>
     </message>
     <message>
         <source>Tor control port password (default: empty)</source>
@@ -4439,12 +4288,12 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>User Agentcommentaar (%s) bevat onveilige karakters.</translation>
     </message>
     <message>
-        <source>Will retry...</source>
-        <translation>Opnieuw aan het proberen...</translation>
+        <source>Verifying wallet(s)...</source>
+        <translation>Portemonnee(s) verifiëren..... </translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Ongeldige geheime sleutel voor de masternode. Raadpleeg de documentatie alstublieft.</translation>
+        <source>Will retry...</source>
+        <translation>Opnieuw aan het proberen...</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>
@@ -4452,19 +4301,11 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Can't mix while sync in progress.</source>
-        <translation>Kan niet Mixen tijdens het synchroniseren.</translation>
-    </message>
-    <message>
-        <source>Could not parse masternode.conf</source>
-        <translation>Kan masternode.conf niet lezen</translation>
+        <translation>Kan niet mixen tijdens het synchroniseren.</translation>
     </message>
     <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>Ongeldig netmask gespecificeerd in -whitelist: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid port detected in masternode.conf</source>
-        <translation>Ongeldige poort gevonden in masternode.conf</translation>
     </message>
     <message>
         <source>Invalid script detected.</source>
@@ -4479,12 +4320,28 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>KeePassHttp sleutel voor AES versleutelde communicatie met KeePass</translation>
     </message>
     <message>
-        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
-        <translation>Houd maximaal &lt;n&gt; onverbonden transacties in geheugen (standaard: %u)</translation>
-    </message>
-    <message>
         <source>Disable all Stash specific functionality (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</source>
         <translation>Uitschakelen van alle Stash specifieke functies (Masternodes, PrivateSend, InstantSend, Governance) (0-1, standaard: %u)</translation>
+    </message>
+    <message>
+        <source>%s file contains all private keys from this wallet. Do not share it with anyone!</source>
+        <translation>%s bestand bevat alle persoonlijke sleutel van deze portemonnee. Deel deze met niemand!</translation>
+    </message>
+    <message>
+        <source>-masternode option is deprecated and ignored, specifying -masternodeblsprivkey is enough to start this node as a masternode.</source>
+        <translation>-masternode optie is verouderd en genegeerd, het specificeren van -masternodeblsprivkey is voldoende om deze node als een masternode te starten.</translation>
+    </message>
+    <message>
+        <source>Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info)</source>
+        <translation>Voeg een node toe om verbinding mee te maken en om de verbinding open te houden (zie de `addnode` RPC-opdracht help voor meer info)</translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. This option is ignored unless -rpcallowip is also passed. Port is optional and overrides -rpcport. Use [host]:port notation for IPv6. This option can be specified multiple times (default: 127.0.0.1 and ::1 i.e., localhost, or if -rpcallowip has been specified, 0.0.0.0 and :: i.e., all addresses)</source>
+        <translation>Bind met opgegeven address om te luisteren voor JSON-RPC-connections. Deze optie wordt genegeerd behalve als -rpcallowip ook opgegeven is. Poort is optioneel en overschrijft -rpcport. Gebruik [host]:port notatie voor IPv6. Deze optie kan meerdere keren worden meegegeven (standaard: 127.0.0.1 en ::1 bijvoobeeld, localhost, of als -rpcallowip is opgegeven, 0.0.0.0 en :: bijvoorbeeld, alle adressen)</translation>
+    </message>
+    <message>
+        <source>Connect only to the specified node(s); -connect=0 disables automatic connections (the rules for this peer are the same as for -addnode)</source>
+        <translation>Maak alleen verbinding met de opgegeven node(s); -connect=0 schakelt automatische verbindingen uit (de regels voor deze peer zijn hetzelfde als voor -addnode)</translation>
     </message>
     <message>
         <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
@@ -4495,20 +4352,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Bewaar transactie niet langer dan &lt;n&gt; uren in de geheugenpool (standaard: %u)</translation>
     </message>
     <message>
-        <source>Enable InstantSend, show confirmations for locked transactions (0-1, default: %u)</source>
-        <translation>Inschakelen van InstantSend, toon bevestigingen van vastgezette transacties (0-1, standaard: %u)</translation>
-    </message>
-    <message>
         <source>Enable multiple PrivateSend mixing sessions per block, experimental (0-1, default: %u)</source>
-        <translation>Inschakel van meerdere PrivateSend mix sessies per blok, experimenteel (0-1, standaard: %u)</translation>
-    </message>
-    <message>
-        <source>Enable use of automated PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
-        <translation>Inschakelen van het automatisch gebruik van PrivateSend voor geld opgeslagen in deze wallet (0-1, standaard: %u)</translation>
+        <translation>Inschakel van meerdere PrivateSend mixsessies per blok, experimenteel (0-1, standaard: %u)</translation>
     </message>
     <message>
         <source>Execute command when a wallet InstantSend transaction is successfully locked (%s in cmd is replaced by TxID)</source>
         <translation>Voer opdracht uit zodra een wallettransactie succesvol vastgezet is (%s in cmd wordt vervangen door TxID)</translation>
+    </message>
+    <message>
+        <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
+        <translation>Extra transactie om in het geheugen te houden voor de reconstructie van compacte blokken (standaard: %u)</translation>
     </message>
     <message>
         <source>Failed to create backup, file already exists! This could happen if you restarted wallet in less than 60 seconds. You can continue if you are ok with this.</source>
@@ -4527,14 +4380,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Als er geen &lt;categorie&gt; is opgegeven of als de &lt;categorie&gt; 1 is, laat dan alle debugginginformatie zien.</translation>
     </message>
     <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>InstantSend ondersteund het verzenden van zulke hoge bedragen nog niet. Transacties zijn momenteel gelimiteerd tot %1 Stash.</translation>
-    </message>
-    <message>
-        <source>InstantSend requires inputs with at least %d confirmations, you might need to wait a few minutes and try again.</source>
-        <translation>InstantSend vereist dat inputs ten minste %d bevestigingen hebben, u zult een paar minuten moeten wachten en opnieuw moeten proberen.</translation>
-    </message>
-    <message>
         <source>Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)</source>
         <translation>Hou een volledige transactieindex bij, wordt gebruikt om het balans, txids en niet-uitgegeven outputs voor adresen op te vragen (standaard: %u)</translation>
     </message>
@@ -4544,15 +4389,19 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Maintain a timestamp index for block hashes, used to query blocks hashes by a range of timestamps (default: %u)</source>
-        <translation>Hou een tijdstempelindex bij voor blok hashes, wordt gebruikt om blokhashes op te vragen voor een bereik aan tijdstempels (standaard: %u)</translation>
+        <translation>Hou een tijdstempelindex bij voor block hashes, wordt gebruikt om blockhashes op te vragen voor een bereik aan tijdstempels (standaard: %u)</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (temporary service connections excluded) (default: %u)</source>
         <translation>Onderhoudt maximaal &lt;n&gt; connecties met peers (tijdelijke service connecties uitgezonderd) (standaard: %u)</translation>
     </message>
     <message>
-        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.</source>
-        <translation>PrivateSend gebruikt exact gedenomineerde bedragen om geld te versturen, u zult wellicht simpelweg meer geld moeten anonimiseren.</translation>
+        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you have verified that the wallet works!</source>
+        <translation>Zorg ervoor dat u uw portefeuille codeert en alle niet-gecodeerde back-ups verwijdert nadat u hebt geverifieerd dat de portefeuille werkt!</translation>
+    </message>
+    <message>
+        <source>Maximum total size of all orphan transactions in megabytes (default: %u)</source>
+        <translation>Maximale totale grootte van alle wees-transacties in megabytes (standaard: %u)</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -4563,6 +4412,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Prune: laatste wallet synchronisatie gaat verder terug dan de middels -prune beperkte data. U moet -reindex gebruiken (downloadt opnieuw de gehele blockchain voor een pruned node)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>Vraag naar peer-adressen via DNS-lookup, indien laag aantal adressen (standaard: 1 tenzij -connect gebruikt)</translation>
+    </message>
+    <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
         <translation>Gebruik willekeurige inloggegevens voor elke proxyverbinding. Dit maakt streamisolatie voor Tor mogelijk (standaard: %u)</translation>
     </message>
@@ -4571,12 +4424,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Herscannen is niet mogelijk i.c.m. -prune. U moet -reindex gebruiken dat de hele blockchain opnieuw zal downloaden.</translation>
     </message>
     <message>
+        <source>Set the masternode BLS private key and enable the client to act as a masternode</source>
+        <translation>Stel de geheime sleutel van de masternode in en laat de cliënt als een masternode werken</translation>
+    </message>
+    <message>
         <source>Specify full path to directory for automatic wallet backups (must exist)</source>
         <translation>Voer het volledige pad in voor de map met automatische walletbackups (moet al bestaan)</translation>
     </message>
     <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
-        <translation>Ondersteun filtering van blokken en transacties met bloomfilters (standaard: %u)</translation>
+        <translation>Ondersteun filtering van blocks en transacties met bloomfilters (standaard: %u)</translation>
     </message>
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
@@ -4589,6 +4446,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
         <translation>Totale lengte van netwerkversiestring (%i) overschrijdt maximale lengte (%i). Verminder het aantal of grootte van uacomments.</translation>
+    </message>
+    <message>
+        <source>Transaction index can't be disabled in full mode. Either start with -litemode command line switch or enable transaction index.</source>
+        <translation>Transactie index kan niet uitgeschakeld worden in volledige modus. Start met -litemode commando-optie, of activeer transactie index.</translation>
     </message>
     <message>
         <source>Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)</source>
@@ -4616,27 +4477,23 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Wallet is locked, can't replenish keypool! Automatic backups and mixing are disabled, please unlock your wallet to replenish keypool.</source>
-        <translation>Wallet is vergrendeld, niet instaat om keypool aan te vullen! Automatische backups en PrivateSend zijn uitgeschakeld, ontgrendel alstublieft uw wallet om de keypool aan te vullen.</translation>
+        <translation>Wallet is vergrendeld, niet instaat om keypool aan te vullen! Automatische backups en mixen zijn uitgeschakeld, ontgrendel alstublieft uw wallet om de keypool aan te vullen.</translation>
     </message>
     <message>
         <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
         <translation>Waarschuwing: Onbekende blok versies worden gemined! Er zijn mogelijk onbekende regels in werking getreden</translation>
     </message>
     <message>
+        <source>You need to rebuild the database using -reindex to change -timestampindex</source>
+        <translation>U moet de database opnieuw opbouwen met behulp van -reindex om -timestampindex te wijzigen</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>U moet de database herbouwen met -reindex om terug te gaan naar de niet-prune modus. Dit zal de gehele blockchain opnieuw downloaden.</translation>
     </message>
     <message>
-        <source>(%d could be used only on mainnet)</source>
-        <translation>(%d kan alleen gebruikt worden op mainnet)</translation>
-    </message>
-    <message>
         <source>(default: %u)</source>
         <translation>(default: %u)</translation>
-    </message>
-    <message>
-        <source>(must be %d for mainnet)</source>
-        <translation>(moet %d zijn voor mainnet)</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -4667,6 +4524,14 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Sta toe om hashblok te publiceren in &lt;adres&gt;</translation>
     </message>
     <message>
+        <source>Enable publish hash of governance objects (like proposals) in &lt;address&gt;</source>
+        <translation>Inschakelen van hash van governance objecten (zoals voorstellen) in &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish hash of governance votes in &lt;address&gt;</source>
+        <translation>Inschakelen van publiceren van governance stemmen in &lt;address&gt;</translation>
+    </message>
+    <message>
         <source>Enable publish hash transaction (locked via InstantSend) in &lt;address&gt;</source>
         <translation>Inschakelen publiceren van de hashtransactie (vastgezet met InstantSend) in &lt;address&gt;</translation>
     </message>
@@ -4687,10 +4552,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Sta toe ruwe transacties te publiceren in &lt;adres&gt;</translation>
     </message>
     <message>
-        <source>Enable transaction replacement in the memory pool (default: %u)</source>
-        <translation>Transactie vervanging inschakelen in het geheugen (standaard: %u)</translation>
-    </message>
-    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation>Fout: er is een fout opgetreden,  zie debug.log voor details</translation>
     </message>
@@ -4707,8 +4568,8 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Verwijderen van de back-up is mislukt, foutmelding: %s</translation>
     </message>
     <message>
-        <source>Failed to parse host:port string</source>
-        <translation>Inlezen van de host:poort string is mislukt</translation>
+        <source>Failed to load sporks cache from</source>
+        <translation>Fout bij het inladen van de sporks cache uit</translation>
     </message>
     <message>
         <source>Fee (in %s/kB) to add to transactions you send (default: %s)</source>
@@ -4716,7 +4577,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Imports blocks from external blk000??.dat file on startup</source>
-        <translation>Importeer blokken van externe blk000??.dat-bestand bij opstarten</translation>
+        <translation>Importeer blocks van externe blk000??.dat-bestand bij opstarten</translation>
     </message>
     <message>
         <source>InstantSend options:</source>
@@ -4725,6 +4586,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Ongeldig bedrag voor -fallbackfee=&lt;bedrag&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid masternodeblsprivkey. Please see documentation.</source>
+        <translation>Ongeldige masternodeblsprivkey. Zie documentatie.</translation>
     </message>
     <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
@@ -4739,20 +4604,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Vorige succesvolle PrivateSend actie is te recent.</translation>
     </message>
     <message>
-        <source>Line: %d</source>
-        <translation>Lijn: %d</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>Laden adresen...</translation>
-    </message>
-    <message>
         <source>Loading block index...</source>
         <translation>Laden blokindex...</translation>
     </message>
     <message>
         <source>Loading governance cache...</source>
         <translation>Laden governance cache...</translation>
+    </message>
+    <message>
+        <source>Loading sporks cache...</source>
+        <translation>Laden sporks cache...</translation>
     </message>
     <message>
         <source>Loading wallet... (%3.2f %%)</source>
@@ -4769,10 +4630,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Make the wallet broadcast transactions</source>
         <translation>Laat de portemonnee transacties uitsturen</translation>
-    </message>
-    <message>
-        <source>Masternode cache is empty, skipping payments and governance cache...</source>
-        <translation>Masternode cache is leeg, betalings- en governancecache worden overgeslagen...</translation>
     </message>
     <message>
         <source>Masternode options:</source>
@@ -4817,10 +4674,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Not enough file descriptors available.</source>
         <translation>Niet genoeg file descriptors beschikbaar.</translation>
-    </message>
-    <message>
-        <source>Not enough funds to anonymize.</source>
-        <translation>Niet genoeg geld om the anonimiseren.</translation>
     </message>
     <message>
         <source>Number of automatic wallet backups (default: %u)</source>
@@ -4871,6 +4724,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Herscan de blokketen voor missende portemonneetransacties bij opstarten</translation>
     </message>
     <message>
+        <source>Synchronizing blockchain...</source>
+        <translation>Blokketen aan het synchronizeren...</translation>
+    </message>
+    <message>
         <source>The wallet will avoid paying less than the minimum relay fee.</source>
         <translation>De portemonnee vermijdt minder te betalen dan de minimale doorgeef vergoeding.</translation>
     </message>
@@ -4893,6 +4750,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Transaction must have at least one recipient</source>
         <translation>Transactie moet ten minste één ontvanger hebben</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>Transactie te groot</translation>
     </message>
     <message>
         <source>Trying to connect...</source>
@@ -4928,7 +4789,27 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
-        <translation>Om in alleen een blokmodus te opereren (standaard: %u)</translation>
+        <translation>Om in alleen een blockmodus te opereren (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>You can not start a masternode in lite mode.</source>
+        <translation>Je kan geen masternode starten in lite modus.</translation>
+    </message>
+    <message>
+        <source>You can not start a masternode with wallet enabled.</source>
+        <translation>U kunt geen masternode starten met portemennee ingeschakeld.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -addressindex</source>
+        <translation>U moet de database opnieuw opbouwen met behulp van -reindex om -addressindex te wijzigen</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -spentindex</source>
+        <translation>U moet de database opnieuw opbouwen met behulp van -reindex om -spentindex te wijzigen</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>U moet de database opnieuw opbouwen met behulp van -reindex om -txindex te wijzigen</translation>
     </message>
     <message>
         <source>ZeroMQ notification options:</source>
@@ -4936,7 +4817,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     </message>
     <message>
         <source>no mixing available.</source>
-        <translation>Geen Mixen beschikbaar.</translation>
+        <translation>Mixen is niet beschikbaar.</translation>
     </message>
     <message>
         <source>see debug.log for details.</source>
@@ -4955,24 +4836,32 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>De %s ontwikkelaars</translation>
     </message>
     <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
-        <translation>Sta verbindingen van buiten toe (standaard: 1 zonder -proxy of -connect/-noconnect)</translation>
-    </message>
-    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Kan geen lock verkrijgen op gegevensmap %s. %s draait waarschijnlijk al.</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s); -noconnect or -connect=0 alone to disable automatic connections</source>
-        <translation>Verbindt alleen met opgegeven node(s); -noconnect of -connect=0 alleen bestemd om automatische verbindingen uit te schakelen</translation>
     </message>
     <message>
         <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
         <translation>Uitgegeven onder de MIT software licentie, zie het bijgevoegde bestand %s of %s</translation>
     </message>
     <message>
+        <source>Enable use of PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
+        <translation>Gebruik van PrivateSend inschakelen voor de Stash die in deze portemonnee is opgeslagen (0-1, standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on an already existing non-HD wallet</source>
+        <translation>Fout bij laden %s: HD kan niet worden geactiveerd bij een bestaande non-HD portemonnee.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet parameter must only specify a filename (not a path).</source>
+        <translation>Fout bij laden portemonnee %s. -wallet parameter moet alleen een bestandsnaam opgeven (geen pad).</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Waarschuwing: Fout bij het lezen van %s! Alle sleutels zijn in goede orde uitgelezen, maar transactiedata of adresboeklemma's zouden kunnen ontbreken of fouten bevatten.</translation>
+    </message>
+    <message>
+        <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
+        <translation>debug-informatie voor een categorie uitsluiten. Kan worden gebruikt in combinatie met -debug=1 voor het uitvoeren van debug-logboeken voor alle categorieën behalve een of meer opgegeven categorieën.</translation>
     </message>
     <message>
         <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
@@ -5003,24 +4892,20 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Gelieve bij te dragen als je %s nuttig vindt. Bezoek %s voor meer informatie over de software.</translation>
     </message>
     <message>
-        <source>Provide liquidity to PrivateSend by infrequently mixing coins on a continual basis (%u-%u, default: %u, 1=very frequent, high fees, %u=very infrequent, low fees)</source>
-        <translation>Voorzie PrivateSend van liquiditeit door niet vaak maar stelselmatig geld te mixen (%u-%u, standaard: %u, 1=heel vaak, hoge vergoedingen, %u=heel zelden, lage vergoedingen)</translation>
-    </message>
-    <message>
-        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
-        <translation>Vraag peer adressen aan via DNS-naslag, indien weinig adressen (standaard: 1 tenzij -connect/-noconnect)</translation>
-    </message>
-    <message>
         <source>Reduce storage requirements by enabling pruning (deleting) of old blocks. This allows the pruneblockchain RPC to be called to delete specific blocks, and enables automatic pruning of old blocks if a target size in MiB is provided. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, 1 = allow manual pruning via RPC, &gt;%u = automatically prune block files to stay under the specified target size in MiB)</source>
-        <translation>Beperk benodigde opslag door het prunen (verwijderen) van oude blokken in te schakelen. Dit maakt het mogelijk om het pruneblockchain RPC commando aan te roepen om specifieke bloks te verwijderen, en maakt het automatische prunen van oude bloks mogelijk wanneer een doelgrootte in MiB is ingesteld. Deze modus is niet compatibel met -txindex en -rescan. Waarschuwing: ongedaan maken van deze instellingen vereist het opnieuw downloaden van gehele de blokketen. (standaard:0 = uitschakelen prunen, 1 = handmatig prunen via RPC toestaan, &gt;%u = automatisch blokketen bestanden prunen om beneden de gespecificeerde doelgrootte in MiB te blijven)</translation>
+        <translation>Beperk benodigde opslag door het prunen (verwijderen) van oude blocks in te schakelen. Dit maakt het mogelijk om het pruneblockchain RPC commando aan te roepen om specifieke blocks te verwijderen, en maakt het automatische prunen van oude blocks mogelijk wanneer een doelgrootte in MiB is ingesteld. Deze modus is niet compatibel met -txindex en -rescan. Waarschuwing: ongedaan maken van deze instellingen vereist het opnieuw downloaden van gehele de blocks. (standaard:0 = uitschakelen prunen, 1 = handmatig prunen via RPC toestaan, &gt;%u = automatisch blokketen bestanden prunen om beneden de gespecificeerde doelgrootte in MiB te blijven)</translation>
     </message>
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Specificeer het laagste tarief (in %s/kB) voor transacties die bij het maken van een blok moeten worden in rekening worden gebracht (standaard: %s)</translation>
     </message>
     <message>
-        <source>Show N confirmations for a successfully locked transaction (%u-%u, default: %u)</source>
-        <translation>Toon N bevestigingen voor een succesvol vergrendelde transactie (%u-%u, standaard: %u)</translation>
+        <source>The fee rate (in %s/kB) that indicates your tolerance for discarding change by adding it to the fee (default: %s). Note: An output is discarded if it is dust at this rate, but we will always discard up to the dust relay fee and a discard fee above that is limited by the fee estimate for the longest target</source>
+        <translation>De tolerantie (in %s/kB) voor het toevoegen van het restantbedrag(dust) aan de transactievergoeding(standaard: %s). Opmerking: Een transactie wordt uitgesloten als het stof is volgens deze instelling. </translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>Dit is de transactievergoeding die u kunt negeren als het wisselgeld kleiner is dan het restantbedrag</translation>
     </message>
     <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
@@ -5033,6 +4918,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Unable to locate enough PrivateSend non-denominated funds for this transaction.</source>
         <translation>Kan onvoldoende met PrivateSend niet-gedenomineerd geld vinden voor deze transactie.</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>Kan blokken niet nalopen. U moet de database opnieuw opbouwen met behulp van -reindex-chainstate.</translation>
     </message>
     <message>
         <source>Use N separate masternodes for each denominated input to mix funds (%u-%u, default: %u)</source>
@@ -5055,20 +4944,24 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Portemonnee creëert geen transacties die mempool-ketenlimieten schenden (standaard: %u)</translation>
     </message>
     <message>
-        <source>Warning: At least %d of %d masternodes are running on a newer software version. Please check latest releases, you might need to update too.</source>
-        <translation>Waarschuwing: Ten minste %d van de %d masternodes werken met een nieuwere softwareversie. Controleer alstublieft de nieuwste releases, misschien moet u ook updaten.</translation>
-    </message>
-    <message>
-        <source>Warning: Every masternode (out of %d known ones) is running on a newer software version. Please check latest releases, it's very likely that you missed a major/critical update.</source>
-        <translation>Waarschuwing: Alle masternodes (van de %d bekende) werken met een nieuwere softwareversie. Controleer alstublieft de nieuwste releases, het is zeer waarschijnlijk dat u een belangrijke/kritische update mist.</translation>
-    </message>
-    <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Waarschuwing: portemonnee bestand is corrupt, data is veiliggesteld! Originele %s is opgeslagen als %s in %s; als uw balans of transacties incorrect zijn dient u een backup terug te zetten.</translation>
     </message>
     <message>
+        <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
+        <translation>Of de mempool moet worden bewaard bij afsluiten en weer moet laden bij opnieuw opstarten (standaard: %u)</translation>
+    </message>
+    <message>
         <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
         <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
+    </message>
+    <message>
+        <source>You are starting in lite mode, most Stash-specific functionality is disabled.</source>
+        <translation>U start in lite-modus, de meeste Stash-specifieke functionaliteit is uitgeschakeld.</translation>
+    </message>
+    <message>
+        <source>%d of last 100 blocks have unexpected version</source>
+        <translation>%d van de laatste 100 blokken hebben een onverwachte versie</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -5099,6 +4992,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>-rpcport moet worden opgegeven wanneer -devnet en -server worden gebruikt</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Accepteer verbindingen van buitenaf (standaard: 1 indien geen -proxy of -connect)</translation>
+    </message>
+    <message>
         <source>Allow RFC1918 addresses to be relayed and connected to (default: %u)</source>
         <translation>Sta toe dat RFC1918 adressen worden doorgegeven en er mee wordt verbonden (standaard: %u)</translation>
     </message>
@@ -5119,6 +5016,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Copyright (C)</translation>
     </message>
     <message>
+        <source>Create up to N inputs of each denominated amount (%u-%u, default: %u)</source>
+        <translation>Maak maximaal N ingangen van elk bedrag (%u-%u, standaard: %u)</translation>
+    </message>
+    <message>
         <source>Error loading %s</source>
         <translation>Fout bij het laden van %s</translation>
     </message>
@@ -5131,20 +5032,48 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Fout bij laden %s: Portemonnee vereist een nieuwere versie van %s</translation>
     </message>
     <message>
+        <source>Error loading %s: You can't disable HD on an already existing HD wallet</source>
+        <translation>Fout bij laden %s. HD kan niet worden uitgeschakeld bij een HD portemonnee.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet filename must be a regular file.</source>
+        <translation>Fout bij het laden van portemonnee %s. -wallet bestandsnaam moet een normaal bestand zijn.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
+        <translation>Fout bij het laden van portemonnee %s. Dubbele -wallet bestandsnaam gespecificeerd.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Invalid characters in -wallet filename.</source>
+        <translation>Fout bij het laden van portemonnee %s. Ongeldig karakter in - wallet bestandsnaam.</translation>
+    </message>
+    <message>
         <source>Error upgrading chainstate database</source>
         <translation>Fout bij het upgraden van de ketenstaat database</translation>
     </message>
     <message>
         <source>Failed to find mixing queue to join</source>
-        <translation>Het is niet gelukt om een Mix-wachtrij te vinden om bij aan te sluiten</translation>
+        <translation>Het is niet gelukt om een mixwachtrij te vinden om bij aan te sluiten</translation>
     </message>
     <message>
         <source>Failed to start a new mixing queue</source>
-        <translation>Het is niet gelukt om een nieuwe Mix-wachtrij te starten</translation>
+        <translation>Het is niet gelukt om een nieuwe mixwachtrij te starten</translation>
     </message>
     <message>
         <source>Initialization sanity check failed. %s is shutting down.</source>
         <translation>Initialisatie sanity check mislukt. %s is aan het afsluiten.</translation>
+    </message>
+    <message>
+        <source>Inputs vs outputs size mismatch.</source>
+        <translation>Invoer versus uitvoer komt niet overeen.</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>Ongeldig -onion adress of hostnaam: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Ongeldig -proxy adress of hostnaam: '%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
@@ -5155,16 +5084,12 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Ongeldig sporkadres opgegeven met -sporkaddr</translation>
     </message>
     <message>
-        <source>Keep N STASH anonymized (%u-%u, default: %u)</source>
-        <translation>Hou N Stash geanonimiseerd (%u-%u, standaard: %u)</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>P2P-adressen aan het laden...</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>
         <translation>Print dit helpbericht en sluit af</translation>
-    </message>
-    <message>
-        <source>Receive and display P2P network alerts (default: %u)</source>
-        <translation>Ontvang en geef P2P network alerts weer (standaard: %u)</translation>
     </message>
     <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
@@ -5177,6 +5102,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Relay non-P2SH multisig (default: %u)</source>
         <translation>Geef non-P2SH multisig door (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Replaying blocks...</source>
+        <translation>Replaying blocks...</translation>
     </message>
     <message>
         <source>Rescanning...</source>
@@ -5207,10 +5136,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Stel de maximale blok grootte in bytes in (standaard: %d)</translation>
     </message>
     <message>
-        <source>Set the masternode private key</source>
-        <translation>Stel de masternode private key in</translation>
-    </message>
-    <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
         <translation>Toon alle foutopsporingsopties (gebruik: --help -help-debug)</translation>
     </message>
@@ -5235,6 +5160,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Specificeer uw eigen publieke adres</translation>
     </message>
     <message>
+        <source>Start PrivateSend automatically (0-1, default: %u)</source>
+        <translation>Start PrivateSend automatisch (0-1, standaard: %u)</translation>
+    </message>
+    <message>
         <source>Starting network threads...</source>
         <translation>Netwerkthread starten...</translation>
     </message>
@@ -5245,10 +5174,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Synchronizing governance objects...</source>
         <translation>Synchroniseren governance objecten...</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternode payments...</source>
-        <translation>Synchroniseren masternode betalingen...</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
@@ -5269,6 +5194,10 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Transaction created successfully.</source>
         <translation>Transactie succesvol aangemaakt.</translation>
+    </message>
+    <message>
+        <source>Transaction fee and change calculation failed</source>
+        <translation>Transactievergoeding en wisselgeld berekening mislukt</translation>
     </message>
     <message>
         <source>Transaction fees are too high.</source>
@@ -5299,16 +5228,16 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
         <translation>Onbekende staat: id = %u</translation>
     </message>
     <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>Niet-ondersteunde logboekcategorie %s=%s.</translation>
+    </message>
+    <message>
         <source>Username for JSON-RPC connections</source>
         <translation>Gebruikersnaam voor JSON-RPC-verbindingen</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
-        <translation>Blokken aan het controleren...</translation>
-    </message>
-    <message>
-        <source>Verifying wallet...</source>
-        <translation>Wallet wordt geverifieerd...</translation>
+        <translation>blocks aan het controleren...</translation>
     </message>
     <message>
         <source>Very low number of keys left: %d</source>
@@ -5337,10 +5266,6 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Stash netwe
     <message>
         <source>Your entries added successfully.</source>
         <translation>Uw gegevens zijn succesvol toegevoegd.</translation>
-    </message>
-    <message>
-        <source>Your transaction was accepted into the pool!</source>
-        <translation>Uw transactie was geaccepteerd in de pool!</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>

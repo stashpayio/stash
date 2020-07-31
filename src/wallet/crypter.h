@@ -11,8 +11,6 @@
 #include "support/allocators/secure.h"
 #include "zcash/Address.hpp"
 
-class uint256;
-
 const unsigned int WALLET_CRYPTO_KEY_SIZE = 32;
 const unsigned int WALLET_CRYPTO_SALT_SIZE = 8;
 const unsigned int WALLET_CRYPTO_IV_SIZE = 16;
@@ -264,7 +262,7 @@ public:
         }
     }
 
-    bool GetHDChain(CHDChain& hdChainRet) const;
+    virtual bool GetHDChain(CHDChain& hdChainRet) const override;
 
     /**
      * Wallet status (encrypted, locked) changed.

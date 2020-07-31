@@ -7,7 +7,7 @@
 
 std::string PaymentDisclosureInfo::ToString() const {
     return strprintf("PaymentDisclosureInfo(version=%d, esk=%s, joinSplitPrivKey=<omitted>, address=%s)",
-        version, esk.ToString(), CZCPaymentAddress(zaddr).ToString());
+        version, esk.ToString(), EncodePaymentAddress(zaddr));
 }
 
 std::string PaymentDisclosure::ToString() const {
@@ -17,7 +17,7 @@ std::string PaymentDisclosure::ToString() const {
 
 std::string PaymentDisclosurePayload::ToString() const {
     return strprintf("PaymentDisclosurePayload(version=%d, esk=%s, txid=%s, js=%d, n=%d, address=%s, message=%s)",
-        version, esk.ToString(), txid.ToString(), js, n, CZCPaymentAddress(zaddr).ToString(), message);
+        version, esk.ToString(), txid.ToString(), js, n, EncodePaymentAddress(zaddr), message);
 }
 
 PaymentDisclosure::PaymentDisclosure(const uint256 &joinSplitPubKey, const PaymentDisclosureKey &key, const PaymentDisclosureInfo &info, const std::string &message)
@@ -34,7 +34,7 @@ PaymentDisclosure::PaymentDisclosure(const uint256 &joinSplitPubKey, const Payme
     // Serialize and hash the payload to generate a signature
     uint256 dataToBeSigned = SerializeHash(payload, SER_GETHASH, 0);
 
-    LogPrint("paymentdisclosure", "Payment Disclosure: signing raw payload = %s\n", dataToBeSigned.ToString());
+    LogPrint(BCLog::ZRPC, "Payment Disclosure: signing raw payload = %s\n", dataToBeSigned.ToString());
 
     // Prepare buffer to store ed25519 key pair in libsodium-compatible format
     unsigned char bufferKeyPair[64];
@@ -42,7 +42,7 @@ PaymentDisclosure::PaymentDisclosure(const uint256 &joinSplitPubKey, const Payme
     memcpy(&bufferKeyPair[32], joinSplitPubKey.begin(), 32);
 
     // Compute payload signature member variable
-    if (!(crypto_sign_detached(payloadSig.data(), NULL,
+    if (!(crypto_sign_detached(payloadSig.data(), nullptr,
                                dataToBeSigned.begin(), 32,
                                &bufferKeyPair[0]
                                ) == 0))
@@ -59,5 +59,5 @@ PaymentDisclosure::PaymentDisclosure(const uint256 &joinSplitPubKey, const Payme
     }
 
     std::string sigString = HexStr(payloadSig.data(), payloadSig.data() + payloadSig.size());
-    LogPrint("paymentdisclosure", "Payment Disclosure: signature = %s\n", sigString);
+    LogPrint(BCLog::ZRPC, "Payment Disclosure: signature = %s\n", sigString);
 }

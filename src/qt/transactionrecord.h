@@ -7,6 +7,7 @@
 
 #include "amount.h"
 #include "uint256.h"
+#include "base58.h"
 
 #include <QList>
 #include <QString>
@@ -20,8 +21,9 @@ class TransactionStatus
 {
 public:
     TransactionStatus():
-        countsForBalance(false), sortKey(""),
-        matures_in(0), status(Offline), depth(0), open_for(0), cur_num_blocks(-1)
+        countsForBalance(false), lockedByInstantSend(false), lockedByChainLocks(false), sortKey(""),
+        matures_in(0), status(Offline), depth(0), open_for(0), cur_num_blocks(-1),
+        cachedChainLockHeight(-1), needsUpdate(false)
     { }
 
     enum Status {
@@ -42,8 +44,14 @@ public:
 
     /// Transaction counts towards available balance
     bool countsForBalance;
+    /// Transaction was locked via InstantSend
+    bool lockedByInstantSend;
+    /// Transaction was locked via ChainLocks
+    bool lockedByChainLocks;
     /// Sorting key based on status
     std::string sortKey;
+    /// Label
+    QString label;
 
     /** @name Generated (mined) transactions
        @{*/
@@ -62,8 +70,10 @@ public:
     /** Current number of blocks (to know whether cached status is still valid) */
     int cur_num_blocks;
 
-    //** Know when to update transaction for ix locks **/
-    int cur_num_ix_locks;
+    //** Know when to update transaction for chainlocks **/
+    int cachedChainLockHeight;
+
+    bool needsUpdate;
 };
 
 /** UI model for a transaction. A core transaction can be represented by multiple UI transactions if it has
@@ -93,22 +103,28 @@ public:
     static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
-            hash(), time(0), type(Other), address(""), debit(0), credit(0), idx(0)
+            hash(), time(0), type(Other), strAddress(""), debit(0), credit(0), idx(0)
     {
+        address = CBitcoinAddress(strAddress);
+        txDest = address.Get();
     }
 
     TransactionRecord(uint256 _hash, qint64 _time):
-            hash(_hash), time(_time), type(Other), address(""), debit(0),
+            hash(_hash), time(_time), type(Other), strAddress(""), debit(0),
             credit(0), idx(0)
     {
+        address = CBitcoinAddress(strAddress);
+        txDest = address.Get();
     }
 
     TransactionRecord(uint256 _hash, qint64 _time,
-                Type _type, const std::string &_address,
+                Type _type, const std::string &_strAddress,
                 const CAmount& _debit, const CAmount& _credit):
-            hash(_hash), time(_time), type(_type), address(_address), debit(_debit), credit(_credit),
+            hash(_hash), time(_time), type(_type), strAddress(_strAddress), debit(_debit), credit(_credit),
             idx(0)
     {
+        address = CBitcoinAddress(strAddress);
+        txDest = address.Get();
     }
 
     /** Decompose CWallet transaction to model transaction records.
@@ -121,7 +137,10 @@ public:
     uint256 hash;
     qint64 time;
     Type type;
-    std::string address;
+    std::string strAddress;
+    CBitcoinAddress address;
+    CTxDestination txDest;
+
     CAmount debit;
     CAmount credit;
     /**@}*/
@@ -143,11 +162,11 @@ public:
 
     /** Update status from core wallet tx.
      */
-    void updateStatus(const CWalletTx &wtx);
+    void updateStatus(const CWalletTx &wtx, int chainLockHeight);
 
     /** Return whether a status update is needed.
      */
-    bool statusUpdateNeeded();
+    bool statusUpdateNeeded(int chainLockHeight);
 };
 
 #endif // BITCOIN_QT_TRANSACTIONRECORD_H

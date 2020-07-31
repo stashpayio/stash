@@ -6,6 +6,7 @@
 #ifndef BITCOIN_COINS_H
 #define BITCOIN_COINS_H
 
+#include "primitives/transaction.h"
 #include "compressor.h"
 #include "core_memusage.h"
 #include "hash.h"
@@ -15,6 +16,7 @@
 
 #include <assert.h>
 #include <stdint.h>
+
 #include <unordered_map>
 
 /**
@@ -79,14 +81,14 @@ public:
     }
 };
 
-class SaltedHasher
+class SaltedOutpointHasher
 {
 private:
     /** Salt */
     const uint64_t k0, k1;
 
 public:
-    SaltedHasher();
+    SaltedOutpointHasher();
 
     /**
      * This *must* return size_t. With Boost 1.46 on 32-bit systems the
@@ -148,9 +150,9 @@ struct CNullifiersCacheEntry
     CNullifiersCacheEntry() : entered(false), flags(0) {}
 };
 
-typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedHasher> CCoinsMap;
-typedef boost::unordered_map<uint256, CAnchorsCacheEntry, SaltedHasher> CAnchorsMap;
-typedef boost::unordered_map<uint256, CNullifiersCacheEntry, SaltedHasher> CNullifiersMap;
+typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher> CCoinsMap;
+typedef std::unordered_map<uint256, CAnchorsCacheEntry, SaltedOutpointHasher> CAnchorsMap;
+typedef std::unordered_map<uint256, CNullifiersCacheEntry, SaltedOutpointHasher> CNullifiersMap;
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor
@@ -161,7 +163,6 @@ public:
 
     virtual bool GetKey(COutPoint &key) const = 0;
     virtual bool GetValue(Coin &coin) const = 0;
-    /* Don't care about GetKeySize here */
     virtual unsigned int GetValueSize() const = 0;
 
     virtual bool Valid() const = 0;
@@ -198,6 +199,11 @@ public:
 
     //! Get the current "tip" or the latest anchored tree root in the chain
     virtual uint256 GetBestAnchor() const;
+    //! Retrieve the range of blocks that may have been only partially written.
+    //! If the database is in a consistent state, the result is the empty vector.
+    //! Otherwise, a two-element vector is returned consisting of the new and
+    //! the old block hash, in that order.
+    virtual std::vector<uint256> GetHeadBlocks() const;
 
     //! Do a bulk modification (multiple Coin changes + BestBlock change).
     //! The passed mapCoins can be modified.
@@ -233,6 +239,7 @@ public:
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
     uint256 GetBestAnchor() const override;
+    std::vector<uint256> GetHeadBlocks() const override;
     void SetBackend(CCoinsView &viewIn);
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     bool BatchWrite(CCoinsMap &mapCoins,
@@ -240,7 +247,7 @@ public:
                     const uint256 &hashAnchor,
                     CAnchorsMap &mapAnchors,
                     CNullifiersMap &mapNullifiers) override;
-   CCoinsViewCursor *Cursor() const override;
+    CCoinsViewCursor *Cursor() const override;
     size_t EstimateSize() const override;
 };
 
@@ -362,13 +369,6 @@ public:
     //! Check whether all joinsplit requirements (anchors/nullifiers) are satisfied
     bool HaveJoinSplitRequirements(const CTransaction& tx) const;
 
-    /**
-     * Return priority of tx at height nHeight. Also calculate the sum of the values of the inputs
-     * that are already in the chain.  These are the inputs that will age and increase priority as
-     * new blocks are added to the chain.
-     */
-    double GetPriority(const CTransaction &tx, int nHeight, CAmount &inChainInputValue) const;
-
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint) const;
 
@@ -379,10 +379,12 @@ private:
 };
 
 //! Utility function to add all of a transaction's outputs to a cache.
-// It assumes that overwrites are only possible for coinbase transactions,
+// When check is false, this assumes that overwrites are only possible for coinbase transactions.
+// When check is true, the underlying view may be queried to determine whether an addition is
+// an overwrite.
 // TODO: pass in a boolean to limit these possible overwrites to known
 // (pre-BIP34) cases.
-void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight);
+void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight, bool check = false);
 
 //! Utility function to find any unspent output with a given txid.
 // This function can be quite expensive because in the event of a transaction

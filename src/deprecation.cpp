@@ -27,7 +27,7 @@ void EnforceNodeDeprecation(int nHeight, bool forceLogging) {
                                 sporkManager.GetSporkValue(SPORK_35_STASH_DEPRECATION_WARN_LIMIT) : 0;
     int deprecationHeight     = releaseHeight + weeksUntilDeprecation * 7 * 60 * 24; // 60 block/hr on average
     int blocksToDeprecation   = deprecationHeight - nHeight;
-    bool disableDeprecation   = (GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
+    bool disableDeprecation   = (gArgs.GetArg("-disabledeprecation", "") == CLIENT_VERSION_STR);
 
     if (blocksToDeprecation <= 0) {
         // In order to ensure we only log once per process when deprecation is

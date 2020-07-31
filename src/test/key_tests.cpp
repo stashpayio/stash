@@ -29,34 +29,6 @@ static const CBitcoinAddress addr2C("Xn7ZrYdExuk79Dm7CJCw7sfUWi2qWJSbRy");
 static const std::string strAddressBad("Xta1praZQjyELweyMByXyiREw1ZRsjXzVP");
 
 
-#ifdef KEY_TESTS_DUMPINFO
-void dumpKeyInfo(uint256 privkey)
-{
-    CKey key;
-    key.resize(32);
-    memcpy(&secret[0], &privkey, 32);
-    std::vector<unsigned char> sec;
-    sec.resize(32);
-    memcpy(&sec[0], &secret[0], 32);
-    printf("  * secret (hex): %s\n", HexStr(sec).c_str());
-
-    for (int nCompressed=0; nCompressed<2; nCompressed++)
-    {
-        bool fCompressed = nCompressed == 1;
-        printf("  * %s:\n", fCompressed ? "compressed" : "uncompressed");
-        CBitcoinSecret bsecret;
-        bsecret.SetSecret(secret, fCompressed);
-        printf("    * secret (base58): %s\n", bsecret.ToString().c_str());
-        CKey key;
-        key.SetSecret(secret, fCompressed);
-        std::vector<unsigned char> vchPubKey = key.GetPubKey();
-        printf("    * pubkey (hex): %s\n", HexStr(vchPubKey).c_str());
-        printf("    * address (base58): %s\n", CBitcoinAddress(vchPubKey).ToString().c_str());
-    }
-}
-#endif
-
-
 BOOST_FIXTURE_TEST_SUITE(key_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(key_test1)
@@ -184,6 +156,39 @@ BOOST_AUTO_TEST_CASE(key_test1)
     BOOST_CHECK(key2C.SignCompact(hashMsg, detsigc));
     BOOST_CHECK(detsig == ParseHex("1c52d8a32079c11e79db95af63bb9600c5b04f21a9ca33dc129c2bfa8ac9dc1cd561d8ae5e0f6c1a16bde3719c64c2fd70e404b6428ab9a69566962e8771b5944d"));
     BOOST_CHECK(detsigc == ParseHex("2052d8a32079c11e79db95af63bb9600c5b04f21a9ca33dc129c2bfa8ac9dc1cd561d8ae5e0f6c1a16bde3719c64c2fd70e404b6428ab9a69566962e8771b5944d"));
+}
+
+BOOST_AUTO_TEST_CASE(zc_address_test)
+{
+    for (size_t i = 0; i < 1000; i++) {
+        auto sk = SpendingKey::random();
+        {
+            CZCSpendingKey spendingkey(sk);
+            string sk_string = spendingkey.ToString();
+
+            BOOST_CHECK(sk_string[0] == 'S');
+            BOOST_CHECK(sk_string[1] == 'K');
+
+            CZCSpendingKey spendingkey2(sk_string);
+            SpendingKey sk2 = spendingkey2.Get();
+            BOOST_CHECK(sk.inner() == sk2.inner());
+        }
+        {
+            auto addr = sk.address();
+
+            std::string addr_string = EncodePaymentAddress(addr);
+
+            BOOST_CHECK(addr_string[0] == 'z');
+            BOOST_CHECK(addr_string[1] == 'c');
+
+            auto paymentaddr2 = DecodePaymentAddress(addr_string);
+            BOOST_ASSERT(static_cast<bool>(paymentaddr2));
+
+            PaymentAddress addr2 = *paymentaddr2;
+            BOOST_CHECK(addr.a_pk == addr2.a_pk);
+            BOOST_CHECK(addr.pk_enc == addr2.pk_enc);
+        }
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

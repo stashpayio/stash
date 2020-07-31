@@ -174,6 +174,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="showPrivateSendPopups">
+            <property name="toolTip">
+             <string>Show system popups for PrivateSend mixing transactions&lt;br/&gt;just like for all other transaction types.</string>
+            </property>
+            <property name="text">
+             <string>Show popups for PrivateSend transactions</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="lowKeysWarning">
             <property name="toolTip">
              <string>Show warning dialog when PrivateSend detects that wallet has very low number of keys left.</string>
@@ -211,7 +221,7 @@
          <item>
           <widget class="QLabel" name="labelPrivateSendRounds">
            <property name="toolTip">
-            <string>This setting determines the amount of individual masternodes that an input will be anonymized through.&lt;br/&gt;More rounds of anonymization gives a higher degree of privacy, but also costs more in fees.</string>
+            <string>This setting determines the amount of individual masternodes that an input will be mixed through.&lt;br/&gt;More rounds of mixing gives a higher degree of privacy, but also costs more in fees.</string>
            </property>
            <property name="text">
             <string>PrivateSend rounds to use</string>
@@ -224,7 +234,7 @@
             <number>2</number>
            </property>
            <property name="maximum">
-            <number>8</number>
+            <number>16</number>
            </property>
            <property name="value">
             <number>4</number>
@@ -253,7 +263,7 @@
             <string notr="true"/>
            </property>
            <property name="text">
-            <string>Amount of Stash to keep anonymized</string>
+            <string>Target PrivateSend balance</string>
            </property>
           </widget>
          </item>
@@ -424,7 +434,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
+            <string>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
            </property>
            <property name="text">
             <string/>
@@ -447,7 +457,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
+            <string>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
            </property>
            <property name="text">
             <string/>
@@ -470,7 +480,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
+            <string>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</string>
            </property>
            <property name="text">
             <string/>

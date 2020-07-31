@@ -13,14 +13,11 @@
 #include "wallet.h"
 #include "zcash/Address.hpp"
 #include "zcash/JoinSplit.hpp"
-
+#include <array>
 #include <tuple>
 #include <unordered_map>
 
 #include <univalue.h>
-
-// Default transaction fee if caller does not specify one.
-#define MERGE_TO_ADDRESS_OPERATION_DEFAULT_MINERS_FEE 10000
 
 using namespace libzcash;
 
@@ -53,6 +50,7 @@ class AsyncRPCOperation_mergetoaddress : public AsyncRPCOperation
 {
 public:
     AsyncRPCOperation_mergetoaddress(
+        CWallet* pwallet,
         CMutableTransaction contextualTx,
         std::vector<MergeToAddressInputUTXO> utxoInputs,
         std::vector<MergeToAddressInputNote> noteInputs,
@@ -88,6 +86,7 @@ private:
     bool isToZaddr_;
     CBitcoinAddress toTaddr_;
     PaymentAddress toPaymentAddress_;
+    CWallet* pwallet_;
 
     uint256 joinSplitPubKey_;
     unsigned char joinSplitPrivKey_[crypto_sign_SECRETKEYBYTES];
@@ -99,7 +98,6 @@ private:
     std::vector<MergeToAddressInputNote> noteInputs_;
 
     CTransaction tx_;
-
     std::array<unsigned char, ZC_MEMO_SIZE> get_memo_from_hex_string(std::string s);
     bool main_impl();
 
@@ -114,8 +112,6 @@ private:
         MergeToAddressJSInfo& info,
         std::vector<boost::optional<ZCIncrementalWitness>> witnesses,
         uint256 anchor);
-
-    void sign_send_raw_transaction(UniValue obj); // throws exception if there was an error
 
     void lock_utxos();
 
@@ -150,7 +146,7 @@ public:
 
     // Delegated methods
 
-    boost::array<unsigned char, ZC_MEMO_SIZE> get_memo_from_hex_string(std::string s)
+    std::array<unsigned char, ZC_MEMO_SIZE> get_memo_from_hex_string(std::string s)
     {
         return delegate->get_memo_from_hex_string(s);
     }
@@ -176,11 +172,6 @@ public:
         uint256 anchor)
     {
         return delegate->perform_joinsplit(info, witnesses, anchor);
-    }
-
-    void sign_send_raw_transaction(UniValue obj)
-    {
-        delegate->sign_send_raw_transaction(obj);
     }
 
     void set_state(OperationStatus state)

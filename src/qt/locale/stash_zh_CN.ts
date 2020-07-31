@@ -22,6 +22,14 @@
         <translation>复制(&amp;C)</translation>
     </message>
     <message>
+        <source>Show QR code for the currently selected address</source>
+        <translation>显示当前选中地址的二维码</translation>
+    </message>
+    <message>
+        <source>&amp;Show QR code</source>
+        <translation>&amp;显示二维码</translation>
+    </message>
+    <message>
         <source>Delete the currently selected address from the list</source>
         <translation>从列表中删除选中的地址</translation>
     </message>
@@ -80,6 +88,14 @@
     <message>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
+    </message>
+    <message>
+        <source>&amp;Show address QR code</source>
+        <translation>&amp;显示地址二维码</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>二维码</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -438,14 +454,6 @@
         <translation>打开配置文件</translation>
     </message>
     <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>打开主节点配置文件(&amp;M)</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>打开主节点配置文件</translation>
-    </message>
-    <message>
         <source>Show Automatic &amp;Backups</source>
         <translation>显示自动备份(&amp;B)</translation>
     </message>
@@ -527,7 +535,7 @@
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation>同步区块头 (%1%)...</translation>
+        <translation>同步区块头部 (%1%)...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -590,6 +598,30 @@
         <translation>信息</translation>
     </message>
     <message>
+        <source>Received and sent multiple transactions</source>
+        <translation>已接收和发送的多重交易</translation>
+    </message>
+    <message>
+        <source>Sent multiple transactions</source>
+        <translation>已发送的多重交易</translation>
+    </message>
+    <message>
+        <source>Received multiple transactions</source>
+        <translation>已接收的多重交易</translation>
+    </message>
+    <message>
+        <source>Sent Amount: %1
+</source>
+        <translation>已发送数额: %1
+</translation>
+    </message>
+    <message>
+        <source>Received Amount: %1
+</source>
+        <translation>已接收数额: %1
+</translation>
+    </message>
+    <message>
         <source>Date: %1
 </source>
         <translation>日期：%1
@@ -646,17 +678,6 @@
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>钱包已被&lt;b&gt;加密&lt;/b&gt;，当前为&lt;b&gt;锁定&lt;/b&gt;状态</translation>
-    </message>
-</context>
-<context>
-    <name>ClientModel</name>
-    <message>
-        <source>Total: %1 (PS compatible: %2 / Enabled: %3)</source>
-        <translation>总计：%1 (匿名发送兼容：%2 / 可用：%3)</translation>
-    </message>
-    <message>
-        <source>Network Alert</source>
-        <translation>网络警报</translation>
     </message>
 </context>
 <context>
@@ -794,8 +815,8 @@
         <translation>请切换到“列表模式”来使用此功能。</translation>
     </message>
     <message>
-        <source>Non-anonymized input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-nonymized inputs first and then check PrivateSend checkbox again.</source>
-        <translation>已选择非匿名输入。&lt;b&gt;匿名发送将会被禁用。&lt;/b&gt;&lt;br&gt;&lt;br&gt;如果你仍然想使用匿名发送功能，请先取消所选的非匿名输入，然后再勾选匿名发送。</translation>
+        <source>Non-mixed input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-mixed inputs first and then check the PrivateSend checkbox again.</source>
+        <translation>已选择非混币输入。&lt;b&gt;匿名发送将会被禁用。&lt;/b&gt;&lt;br&gt;&lt;br&gt;如果你仍然想使用匿名发送功能，请先取消所选的非混币输入，然后再勾选匿名发送。</translation>
     </message>
     <message>
         <source>(%1 locked)</source>
@@ -832,73 +853,6 @@
     <message>
         <source>n/a</source>
         <translation>不可用</translation>
-    </message>
-</context>
-<context>
-    <name>DarksendConfig</name>
-    <message>
-        <source>Configure PrivateSend</source>
-        <translation>配置匿名发送</translation>
-    </message>
-    <message>
-        <source>Basic Privacy</source>
-        <translation>基本隐私</translation>
-    </message>
-    <message>
-        <source>High Privacy</source>
-        <translation>高度隐私</translation>
-    </message>
-    <message>
-        <source>Maximum Privacy</source>
-        <translation>最大隐私</translation>
-    </message>
-    <message>
-        <source>Please select a privacy level.</source>
-        <translation>请选择隐私等级。</translation>
-    </message>
-    <message>
-        <source>Use 2 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>使用2个独立的主节点来混合最多1000个藏</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>使用8个独立的主节点来混合最多1000个藏</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>使用16个独立主节点</translation>
-    </message>
-    <message>
-        <source>This option is the quickest and will cost about ~0.025 STASH to anonymize 1000 STASH</source>
-        <translation>此选项为最快速度，需要支付约0.025藏/1000藏的匿名处理费用。</translation>
-    </message>
-    <message>
-        <source>This option is moderately fast and will cost about 0.05 STASH to anonymize 1000 STASH</source>
-        <translation>此选项为一般速度，需要支付约0.05藏/1000藏的匿名处理费用。</translation>
-    </message>
-    <message>
-        <source>0.1 STASH per 1000 STASH you anonymize.</source>
-        <translation>0.1藏/1000藏的匿名处理费用。</translation>
-    </message>
-    <message>
-        <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
-        <translation>此选项提供最慢速度却最安全的匿名服务。耗费最多的匿名处理费</translation>
-    </message>
-    <message>
-        <source>PrivateSend Configuration</source>
-        <translation>匿名发送设置</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>匿名发送已成功设置为基本 (%1 和2次循环)。您可以随时打开藏配置窗口来进行修改。</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>匿名发送已成功设置为高(%1到8次循环)。您可以随时打开藏配置窗口来进行修改。</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>匿名发送已成功设置为最高(%1到16次循环)。您可以随时打开藏配置窗口来进行修改。</translation>
     </message>
 </context>
 <context>
@@ -1038,8 +992,8 @@
         <translation>匿名发送信息</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be anonymized. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more info see &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;         </source>
-        <translation>&lt;h3&gt;匿名发送基础知识&lt;/h3&gt;匿名发送通过隐藏您的资金来源为您提供真正的财务隐私。您的钱包中所有的藏都由不同的“输入”组成，您可以将其视为分开的离散硬币。&lt;br&gt;匿名发送使用创新的方法将您的输入与其他两个人的输入相结合，而过程中不会让您的藏离开您的钱包。每时每刻，您仍然控制着您的钱。&lt;hr&gt;&lt;b&gt;匿名发送的运作原理如下：&lt;/b&gt;&lt;ol type="1"&gt;&lt;li&gt;匿名发送首先将您的交易分柝成多个标准面额的交易。这些标准面额分别为0.01 STASH，0.1 STASH，1 STASH和10 STASH --有点像您每天使用的纸币。&lt;/li&gt;&lt;li&gt;您的钱包然后发送请求到网络上有专门配置的软件节点，称为“主节点”。这些主节点会收到您希望混合一些资金的通知。没有可识别的信息发送到主节点，所以他们永远不会知道你是“谁”。&lt;li&gt;当另外两个人发送类似的消息时，表示希望混合相同的面额的话，混合会话就会开始。相关的主节点会混合这些输入，并指示所有三个用户的钱包将已经转换了输入的交易支付给自己。您的钱包直接支付给自己，但是付给不同的位址（称之为找零地址）。&lt;/li&gt;&lt;li&gt;为了完全掩盖您的资金来源，您的钱包必须以每个面额来重复此过程数次。每次这个过程完成后，都称之为一个“循环”。每个循环的匿名发送都会令确定您的资金来源的工作倍加困难。&lt;/li&gt;&lt;li&gt;这种混合过程发生在后台，而不需要您进行任何操作。当您想进行交易时，您的资金将已被匿名处理。不需再花额外的时间等待。&lt;/li&gt;&lt;/ol&gt;&lt;hr&gt;重要：&lt;b&gt;您的钱包只能拥有1000个“找零地址”。每次混合事件发生时，最多会使用9个找零地址。这意味着这1000个地址可以容许100次的混合事件。当其的中900个已经被使用后，您的钱包必须创建更多的地址。如果您启用了自动备份，则只能够这样做。&lt;br&gt;因此，禁用备份的用户也将禁用匿名发送。&lt;hr&gt;如欲了解更多信息请参阅&lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;</translation>
+        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.001 STASH, 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be mixed. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more information, see the &lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;PrivateSend documentation&lt;/a&gt;.</source>
+        <translation>&lt;h3&gt;匿名发送基础知识&lt;/h3&gt;匿名发送通过隐藏您的资金来源为您提供真正的财务隐私。您的钱包中所有的藏都由不同的“输入”组成，您可以将其视为分开的离散硬币。&lt;br&gt;匿名发送使用创新的方法将您的输入与其他两个人的输入相结合，而过程中不会让您的藏离开您的钱包。每时每刻，您仍然控制着您的钱。&lt;hr&gt;&lt;b&gt;匿名发送的运作原理如下：&lt;/b&gt;&lt;ol type="1"&gt;&lt;li&gt;匿名发送首先将您的交易分柝成多个标准面额的交易。这些标准面额分别为0.001 STASH，0.01 STASH，0.1 STASH，1 STASH和10 STASH --有点像您每天使用的纸币。&lt;/li&gt;&lt;li&gt;您的钱包然后发送请求到网络上有专门配置的软件节点，称为“主节点”。这些主节点会收到您希望混合一些资金的通知。没有可识别的信息发送到主节点，所以他们永远不会知道你是“谁”。&lt;li&gt;当另外两个人发送类似的消息时，表示希望混合相同的面额的话，混合会话就会开始。相关的主节点会混合这些输入，并指示所有三个用户的钱包将已经转换了输入的交易支付给自己。您的钱包直接支付给自己，但是付给不同的位址（称之为找零地址）。&lt;/li&gt;&lt;li&gt;为了完全掩盖您的资金来源，您的钱包必须以每个面额来重复此过程数次。每次这个过程完成后，都称之为一个“循环”。每个循环的匿名发送都会令确定您的资金来源的工作倍加困难。&lt;/li&gt;&lt;li&gt;这种混合过程发生在后台，而不需要您进行任何操作。当您想进行交易时，您的资金将已被混币处理。不需再花额外的时间等待。&lt;/li&gt;&lt;/ol&gt;&lt;hr&gt;重要：&lt;b&gt;您的钱包只能拥有1000个“找零地址”。每次混合事件发生时，最多会使用9个找零地址。这意味着这1000个地址可以容许100次的混合事件。当其的中900个已经被使用后，您的钱包必须创建更多的地址。如果您启用了自动备份，则只能够这样做。&lt;br&gt;因此，禁用备份的用户也将禁用匿名发送。&lt;hr&gt;如欲了解更多信息请参阅&lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;匿名发送文档&lt;/a&gt;。</translation>
     </message>
 </context>
 <context>
@@ -1057,8 +1011,16 @@
         <translation>由于这是第一次启动此程序，您可以选择%1的数据所存储的位置</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Stash block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 将会下载并存储藏区块链。至少有 %2 GB的数据会保存到此路径下，并且随着时间增长。钱包文件也将存储到此路径下。</translation>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>当你点击确认后，%1 将会在 %4 启动时从  %3 中最早的交易开始，下载并处理完整的 %4 区块链 (%2GB)。</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>最初的同步过程是非常吃力的，同时可能会暴露你电脑上的一些硬件方面的小毛病，尽管你可能之前没有注意过。你每跑%1，它就会继续从之前中断的地方下载</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>如果你选择限制区块链存储大小（区块链裁剪模式），程序依然会下载并处理全部历史数据，此后才会删除不必须的部分，占用最少的存储空间。</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1067,6 +1029,22 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>使用自定义的数据目录：</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>此目录中至少会保存 %1 GB 的数据，并且尺寸还会随着时间增长。</translation>
+    </message>
+    <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>会在此目录中存储约 %1 GB 的数据。</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Stash block chain.</source>
+        <translation>%1 将会下载并存储比特币区块链。</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>钱包也会被保存在这个目录中。</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1092,72 +1070,12 @@
         <translation>表单</translation>
     </message>
     <message>
-        <source>My Masternodes</source>
-        <translation>我的主节点</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your masternode should be running but you still do not see "ENABLED" in "Status" field.</source>
-        <translation>注意：本地钱包中的主节点状态可能会稍有误差。&lt;br /&gt;总是等待钱包同步完额外的数据后再从另一个节点重新检查&lt;br /&gt;如果您的主节点应该已经运行，但您仍然在“状态”栏看不到“启用”的话。</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>别名</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>地址</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>协议</translation>
-    </message>
-    <message>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <source>Active</source>
-        <translation>工作中</translation>
-    </message>
-    <message>
-        <source>Last Seen</source>
-        <translation>最后在线</translation>
-    </message>
-    <message>
-        <source>Payee</source>
-        <translation>收款人</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>启动别名(&amp;T)</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>启动遗漏(&amp;M)</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>更新状态(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Show additional Masternode information</source>
-        <translation>显示附加的主节点信息</translation>
-    </message>
-    <message>
-        <source>Show &amp;Info...</source>
-        <translation>显示 &amp;信息...</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>状态将在数秒后自动更新：</translation>
-    </message>
-    <message>
         <source>0</source>
         <translation>0</translation>
-    </message>
-    <message>
-        <source>All Masternodes</source>
-        <translation>所有主节点</translation>
     </message>
     <message>
         <source>Filter List:</source>
@@ -1172,72 +1090,92 @@
         <translation>节点数：</translation>
     </message>
     <message>
-        <source>Start alias</source>
-        <translation>启动别名</translation>
+        <source>Show only masternodes this wallet has keys for.</source>
+        <translation>仅显示此钱包拥有私钥的主节点</translation>
     </message>
     <message>
-        <source>Confirm masternode start</source>
-        <translation>确认启动主节点</translation>
+        <source>My masternodes only</source>
+        <translation>仅我的主节点</translation>
     </message>
     <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>您确定要启动主节点%1吗？</translation>
+        <source>Service</source>
+        <translation>服务</translation>
     </message>
     <message>
-        <source>Confirm all masternodes start</source>
-        <translation>确认启动所有的主节点</translation>
+        <source>PoSe Score</source>
+        <translation>PoSe 评分</translation>
     </message>
     <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>您确定要启动所有主节点吗？</translation>
+        <source>Registered</source>
+        <translation>已注册的</translation>
     </message>
     <message>
-        <source>Command is not available right now</source>
-        <translation>命令目前不可使用</translation>
+        <source>Last Paid</source>
+        <translation>最近支付</translation>
     </message>
     <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>在主节点列表同步之前您无法使用此命令</translation>
+        <source>Next Payment</source>
+        <translation>下次支付</translation>
     </message>
     <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>确认启动遗漏的主节点</translation>
+        <source>Payout Address</source>
+        <translation>付款地址</translation>
     </message>
     <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>你确定要启动遗漏的主节点吗？</translation>
+        <source>Operator Reward</source>
+        <translation>运行者奖励</translation>
     </message>
     <message>
-        <source>Additional information for Masternode %1</source>
-        <translation>主节点 %1 的附加信息</translation>
+        <source>Collateral Address</source>
+        <translation>保证金地址</translation>
     </message>
     <message>
-        <source>Masternode Private Key</source>
-        <translation>主节点私钥</translation>
+        <source>Owner Address</source>
+        <translation>所有者地址</translation>
     </message>
     <message>
-        <source>Private Key</source>
-        <translation>私钥</translation>
+        <source>Voting Address</source>
+        <translation>投票地址</translation>
     </message>
     <message>
-        <source>Collateral</source>
-        <translation>抵押</translation>
+        <source>Copy ProTx Hash</source>
+        <translation>复制 ProTx Hash</translation>
     </message>
     <message>
-        <source>IP</source>
-        <translation>IP</translation>
+        <source>Copy Collateral Outpoint</source>
+        <translation>复制保证金输出点</translation>
     </message>
     <message>
-        <source>Version</source>
-        <translation>版本</translation>
+        <source>ENABLED</source>
+        <translation>ENABLED</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>未知</translation>
+        <source>POSE_BANNED</source>
+        <translation>POSE_BANNED</translation>
     </message>
     <message>
-        <source>Sentinel</source>
-        <translation>哨兵</translation>
+        <source>UNKNOWN</source>
+        <translation>UNKNOWN</translation>
+    </message>
+    <message>
+        <source>to %1</source>
+        <translation>至 %1</translation>
+    </message>
+    <message>
+        <source>to UNKNOWN</source>
+        <translation>至 UNKNOWN</translation>
+    </message>
+    <message>
+        <source>but not claimed</source>
+        <translation>但未认领</translation>
+    </message>
+    <message>
+        <source>NONE</source>
+        <translation>NONE</translation>
+    </message>
+    <message>
+        <source>Additional information for DIP3 Masternode %1</source>
+        <translation>DIP3 主节点 %1 的额外信息</translation>
     </message>
 </context>
 <context>
@@ -1288,7 +1226,7 @@
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>未知状态。同步区块头(%1)...</translation>
+        <translation>未知状态. 同步区块头部 (%1)...</translation>
     </message>
 </context>
 <context>
@@ -1341,10 +1279,6 @@
         <translation>(0 = 自动, &lt;0 = 保留处理器核心不用的数目)</translation>
     </message>
     <message>
-        <source>Amount of Stash to keep anonymized</source>
-        <translation>保持匿名化的藏数</translation>
-    </message>
-    <message>
         <source>W&amp;allet</source>
         <translation>钱包(&amp;A)</translation>
     </message>
@@ -1393,16 +1327,12 @@
         <translation>此金额为关闭匿名发送的阈值。</translation>
     </message>
     <message>
+        <source>Target PrivateSend balance</source>
+        <translation>目标混币数额</translation>
+    </message>
+    <message>
         <source>Automatically open the Stash Core client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <translation>自动在路由器打开藏核心客户端端口。此项只在路由器支持UPnP且开启时有效。</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside</source>
-        <translation>接受来自外部的连接</translation>
-    </message>
-    <message>
-        <source>Allow incoming connections</source>
-        <translation>接受外来连接</translation>
     </message>
     <message>
         <source>Connect to the Stash network through a SOCKS5 proxy.</source>
@@ -1411,6 +1341,10 @@
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
         <translation>通过SOCKS5代理连接 (默认代理)(&amp;C)：</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>如果是使用提供的默认SOCKS5代理来连接到节点就加以显示。</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1423,10 +1357,6 @@
     <message>
         <source>Expert</source>
         <translation>专家</translation>
-    </message>
-    <message>
-        <source>This setting determines the amount of individual masternodes that an input will be anonymized through.&lt;br/&gt;More rounds of anonymization gives a higher degree of privacy, but also costs more in fees.</source>
-        <translation>此选项用以调整进行匿名化操作的主节点数量。&lt;br/&gt;越多的循环次数提供了更高级别的匿名性，同时也会花费更多的手续费</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1445,8 +1375,20 @@
         <translation>启动交易源地址控制功能(&amp;C)</translation>
     </message>
     <message>
+        <source>Show system popups for PrivateSend mixing transactions&lt;br/&gt;just like for all other transaction types.</source>
+        <translation>显示匿名发送混币交易的系统弹出窗口 &lt;br/&gt; 如同其他所有交易类型一样。</translation>
+    </message>
+    <message>
+        <source>Show popups for PrivateSend transactions</source>
+        <translation>显示匿名发送交易的弹出窗口</translation>
+    </message>
+    <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>可以花还未确认的零钱(&amp;S)</translation>
+    </message>
+    <message>
+        <source>This setting determines the amount of individual masternodes that an input will be mixed through.&lt;br/&gt;More rounds of mixing gives a higher degree of privacy, but also costs more in fees.</source>
+        <translation>此选项用以调整进行混币操作的主节点数量。&lt;br/&gt;越多的循环次数提供了更高级别的匿名性，同时也会花费更多的手续费。</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1455,6 +1397,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>使用UPnP映射端口(&amp;U)</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside</source>
+        <translation>接受来自外部的连接</translation>
+    </message>
+    <message>
+        <source>Allow incoming connections</source>
+        <translation>接受外来连接</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1475,10 +1425,6 @@
     <message>
         <source>Used for reaching peers via:</source>
         <translation>连接到节点的方式：</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>如果是使用提供的默认SOCKS5代理来连接到节点就加以显示。</translation>
     </message>
     <message>
         <source>IPv4</source>
@@ -1698,22 +1644,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>完成度：</translation>
     </message>
     <message>
-        <source>Try to manually submit a PrivateSend request.</source>
-        <translation>尝试手动提交匿名发送请求。</translation>
-    </message>
-    <message>
-        <source>Reset the current status of PrivateSend (can interrupt PrivateSend if it's in the process of Mixing, which can cost you money!)</source>
-        <translation>重置目前匿名发送状态（此操作可能会影响您目前正在执行的混合过程，并且产生费用！）</translation>
-    </message>
-    <message>
-        <source>Information about PrivateSend and Mixing</source>
-        <translation>关于匿名发送和混币的信息</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>信息</translation>
-    </message>
-    <message>
         <source>Amount and Rounds:</source>
         <translation>数量与循环次数：</translation>
     </message>
@@ -1748,14 +1678,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>(Last Message)</source>
         <translation>(最近一次信息)</translation>
-    </message>
-    <message>
-        <source>Try Mix</source>
-        <translation>尝试混合</translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation>重置</translation>
     </message>
     <message>
         <source>out of sync</source>
@@ -1798,12 +1720,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>已面额化的</translation>
     </message>
     <message>
-        <source>Mixed</source>
-        <translation>混合的</translation>
+        <source>Partially mixed</source>
+        <translation>部分混币</translation>
     </message>
     <message>
-        <source>Anonymized</source>
-        <translation>已匿名处理的</translation>
+        <source>Mixed</source>
+        <translation>混合的</translation>
     </message>
     <message numerus="yes">
         <source>Denominated inputs have %5 of %n rounds on average</source>
@@ -1827,7 +1749,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Note: You can turn this message off in options.</source>
-        <translation>注意：您在选项中关闭了这项信息。</translation>
+        <translation>注意：您可以在选项中关闭此消息。</translation>
     </message>
     <message>
         <source>WARNING! Something went wrong on automatic backup</source>
@@ -1858,14 +1780,6 @@ https://www.transifex.com/projects/p/stash/</translation>
 </source>
         <translation>最近收到的匿名发送信息：
 </translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>不可用</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully reset.</source>
-        <translation>匿名发送成功重置。</translation>
     </message>
     <message>
         <source>If you don't want to see internal PrivateSend fees/transactions select "Most Common" as Type on the "Transactions" tab.</source>
@@ -1993,16 +1907,8 @@ https://www.transifex.com/projects/p/stash/</translation>
 <context>
     <name>QObject</name>
     <message>
-        <source>Stash Core</source>
-        <translation>藏核心</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 尚未安全退出</translation>
-    </message>
-    <message>
-        <source>Error reading masternode configuration file: %1</source>
-        <translation>读取主节点配置文件时出错：%1</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2236,10 +2142,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>网络流量(&amp;N)</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>清除(&amp;C)</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>总数</translation>
     </message>
@@ -2281,7 +2183,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Synced Headers</source>
-        <translation>已同步的区块头</translation>
+        <translation>已同步的区块头部</translation>
     </message>
     <message>
         <source>Synced Blocks</source>
@@ -2300,12 +2202,24 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>数据目录</translation>
     </message>
     <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>打开当前目录中的%1调试日志文件。日志文件大的话可能要等上几秒钟。</translation>
+    </message>
+    <message>
+        <source>InstantSend locks</source>
+        <translation>即时发送锁</translation>
+    </message>
+    <message>
         <source>Decrease font size</source>
         <translation>缩小文字</translation>
     </message>
     <message>
         <source>Increase font size</source>
         <translation>放大文字</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;重置</translation>
     </message>
     <message>
         <source>Services</source>
@@ -2440,16 +2354,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>欢迎使用 %1 的 RPC 控制台。</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>使用上下方向键浏览历史,  &lt;b&gt;Ctrl-L&lt;/b&gt;清除屏幕。</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>使用 &lt;b&gt;help&lt;/b&gt; 命令显示可用命令的简介。</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>警告: 骗子总是积极地劝说用户在此输入指令, 以窃取用户钱包中的资金. 在没有完全理解各命令行作用前, 请不要使用控制台.</translation>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>使用上下方向键浏览历史,  %1清除屏幕。</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
+        <translation>警告: 骗子总是积极地劝说用户在此输入指令, 以窃取用户钱包中的资金. 在没有完全理解各命令行作用前, 请不要使用控制台。</translation>
     </message>
     <message>
         <source>In:</source>
@@ -2462,6 +2376,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Network activity disabled</source>
         <translation>网络活动已禁用</translation>
+    </message>
+    <message>
+        <source>Total: %1 (Enabled: %2)</source>
+        <translation>总计: %1 (已激活的: %2)</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -2567,10 +2485,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>清除</translation>
     </message>
     <message>
-        <source>Request InstantSend</source>
-        <translation>要求即时到帐付款</translation>
-    </message>
-    <message>
         <source>Requested payments history</source>
         <translation>请求付款的历史</translation>
     </message>
@@ -2652,18 +2566,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Message</source>
         <translation>消息</translation>
-    </message>
-    <message>
-        <source>InstantSend</source>
-        <translation>即时到账</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>否</translation>
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
@@ -2772,14 +2674,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>选择...</translation>
     </message>
     <message>
-        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation>使用fallbackfee可能会导致发送一笔需要几个小时或几天(或永远不会)确认的交易. 建议手动选择手续费, 或者等待你完全验证整个区块链后.</translation>
-    </message>
-    <message>
-        <source>Warning: Fee estimation is currently not possible.</source>
-        <translation>警告: 目前无法进行交易费估计。</translation>
-    </message>
-    <message>
         <source>collapse fee-settings</source>
         <translation>收起手续费设置</translation>
     </message>
@@ -2792,16 +2686,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>匿名发送</translation>
     </message>
     <message>
-        <source>InstantSend</source>
-        <translation>即时到账</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>如果自定手续费设定为1000 stashees，而交易信息只有250字节的话，那么选择"每千字节"就只会支付250 stashees的手续费，&lt;br /&gt;而"至少"会支付1000 stashees。但如果交易信息大于一千字节,那么两者都要按每千字节付费。</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "total at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>如果自定手续费设定为1000 stashees，而交易信息只有250字节的话，那么选择“每千字节”就只会支付250 stashees的手续费，&lt;br /&gt;而"总共至少"会支付1000 stashees。但如果交易信息大于一千字节，那么两者都要按每千字节付费。</translation>
+        <source>If the custom fee is set to 1000 duffs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 duffs in fee,&lt;br /&gt;while "at least" pays 1000 duffs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>如果自定手续费设定为1000 duffs，而交易信息只有250字节的话，那么选择"每千字节"就只会支付250 duffs的手续费，&lt;br /&gt;而"至少"会支付1000 duffs。但如果交易信息大于一千字节,那么两者都要按每千字节付费。</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for stash transactions than the network can process.</source>
@@ -2812,12 +2698,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>每千字节</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>隐藏</translation>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>使用fallbackfee可能会导致发送一笔需要几个小时或几天(或永远不会)确认的交易. 建议手动选择手续费, 或者等待你完全验证整个区块链后。</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>总共至少</translation>
+        <source>Note: Not enough data for fee estimation, using the fallback fee instead.</source>
+        <translation>注意: 没有足够数据用于费用测算, 将使用备选费用代替.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>隐藏</translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
@@ -2834,14 +2724,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(手续费演算法还没有准备好。通常都要等几个块才可以...)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>正常</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>快速</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2900,24 +2782,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>复制找零金额</translation>
     </message>
     <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 区块)</translation>
+    </message>
+    <message>
         <source>using</source>
         <translation>使用</translation>
-    </message>
-    <message>
-        <source>anonymous funds</source>
-        <translation>匿名化资金</translation>
-    </message>
-    <message>
-        <source>(privatesend requires this amount to be rounded up to the nearest %1).</source>
-        <translation>（匿名发送需要这一数额四舍五入到最接近%1）。</translation>
-    </message>
-    <message>
-        <source>any available funds (not anonymous)</source>
-        <translation>任何可用资金（非匿名的）</translation>
-    </message>
-    <message>
-        <source>and InstantSend</source>
-        <translation>和即时支付</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2938,6 +2808,34 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>&lt;b&gt;(%1 of %2 entries displayed)&lt;/b&gt;</source>
         <translation>&lt;b&gt;（在%2中%1个项目显示出来）&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>PrivateSend funds only</source>
+        <translation>仅支持混币资金</translation>
+    </message>
+    <message>
+        <source>any available funds</source>
+        <translation>全部有效金额</translation>
+    </message>
+    <message>
+        <source>(PrivateSend transactions have higher fees usually due to no change output being allowed)</source>
+        <translation>(匿名发送交易的手续费更高通常由于输出不允许更改)</translation>
+    </message>
+    <message>
+        <source>Transaction size: %1</source>
+        <translation>交易大小: %1</translation>
+    </message>
+    <message>
+        <source>Fee rate: %1</source>
+        <translation>交易手续费比率: %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>This transaction will consume %n input(s)</source>
+        <translation><numerusform>此交易将消耗 %n 个输入</numerusform></translation>
+    </message>
+    <message>
+        <source>Warning: Using PrivateSend with %1 or more inputs can harm your privacy and is not recommended</source>
+        <translation>提醒: 使用 %1 或超过的输入不利于您的隐私保护，并不推荐</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2978,10 +2876,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Payment request expired.</source>
         <translation>付款请求已过期。</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n 区块</numerusform></translation>
     </message>
     <message>
         <source>Pay only the required fee of %1</source>
@@ -3313,16 +3207,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>确认%1次</translation>
     </message>
     <message>
-        <source>verified via InstantSend</source>
-        <translation>经即时发送系统核实</translation>
+        <source>locked via LLMQ based ChainLocks</source>
+        <translation>通过基于LLMQ的链锁功能锁定</translation>
     </message>
     <message>
-        <source>InstantSend verification in progress - %1 of %2 signatures</source>
-        <translation>即时发送验证正在进行 - %2个签署中的第%1个</translation>
-    </message>
-    <message>
-        <source>InstantSend verification failed</source>
-        <translation>即时发送验证失败</translation>
+        <source>verified via LLMQ based InstantSend</source>
+        <translation>通过基于LLMQ的即时发送功能验证</translation>
     </message>
     <message>
         <source>Status</source>
@@ -3599,6 +3489,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>决定是否有一个仅限查看的地址参与这次交易.</translation>
     </message>
     <message>
+        <source>Whether or not this transaction was locked by InstantSend.</source>
+        <translation>无论此交易是否被即时发送锁定。</translation>
+    </message>
+    <message>
         <source>User-defined intent/purpose of the transaction.</source>
         <translation>用户定义的该交易的意图/目的。</translation>
     </message>
@@ -3612,6 +3506,14 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>All</source>
         <translation>全部</translation>
+    </message>
+    <message>
+        <source>Locked by InstantSend</source>
+        <translation>被即时发送锁定</translation>
+    </message>
+    <message>
+        <source>Not locked by InstantSend</source>
+        <translation>未被即时发送锁定</translation>
     </message>
     <message>
         <source>Today</source>
@@ -3726,6 +3628,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>显示交易详情</translation>
     </message>
     <message>
+        <source>Show address QR code</source>
+        <translation>显示地址二维码</translation>
+    </message>
+    <message>
         <source>Export Transaction History</source>
         <translation>导出交易历史</translation>
     </message>
@@ -3778,6 +3684,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>交易历史已成功保存到 %1。</translation>
     </message>
     <message>
+        <source>QR code</source>
+        <translation>二维码</translation>
+    </message>
+    <message>
         <source>Range:</source>
         <translation>范围：</translation>
     </message>
@@ -3805,14 +3715,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Send Coins</source>
         <translation>发送藏</translation>
-    </message>
-    <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>即时发送功能目前还不支持发送如此高的金额。目前限制在%1藏。</translation>
-    </message>
-    <message>
-        <source>Used way too many inputs (&gt;%1) for this InstantSend transaction, fees could be huge.</source>
-        <translation>这个即时发送交易使用过多的输入（&gt;%1），费用可能很大。</translation>
     </message>
 </context>
 <context>
@@ -3881,10 +3783,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>为存储钱包密码的KeePass入口链接命名</translation>
     </message>
     <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>设置以字节为单位的高优先级或低费率交易的最大数(默认：%d)</translation>
-    </message>
-    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>设置脚本确认线程数(%u到%d，0 = 自动，&lt;0 = 保留处理器核心不用的数目， 默认：%d)</translation>
     </message>
@@ -3901,16 +3799,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>警告: 我们和某些连线的节点对于区块链结的决定不同！你可能需要升级，或是需要等其它的节点升级。</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>您必须在配置中指定一个主节点密钥。请参阅文档以获得帮助。</translation>
-    </message>
-    <message>
         <source>Accept command line and JSON-RPC commands</source>
         <translation>接受命令行以及JSON-RPC命令</translation>
-    </message>
-    <message>
-        <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>添加一个可连接节点，并尝试保持连接开放。</translation>
     </message>
     <message>
         <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
@@ -4025,10 +3915,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>和指定的地址连接，並且将连接的节点放入白名单中。IPv6请用[host]:port格式</translation>
     </message>
     <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>和指定的地址连接，监听JSON-RPC连接。IPv6请用[host]:port格式。此选项可以多次设定(默认：绑定所有界面)</translation>
-    </message>
-    <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
         <translation>创建系统默认权限的文件，而不是 umask 077 (只在关闭钱包功能时有效) </translation>
     </message>
@@ -4037,8 +3923,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>删除钱包里的所有交易信息, 并且在下次启动时, 使用 -rescan 来从区块链中恢复</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
-        <translation>加载%s时出错：您不能够在非HD钱包上启用HD功能</translation>
+        <source>Enable publish raw transactions of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>允许在 &lt;address&gt;中发布尝试即时支付双花的原始交易</translation>
+    </message>
+    <message>
+        <source>Enable publish transaction hashes of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>允许在 &lt;address&gt;中发布尝试即时支付双花的交易哈希值</translation>
     </message>
     <message>
         <source>Found unconfirmed denominated outputs, will wait till they confirm to continue.</source>
@@ -4065,10 +3955,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>维护一份完整的交易索引, 用于 getrawtransaction RPC调用 (默认：%u)</translation>
     </message>
     <message>
-        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you verified that wallet works!</source>
-        <translation>请确保加密您的钱包，并在验证您的钱包能够运作后删除所有未加密的备份！</translation>
-    </message>
-    <message>
         <source>Maximum size of data in data carrier transactions we relay and mine (default: %u)</source>
         <translation>转发和挖矿时，对只带数据的交易的大小上限（默认：%u）</translation>
     </message>
@@ -4079,6 +3965,18 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>输出调试信息(默认：%u，&lt;category&gt;是可选项)</translation>
+    </message>
+    <message>
+        <source>Overrides minimum spork signers to change spork value. Only useful for regtest and devnet. Using this on mainnet or testnet will ban you.</source>
+        <translation>重写最少数叉勺签名人以更改叉勺值。仅适用于 regtest 和 devnet。在主网或测试网络使用会被禁止。</translation>
+    </message>
+    <message>
+        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to mix some more coins.</source>
+        <translation>匿名发送要求使用准确的已除名资金来发送，您可能需要再混币处理一些资金。</translation>
+    </message>
+    <message>
+        <source>Use N separate masternodes in parallel to mix funds (%u-%u, default: %u)</source>
+        <translation>同时使用 N 个独立主节点来混淆资金 (%u-%u, default: %u)</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -4095,10 +3993,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
         <translation>在白名单中的节点不会因为检测到DoS攻击而被停用。来自这些节点的交易也一定会被转发，即使说交易本来就在记忆池里了也一样。适用于像是网关服务器</translation>
-    </message>
-    <message>
-        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation>你需要通过使用 -reindex-chainstate改变-txindex来重建数据库</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4129,16 +4023,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>连接至 KeePassHttp 端口 &lt;port&gt; (默认：%u)</translation>
     </message>
     <message>
-        <source>Enable the client to act as a masternode (0-1, default: %u)</source>
-        <translation>激活客户端，使其作为主节点(0-1，默认：%u)</translation>
-    </message>
-    <message>
         <source>Entry exceeds maximum size.</source>
         <translation>条目超过最大值。</translation>
-    </message>
-    <message>
-        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
-        <translation>加载%s时出错：您不能在HD钱包上禁用HD功能</translation>
     </message>
     <message>
         <source>Failed to load fulfilled requests cache from</source>
@@ -4151,10 +4037,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Failed to load masternode cache from</source>
         <translation>无法加载主节点缓存</translation>
-    </message>
-    <message>
-        <source>Failed to load masternode payments cache from</source>
-        <translation>无法加载主节点付款缓存</translation>
     </message>
     <message>
         <source>Found enough users, signing ( waiting %s )</source>
@@ -4201,16 +4083,24 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>余额不足。</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>无效-onion地址：'%s'</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>无效 -proxy地址：'%s'</translation>
+        <source>Invalid amount for -discardfee=&lt;amount&gt;: '%s'</source>
+        <translation>设定 -discardfee=&lt;金额&gt; 的金额无效：'%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
         <translation>设定 -paytxfee=&lt;金额&gt;  的金额无效：'%s' (至少要有%s)</translation>
+    </message>
+    <message>
+        <source>Invalid minimum number of spork signers specified with -minsporkkeys</source>
+        <translation>无效的最少数叉勺签名人以  -minsporkkeys 标识</translation>
+    </message>
+    <message>
+        <source>Keep N STASH mixed (%u-%u, default: %u)</source>
+        <translation>保持N个混币处理的藏 (%u-%u, 默认: %u)</translation>
+    </message>
+    <message>
+        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
+        <translation>内存中最多保留 &lt;n&gt; 笔孤立的交易 (默认: %u) </translation>
     </message>
     <message>
         <source>Keypool ran out, please call keypoolrefill first</source>
@@ -4237,16 +4127,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>正在读取主节点缓存...</translation>
     </message>
     <message>
-        <source>Loading masternode payment cache...</source>
-        <translation>正在读取主节点付款缓存...</translation>
-    </message>
-    <message>
         <source>Lock is already in place.</source>
         <translation>已锁定。</translation>
-    </message>
-    <message>
-        <source>Lock masternodes from masternode configuration file (default: %u)</source>
-        <translation>根据主节点的配置文件锁定主节点(默认：%u)</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
@@ -4277,16 +4159,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>没有找到任何兼容的主节点。</translation>
     </message>
     <message>
+        <source>Not enough funds to mix.</source>
+        <translation>没有足够的资金进行混币。</translation>
+    </message>
+    <message>
         <source>Not in the Masternode list.</source>
         <translation>在主节点列表中不存在。</translation>
     </message>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>在网络中只连接至节点 &lt;net&gt; (ipv4，ipv6 或 onion)</translation>
-    </message>
-    <message>
-        <source>Port: %d</source>
-        <translation>端口：%d</translation>
     </message>
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
@@ -4305,10 +4187,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>发送追踪或除错信息到debug.log中 (默认：%u)</translation>
     </message>
     <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>如果可能，发送零手续费的交易(默认：%u)</translation>
-    </message>
-    <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>设置密匙池大小至&lt;n&gt; (默认：%u)</translation>
     </message>
@@ -4325,10 +4203,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>指定连接超时毫秒数 (最小值：1，默认：%d)</translation>
     </message>
     <message>
-        <source>Specify masternode configuration file (default: %s)</source>
-        <translation>指定主节点配置文件 (默认：%s)</translation>
-    </message>
-    <message>
         <source>Specify pid file (default: %s)</source>
         <translation>指定pid 文件 (默认：%s)</translation>
     </message>
@@ -4337,20 +4211,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>发送交易时花费未确认的费用(默认：%u)</translation>
     </message>
     <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>己经提交下列条目到主节点：%u / %d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>己经提交到主节点，正在等候更多条目（%u / %d）%s</translation>
-    </message>
-    <message>
         <source>Submitted to masternode, waiting in queue %s</source>
         <translation>提交到主节点，在队列 %s 中等待</translation>
-    </message>
-    <message>
-        <source>Synchroning blockchain...</source>
-        <translation>正在同步区块链...</translation>
     </message>
     <message>
         <source>Synchronization failed</source>
@@ -4361,16 +4223,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>同步完成</translation>
     </message>
     <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>正在同步主节点...</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>这并不是一个主节点。</translation>
-    </message>
-    <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
         <translation>断开无效节点的临界值(默认：%u)</translation>
+    </message>
+    <message>
+        <source>Too many %f denominations, removing.</source>
+        <translation>太多%f面额化资金，正在移除。</translation>
+    </message>
+    <message>
+        <source>Too many %f denominations, skipping.</source>
+        <translation>太多 %f 面额，跳过。</translation>
     </message>
     <message>
         <source>Tor control port password (default: empty)</source>
@@ -4421,12 +4283,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>用户代理评论(%s)包含不安全的字符。</translation>
     </message>
     <message>
-        <source>Will retry...</source>
-        <translation>即将重试...</translation>
+        <source>Verifying wallet(s)...</source>
+        <translation>验证(多个)钱包中...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>无效主节点私钥。请查阅文档。</translation>
+        <source>Will retry...</source>
+        <translation>即将重试...</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>
@@ -4437,16 +4299,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>无法在同步过程中进行混合。</translation>
     </message>
     <message>
-        <source>Could not parse masternode.conf</source>
-        <translation>无法解析主节点配置文件</translation>
-    </message>
-    <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>在 -whitelist中指定了无效的子网掩码：'%s'</translation>
-    </message>
-    <message>
-        <source>Invalid port detected in masternode.conf</source>
-        <translation>在主节点配置文件中检测到无效端口</translation>
     </message>
     <message>
         <source>Invalid script detected.</source>
@@ -4461,12 +4315,28 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>KeePassHttp的密钥，用作与KeePass的AES加密通信</translation>
     </message>
     <message>
-        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
-        <translation>内存中最多保留 &lt;n&gt; 笔孤立的交易 (默认：%u) </translation>
-    </message>
-    <message>
         <source>Disable all Stash specific functionality (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</source>
         <translation>禁止所有藏的附加功能（主节点，匿名发送，即时发送，预算案）（0-1，默认：%u）</translation>
+    </message>
+    <message>
+        <source>%s file contains all private keys from this wallet. Do not share it with anyone!</source>
+        <translation>%s 文件包含此钱包中的所有私钥。不要与任何人分享！</translation>
+    </message>
+    <message>
+        <source>-masternode option is deprecated and ignored, specifying -masternodeblsprivkey is enough to start this node as a masternode.</source>
+        <translation>-masternode选项已被弃用并忽略, 指定-masternodeblsprivkey即可将此节点激活为主节点.</translation>
+    </message>
+    <message>
+        <source>Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info)</source>
+        <translation>添加一个可连接节点，并尝试保持连接开放 (查看 `addnode` RPC 帮助命令以获得更多信息)</translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. This option is ignored unless -rpcallowip is also passed. Port is optional and overrides -rpcport. Use [host]:port notation for IPv6. This option can be specified multiple times (default: 127.0.0.1 and ::1 i.e., localhost, or if -rpcallowip has been specified, 0.0.0.0 and :: i.e., all addresses)</source>
+        <translation>与指定的地址绑定, 监听JSON-RPC连接. 请忽略此选项, 除非-rpcallowip也被通过. 端口是可选的并且取代-rpcport. IPv6请用[host]:port格式. 此选项可以多次设定 (默认: 127.0.0.1 和 ::1 例如, localhost, 或 如果 -rpcallowip 已经被指定, 0.0.0.0 和 :: 例如, 所有地址)</translation>
+    </message>
+    <message>
+        <source>Connect only to the specified node(s); -connect=0 disables automatic connections (the rules for this peer are the same as for -addnode)</source>
+        <translation>只连接指定节点(或多个); -connect=0 禁用自动连接 (此规则与 -addnode 的规则相同)</translation>
     </message>
     <message>
         <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
@@ -4477,20 +4347,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>不要让交易留在内存池中超过 &lt;n&gt; 个小时 (默认：%u)</translation>
     </message>
     <message>
-        <source>Enable InstantSend, show confirmations for locked transactions (0-1, default: %u)</source>
-        <translation>启用即时发送，显示锁定交易的确认次数（0-1，默认：%u）</translation>
-    </message>
-    <message>
         <source>Enable multiple PrivateSend mixing sessions per block, experimental (0-1, default: %u)</source>
         <translation>允许在每个区块中使用多重匿名发送混合会话，实验性功能（0-1，预设值：%u）</translation>
     </message>
     <message>
-        <source>Enable use of automated PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
-        <translation>允许存储在这个钱包内的资金自动使用匿名发送（0-1，默认：%u）</translation>
-    </message>
-    <message>
         <source>Execute command when a wallet InstantSend transaction is successfully locked (%s in cmd is replaced by TxID)</source>
         <translation>当钱包有交易改变时要执行的指令（命令中的%s会被取代成交易识别码）</translation>
+    </message>
+    <message>
+        <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
+        <translation>额外的交易储存在内存中用于致密区块的重建 (默认: %u)</translation>
     </message>
     <message>
         <source>Failed to create backup, file already exists! This could happen if you restarted wallet in less than 60 seconds. You can continue if you are ok with this.</source>
@@ -4509,14 +4375,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>如果&lt;category&gt;未提供或&lt;category&gt; = 1，输出所有调试信息。</translation>
     </message>
     <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>即时发送系统暂时并不支持这么高的交易金额。目前的金额仅限于%1藏。</translation>
-    </message>
-    <message>
-        <source>InstantSend requires inputs with at least %d confirmations, you might need to wait a few minutes and try again.</source>
-        <translation>即时发送系统要求输入的资金最少要有%d个确认，您可能需要等待数分钟然后再重试。</translation>
-    </message>
-    <message>
         <source>Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)</source>
         <translation>维护一个完整的地址索引，用于查询余额，txids和未使用的位址输出（默认：%u）</translation>
     </message>
@@ -4533,8 +4391,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>维持与节点联机数的上限为&lt;n&gt;个（临时服务连接除外）（默认：%u）</translation>
     </message>
     <message>
-        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.</source>
-        <translation>匿名发送要求使用准确的已除名资金来发送，你可能需要再匿名处理一些资金。</translation>
+        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you have verified that the wallet works!</source>
+        <translation>请确保加密您的钱包，并在验证您的钱包能够运作后删除所有未加密的备份！</translation>
+    </message>
+    <message>
+        <source>Maximum total size of all orphan transactions in megabytes (default: %u)</source>
+        <translation>以兆为单位最大化所有孤立交易总大小 (默认: %u)</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -4545,12 +4407,20 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>修剪：最后的钱包同步超过了修剪的数据。你需要通过 -reindex (重新下载整个区块链以防止节点被修剪)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>是否在节点地址数量不足时, 使用DNS查询来搜索节点 (默认: 1 除非使用 -connect)</translation>
+    </message>
+    <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
         <translation>随机化每个代理连接的凭证。这能使Tor流隔离（默认：%u）</translation>
     </message>
     <message>
         <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
         <translation>无法在开启修剪的状态下重扫描。请使用 -reindex重新下载完整的区块链。</translation>
+    </message>
+    <message>
+        <source>Set the masternode BLS private key and enable the client to act as a masternode</source>
+        <translation>设置主节点BLS私钥并允许客户端作为主节点运行</translation>
     </message>
     <message>
         <source>Specify full path to directory for automatic wallet backups (must exist)</source>
@@ -4571,6 +4441,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
         <translation>网络版本字符串的总长度 (%i) 超过最大长度 (%i) 了。请减少 uacomment 参数的数量或大小。</translation>
+    </message>
+    <message>
+        <source>Transaction index can't be disabled in full mode. Either start with -litemode command line switch or enable transaction index.</source>
+        <translation>交易索引无法在全节点中禁用。可以通过 -litemode 来切换或开启交易索引。</translation>
     </message>
     <message>
         <source>Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)</source>
@@ -4605,20 +4479,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>警告：未知的区块版本被挖出！未知规则可能已生效</translation>
     </message>
     <message>
+        <source>You need to rebuild the database using -reindex to change -timestampindex</source>
+        <translation>你需要通过使用-reindex改变-timestampindex来重新建立数据库</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>您需要使用 -reindex 重新构建数据库以返回未修剪的模式。这将重新下载整个区块链</translation>
     </message>
     <message>
-        <source>(%d could be used only on mainnet)</source>
-        <translation>（%d只可以在主网络上使用）</translation>
-    </message>
-    <message>
         <source>(default: %u)</source>
         <translation>(默认: %u)</translation>
-    </message>
-    <message>
-        <source>(must be %d for mainnet)</source>
-        <translation>（必须是%d用于主网）</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -4649,6 +4519,14 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>允许在&lt;address&gt;中发布哈希区块</translation>
     </message>
     <message>
+        <source>Enable publish hash of governance objects (like proposals) in &lt;address&gt;</source>
+        <translation>允许在 &lt;address&gt;中发布管理对象哈希值（如提案）</translation>
+    </message>
+    <message>
+        <source>Enable publish hash of governance votes in &lt;address&gt;</source>
+        <translation>允许在 &lt;address&gt;中发布管理投票哈希值</translation>
+    </message>
+    <message>
         <source>Enable publish hash transaction (locked via InstantSend) in &lt;address&gt;</source>
         <translation>允许在&lt;address&gt;中发布哈希交易（通过即时发送来锁定）</translation>
     </message>
@@ -4669,10 +4547,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>允许在&lt;address&gt;中发布原始交易</translation>
     </message>
     <message>
-        <source>Enable transaction replacement in the memory pool (default: %u)</source>
-        <translation>在内存池中启用交易替换功能(默认：%u)</translation>
-    </message>
-    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation>错误：发生了致命的内部错误，详情见 debug.log 文件</translation>
     </message>
@@ -4689,8 +4563,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>无法删除备份，错误：%s</translation>
     </message>
     <message>
-        <source>Failed to parse host:port string</source>
-        <translation>无法解析host:port字符串</translation>
+        <source>Failed to load sporks cache from</source>
+        <translation>从... 读取叉勺缓存失败</translation>
     </message>
     <message>
         <source>Fee (in %s/kB) to add to transactions you send (default: %s)</source>
@@ -4709,6 +4583,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>设定-fallbackfee=&lt;amount&gt;的金额无效：'%s'</translation>
     </message>
     <message>
+        <source>Invalid masternodeblsprivkey. Please see documentation.</source>
+        <translation>无效的 masternodeblsprivkey。请阅读文档。</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>保持交易内存池大小低于&lt;n&gt;MB（默认：%u）</translation>
     </message>
@@ -4721,20 +4599,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>距离上一次成功送出匿名发送的时间过短。</translation>
     </message>
     <message>
-        <source>Line: %d</source>
-        <translation>行：%d</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>正在读取地址...</translation>
-    </message>
-    <message>
         <source>Loading block index...</source>
         <translation>正在读取区块索引...</translation>
     </message>
     <message>
         <source>Loading governance cache...</source>
         <translation>正在加载治理缓存…</translation>
+    </message>
+    <message>
+        <source>Loading sporks cache...</source>
+        <translation>正在读取叉勺缓存...</translation>
     </message>
     <message>
         <source>Loading wallet... (%3.2f %%)</source>
@@ -4751,10 +4625,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Make the wallet broadcast transactions</source>
         <translation>使钱包广播交易</translation>
-    </message>
-    <message>
-        <source>Masternode cache is empty, skipping payments and governance cache...</source>
-        <translation>主节点缓存为空，跳过付款和治理缓存…</translation>
     </message>
     <message>
         <source>Masternode options:</source>
@@ -4799,10 +4669,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Not enough file descriptors available.</source>
         <translation>文件说明符不足</translation>
-    </message>
-    <message>
-        <source>Not enough funds to anonymize.</source>
-        <translation>没有足够的资金进行匿名处理。</translation>
     </message>
     <message>
         <source>Number of automatic wallet backups (default: %u)</source>
@@ -4853,6 +4719,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>启动时重新扫描区块链以查找遗漏的钱包交易</translation>
     </message>
     <message>
+        <source>Synchronizing blockchain...</source>
+        <translation>正在同步区块链...</translation>
+    </message>
+    <message>
         <source>The wallet will avoid paying less than the minimum relay fee.</source>
         <translation>钱包避免低于最小交易费的支付</translation>
     </message>
@@ -4875,6 +4745,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Transaction must have at least one recipient</source>
         <translation>交易必须包含至少一个接收人</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>交易过大</translation>
     </message>
     <message>
         <source>Trying to connect...</source>
@@ -4913,6 +4787,26 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>是否在区块模式下操作（默认：%u）</translation>
     </message>
     <message>
+        <source>You can not start a masternode in lite mode.</source>
+        <translation>您无法在简化模式中启动主节点。</translation>
+    </message>
+    <message>
+        <source>You can not start a masternode with wallet enabled.</source>
+        <translation>您无法在开启钱包时启动主节点.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -addressindex</source>
+        <translation>你需要通过使用-reindex改变-addressindex来重新建立数据库</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -spentindex</source>
+        <translation>你需要通过使用-reindex改变-spentindex来重新建立数据库</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>你需要通过使用-reindex改变-txindex来重新建立数据库</translation>
+    </message>
+    <message>
         <source>ZeroMQ notification options:</source>
         <translation>ZeroMQ 通知选项：</translation>
     </message>
@@ -4937,24 +4831,32 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>%s 开发人员</translation>
     </message>
     <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
-        <translation>接收来自外部链接 (默认: 1 当没有 -proxy 或 -connect/-noconnect)</translation>
-    </message>
-    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>无法锁定数据目录 %s。%s 可能已经在运行。</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s); -noconnect or -connect=0 alone to disable automatic connections</source>
-        <translation>只连接指定节点(或多个); -noconnect or connect=0 来仅用自动链接</translation>
     </message>
     <message>
         <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
         <translation>在MIT协议下分发，参见附带的 %s 文件或 %s</translation>
     </message>
     <message>
+        <source>Enable use of PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
+        <translation>允许存储在这个钱包内的资金使用匿名发送（0-1, 默认: %u）</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on an already existing non-HD wallet</source>
+        <translation>加载%s时出错：您不能够在非HD钱包上启用HD功能</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet parameter must only specify a filename (not a path).</source>
+        <translation>加载钱包 %s 时出错. -wallet 参数必须仅指定文件名 (非路径).</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>读取 %s 时发生错误！所有的密钥都可以正确读取，但是交易记录或地址簿数据可能已经丢失或出错。</translation>
+    </message>
+    <message>
+        <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
+        <translation>排除特定类别的调试信息. 可以与 -debug=1 结合使用, 以输出排除一个或多个特定类别以外的所有调试日志.</translation>
     </message>
     <message>
         <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
@@ -4985,14 +4887,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>如果你认为%s对你比较有用的话，请对我们进行一些捐赠支持。请访问%s网站来获取有关这个软件的更多信息。</translation>
     </message>
     <message>
-        <source>Provide liquidity to PrivateSend by infrequently mixing coins on a continual basis (%u-%u, default: %u, 1=very frequent, high fees, %u=very infrequent, low fees)</source>
-        <translation>透过偶尔混币来为匿名发送提供流动性 (%u-%u, 默认: %u, 1=非常频繁, 高手续费, %u=非常偶尔，低手续费)</translation>
-    </message>
-    <message>
-        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
-        <translation>如果地址不足, 则通过DNS查询对等地址(默认: 1 除非 -connect/-noconnect)</translation>
-    </message>
-    <message>
         <source>Reduce storage requirements by enabling pruning (deleting) of old blocks. This allows the pruneblockchain RPC to be called to delete specific blocks, and enables automatic pruning of old blocks if a target size in MiB is provided. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, 1 = allow manual pruning via RPC, &gt;%u = automatically prune block files to stay under the specified target size in MiB)</source>
         <translation>修剪（删除）掉老旧区块以降低需要的储存空间。这样会增加一个RPC指令pruneblockchain，可以使用它来删除指定的区块；也可以指定目标储存空间大小，以启用对老旧内存块的自动修剪功能。这个模式跟-txindex和-rescan参数不兼容。警告：还原回不修剪模式会需要重新下载整个区块链。（默认：0表示不修剪内存块，1表示允许使用RPC指令做修剪，&gt;%u的值表示为区块数据的目标大小，单位是百万字节，MiB）</translation>
     </message>
@@ -5001,8 +4895,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>设定生成区块时，所要包含交易每千字节的最低手续费（单位是%s）。（默认：%s）</translation>
     </message>
     <message>
-        <source>Show N confirmations for a successfully locked transaction (%u-%u, default: %u)</source>
-        <translation>显示N个确认为一个成功锁定的交易(%u-%u, 默认: %u)</translation>
+        <source>The fee rate (in %s/kB) that indicates your tolerance for discarding change by adding it to the fee (default: %s). Note: An output is discarded if it is dust at this rate, but we will always discard up to the dust relay fee and a discard fee above that is limited by the fee estimate for the longest target</source>
+        <translation>手续费 (以 %s/kB 为单位) 以表示您对添加到手续费中不保存更改的容忍度 (默认: %s). 注意: 如果此项为粉尘时, 输出将会被丢弃. 但我们将始终丢弃最高至粉尘中继费用, 并且高于最长目标费用估测值限制的丢弃费用.</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>如果更改小于粉尘级别, 这可能是您会丢弃的交易手续费</translation>
     </message>
     <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
@@ -5015,6 +4913,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Unable to locate enough PrivateSend non-denominated funds for this transaction.</source>
         <translation>在本次交易中, 无法找到足够的未面额化资金.</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>无法重播区块. 您需要使用 -reindex-chainstate命令来重建数据库.</translation>
     </message>
     <message>
         <source>Use N separate masternodes for each denominated input to mix funds (%u-%u, default: %u)</source>
@@ -5037,20 +4939,24 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>钱包软件不会产生违反内存池交易链限制的交易（默认：%u）</translation>
     </message>
     <message>
-        <source>Warning: At least %d of %d masternodes are running on a newer software version. Please check latest releases, you might need to update too.</source>
-        <translation>警告: 至少有 %d 分之 %d 的主节点正在运行新版本软件. 请检查最新版本, 您可能也需要更新.</translation>
-    </message>
-    <message>
-        <source>Warning: Every masternode (out of %d known ones) is running on a newer software version. Please check latest releases, it's very likely that you missed a major/critical update.</source>
-        <translation>警告: 每个主节点 ( %d 个已知的) 正在运行新版本软件. 请检查最新版本, 您很有可能错过了重大/关键更新.</translation>
-    </message>
-    <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>警告：钱包文件损坏，但数据被救回！原始的钱包文件%s已经重命名为%s并存储到%s目录下 。如果您的账户余额或者交易记录不正确，请使用您的钱包备份文件恢复。</translation>
     </message>
     <message>
+        <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
+        <translation>是否在关闭时保存内存池并在重启时加载 (默认: %u)</translation>
+    </message>
+    <message>
         <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
         <translation>把来自指定地址（例如：1.2.3.4）或CIDR格式网段（例如：1.2.3.0/24）的节点放进白名单。这个选项可以设定多次。</translation>
+    </message>
+    <message>
+        <source>You are starting in lite mode, most Stash-specific functionality is disabled.</source>
+        <translation>您启动了简化模式, 大多数藏特有的功能已禁用.</translation>
+    </message>
+    <message>
+        <source>%d of last 100 blocks have unexpected version</source>
+        <translation>最近100个区块中的 %d 个区块有意外版本</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -5081,6 +4987,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>当 -devnet 和 -server 被指定时, 必须指定 -rpcport</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>接受来自外部链接 (默认：当没有-proxy或-connect时为1)</translation>
+    </message>
+    <message>
         <source>Allow RFC1918 addresses to be relayed and connected to (default: %u)</source>
         <translation>允许 RFC1918 地址能被中继并连接到 (默认: %u)</translation>
     </message>
@@ -5101,6 +5011,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>版权 (C)</translation>
     </message>
     <message>
+        <source>Create up to N inputs of each denominated amount (%u-%u, default: %u)</source>
+        <translation>每个面额化的金额最多创建N个输入 (%u-%u, 默认: %u)</translation>
+    </message>
+    <message>
         <source>Error loading %s</source>
         <translation>载入 %s 时发生错误</translation>
     </message>
@@ -5111,6 +5025,22 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Error loading %s: Wallet requires newer version of %s</source>
         <translation>%s 加载错误：请升级到最新版 %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't disable HD on an already existing HD wallet</source>
+        <translation>加载%s时出错：您不能在HD钱包上禁用HD功能</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet filename must be a regular file.</source>
+        <translation>加载钱包 %s 时出错. -wallet 文件名必须是一个常规文件.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
+        <translation>加载钱包 %s 时出错. 指定了重复的 -wallet 文件名.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Invalid characters in -wallet filename.</source>
+        <translation>加载钱包 %s 时出错. -wallet 文件名中含无效字符.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
@@ -5125,6 +5055,22 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>无法开始一个新的混币队列</translation>
     </message>
     <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>初始化完整性检查失败。%s即将关闭。</translation>
+    </message>
+    <message>
+        <source>Inputs vs outputs size mismatch.</source>
+        <translation>输入对输出大小不匹配.</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>无效的 -onion 地址: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>无效的 -proxy 地址: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>无效的金额 -%s=&lt;amount&gt;: '%s'</translation>
     </message>
@@ -5133,16 +5079,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>使用 -sporkaddr 指定的spork地址无效</translation>
     </message>
     <message>
-        <source>Keep N STASH anonymized (%u-%u, default: %u)</source>
-        <translation>保持 N 个匿名处理的藏 (%u-%u, default: %u)</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>正在加载P2P地址...</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>
         <translation>打印出这段帮助信息并退出</translation>
-    </message>
-    <message>
-        <source>Receive and display P2P network alerts (default: %u)</source>
-        <translation>接收并显示P2P网络警报（默认：%u）</translation>
     </message>
     <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
@@ -5155,6 +5097,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Relay non-P2SH multisig (default: %u)</source>
         <translation>是否转发非P2SH格式的多签名交易 (默认: %u) </translation>
+    </message>
+    <message>
+        <source>Replaying blocks...</source>
+        <translation>重播区块中...</translation>
     </message>
     <message>
         <source>Rescanning...</source>
@@ -5185,10 +5131,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>以字节为单位设置最大区块的大小(默认：%d)</translation>
     </message>
     <message>
-        <source>Set the masternode private key</source>
-        <translation>设置主节点私钥</translation>
-    </message>
-    <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
         <translation>显示所有debug选项(用法：--help -help-debug)</translation>
     </message>
@@ -5213,6 +5155,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>指定您自己的公开地址</translation>
     </message>
     <message>
+        <source>Start PrivateSend automatically (0-1, default: %u)</source>
+        <translation>自动启动匿名发送 (0-1, 默认: %u)</translation>
+    </message>
+    <message>
         <source>Starting network threads...</source>
         <translation>正在启动网络线程...</translation>
     </message>
@@ -5223,10 +5169,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Synchronizing governance objects...</source>
         <translation>正在同步治理对象…</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternode payments...</source>
-        <translation>正在同步主节点付款信息…</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
@@ -5247,6 +5189,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Transaction created successfully.</source>
         <translation>交易创建成功。</translation>
+    </message>
+    <message>
+        <source>Transaction fee and change calculation failed</source>
+        <translation>交易手续费和找零计算失败</translation>
     </message>
     <message>
         <source>Transaction fees are too high.</source>
@@ -5277,16 +5223,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>未知状态：id = %u</translation>
     </message>
     <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>不支持的日志记录类别 %s=%s.</translation>
+    </message>
+    <message>
         <source>Username for JSON-RPC connections</source>
         <translation>JSON-RPC连接用户名</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
         <translation>验证区块中...</translation>
-    </message>
-    <message>
-        <source>Verifying wallet...</source>
-        <translation>验证钱包中...</translation>
     </message>
     <message>
         <source>Very low number of keys left: %d</source>
@@ -5315,10 +5261,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Your entries added successfully.</source>
         <translation>您的词条已添加成功.</translation>
-    </message>
-    <message>
-        <source>Your transaction was accepted into the pool!</source>
-        <translation>您的交易成功被矿池接受！</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>

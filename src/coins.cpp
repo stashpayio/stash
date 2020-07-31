@@ -9,17 +9,19 @@
 #include "random.h"
 
 #include <assert.h>
-#include <boost/foreach.hpp>
 
 bool CCoinsView::GetAnchorAt(const uint256 &rt, ZCIncrementalMerkleTree &tree) const { return false; }
 bool CCoinsView:: GetNullifier(const uint256 &nullifier) const  { return false; }
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
 uint256 CCoinsView::GetBestAnchor() const { return uint256(); }
+std::vector<uint256> CCoinsView::GetHeadBlocks() const { return std::vector<uint256>(); }
 bool CCoinsView::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return false; }
-bool CCoinsView::BatchWrite(CCoinsMap &mapCoins,const uint256 &hashBlock, const uint256 &hashAnchor,CAnchorsMap &mapAnchors,CNullifiersMap &mapNullifiers) {
-	return false;
-}
+bool CCoinsView::BatchWrite(CCoinsMap &mapCoins,
+                            const uint256 &hashBlock,
+							const uint256 &hashAnchor,
+							CAnchorsMap &mapAnchors,
+							CNullifiersMap &mapNullifiers) { return false; }
 CCoinsViewCursor *CCoinsView::Cursor() const { return 0; }
 
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const
@@ -34,20 +36,21 @@ bool CCoinsViewBacked:: GetNullifier(const uint256 &nullifier) const  { return b
 bool CCoinsViewBacked::GetCoin(const COutPoint &outpoint, Coin &coin) const { return base->GetCoin(outpoint, coin); }
 bool CCoinsViewBacked::HaveCoin(const COutPoint &outpoint) const { return base->HaveCoin(outpoint); }
 uint256 CCoinsViewBacked::GetBestBlock() const { return base->GetBestBlock(); }
-uint256 CCoinsViewBacked::GetBestAnchor() const { return base->GetBestAnchor(); }
+std::vector<uint256> CCoinsViewBacked::GetHeadBlocks() const { return base->GetHeadBlocks(); }
 void CCoinsViewBacked::SetBackend(CCoinsView &viewIn) { base = &viewIn; }
+uint256 CCoinsViewBacked::GetBestAnchor() const { return base->GetBestAnchor(); }
 bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return base->BatchWrite(mapCoins, hashBlock); }
 bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins,
-	                                const uint256 &hashBlock,
-																	const uint256 &hashAnchor,
-																	CAnchorsMap &mapAnchors,
-																	CNullifiersMap &mapNullifiers) {
-	return base->BatchWrite(mapCoins, hashBlock,hashAnchor,mapAnchors,mapNullifiers);
+                                  const uint256 &hashBlock,
+                                  const uint256 &hashAnchor,
+                                  CAnchorsMap &mapAnchors,
+                                  CNullifiersMap &mapNullifiers) {
+    return base->BatchWrite(mapCoins, hashBlock,hashAnchor,mapAnchors,mapNullifiers);
 }
 CCoinsViewCursor *CCoinsViewBacked::Cursor() const { return base->Cursor(); }
 size_t CCoinsViewBacked::EstimateSize() const { return base->EstimateSize(); }
 
-SaltedHasher::SaltedHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max())), k1(GetRand(std::numeric_limits<uint64_t>::max())) {}
+SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max())), k1(GetRand(std::numeric_limits<uint64_t>::max())) {}
 
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0) {}
 
@@ -201,13 +204,14 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     cachedCoinsUsage += it->second.coin.DynamicMemoryUsage();
 }
 
-void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
+void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight, bool check) {
     bool fCoinbase = tx.IsCoinBase();
     const uint256& txid = tx.GetHash();
     for (size_t i = 0; i < tx.vout.size(); ++i) {
-        // Pass fCoinbase as the possible_overwrite flag to AddCoin, in order to correctly
-        // deal with the pre-BIP30 occurrances of duplicate coinbase transactions.
-        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase), fCoinbase);
+        bool overwrite = check ? cache.HaveCoin(COutPoint(txid, i)) : fCoinbase;
+        // Always set the possible_overwrite flag to AddCoin for coinbase txn, in order to correctly
+        // deal with the pre-BIP30 occurrences of duplicate coinbase transactions.
+        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase), overwrite);
     }
 }
 
@@ -260,9 +264,8 @@ uint256 CCoinsViewCache::GetBestAnchor() const {
 	return hashAnchor;
 }
 
-
 void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn) {
-	hashBlock = hashBlockIn;
+    hashBlock = hashBlockIn;
 }
 
 bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn) {
@@ -381,7 +384,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins,
 bool CCoinsViewCache::Flush() {
     bool fOk = base->BatchWrite(cacheCoins, hashBlock, hashAnchor, cacheAnchors, cacheNullifiers);
     cacheCoins.clear();
-		cacheAnchors.clear();
+    cacheAnchors.clear();
     cacheNullifiers.clear();
     cachedCoinsUsage = 0;
     return fOk;
@@ -416,11 +419,11 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
 
 bool CCoinsViewCache::HaveJoinSplitRequirements(const CTransaction& tx) const
 {
-    boost::unordered_map<uint256, ZCIncrementalMerkleTree,SaltedHasher> intermediates;
+    std::unordered_map<uint256, ZCIncrementalMerkleTree,SaltedOutpointHasher> intermediates;
 
-    BOOST_FOREACH(const JSDescription &joinsplit, tx.vjoinsplit)
+    for (const JSDescription &joinsplit : tx.vjoinsplit)
     {
-        BOOST_FOREACH(const uint256& nullifier, joinsplit.nullifiers)
+        for (const uint256& nullifier : joinsplit.nullifiers)
         {
             if (GetNullifier(nullifier)) {
                 // If the nullifier is set, this transaction
@@ -437,7 +440,7 @@ bool CCoinsViewCache::HaveJoinSplitRequirements(const CTransaction& tx) const
             return false;
         }
 
-        BOOST_FOREACH(const uint256& commitment, joinsplit.commitments)
+        for (const uint256& commitment : joinsplit.commitments)
         {
             tree.append(commitment);
         }
@@ -461,25 +464,7 @@ bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
     return true;
 }
 
-double CCoinsViewCache::GetPriority(const CTransaction &tx, int nHeight, CAmount &inChainInputValue) const
-{
-    inChainInputValue = 0;
-    if (tx.IsCoinBase())
-        return 0.0;
-    double dResult = 0.0;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
-    {
-        const Coin& coin = AccessCoin(txin.prevout);
-        if (coin.IsSpent()) continue;
-        if (coin.nHeight <= nHeight) {
-            dResult += (double)coin.out.nValue * (nHeight-coin.nHeight);
-            inChainInputValue += coin.out.nValue;
-        }
-    }
-    return tx.ComputePriority(dResult);
-}
-
-static const size_t MAX_OUTPUTS_PER_BLOCK = MaxBlockSize() /  ::GetSerializeSize(CTxOut(), SER_NETWORK, PROTOCOL_VERSION); // TODO: merge with similar definition in undo.h.
+static const size_t MAX_OUTPUTS_PER_BLOCK = MaxBlockSize(true) /  ::GetSerializeSize(CTxOut(), SER_NETWORK, PROTOCOL_VERSION); // TODO: merge with similar definition in undo.h.
 
 const Coin& AccessByTxid(const CCoinsViewCache& view, const uint256& txid)
 {

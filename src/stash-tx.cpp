@@ -24,8 +24,8 @@
 #include <stdio.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/assign/list_of.hpp>
 
+#include "stacktraces.h"
 
 static bool fCreateBlank;
 static std::map<std::string,UniValue> registers;
@@ -33,7 +33,6 @@ static const int CONTINUE_EXECUTION=-1;
 
 #include "zcash/JoinSplit.hpp"
 #include <libsnark/common/profiling.hpp>
-#include <boost/filesystem.hpp>
 
 static ZCJoinSplit* pzcashParams;
 
@@ -42,10 +41,10 @@ static void ZC_LoadParams()
     struct timeval tv_start, tv_end;
     float elapsed;
 
-    boost::filesystem::path pk_path = ZC_GetParamsDir() / "sprout-proving.key";
-    boost::filesystem::path vk_path = ZC_GetParamsDir() / "sprout-verifying.key";
+    fs::path pk_path = ZC_GetParamsDir() / "sprout-proving.key";
+    fs::path vk_path = ZC_GetParamsDir() / "sprout-verifying.key";
 
-    if (!(boost::filesystem::exists(pk_path) && boost::filesystem::exists(vk_path))) {
+    if (!(fs::exists(pk_path) && fs::exists(vk_path))) {
         LogPrintf("Cannot find the Zcash network parameters in the following directory:\n"
           "%s\n"
           "Please run 'zcash-fetch-params' or './zcutil/fetch-params.sh' and then restart.",
@@ -71,7 +70,12 @@ static int AppInitRawTx(int argc, char* argv[])
     //
     // Parameters
     //
-    ParseParameters(argc, argv);
+    gArgs.ParseParameters(argc, argv);
+
+    if (gArgs.IsArgSet("-printcrashinfo")) {
+        std::cout << GetCrashInfoStrFromSerializedStr(gArgs.GetArg("-printcrashinfo", "")) << std::endl;
+        return true;
+    }
 
     // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)
     try {
@@ -81,9 +85,9 @@ static int AppInitRawTx(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    fCreateBlank = GetBoolArg("-create", false);
+    fCreateBlank = gArgs.GetBoolArg("-create", false);
 
-    if (argc<2 || IsArgSet("-?") || IsArgSet("-h") || IsArgSet("-help"))
+    if (argc<2 || gArgs.IsArgSet("-?") || gArgs.IsArgSet("-h") || gArgs.IsArgSet("-help"))
     {
         // First part of help message is specific to this utility
         std::string strUsage = strprintf(_("%s stash-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
@@ -247,7 +251,7 @@ static void MutateTxAddInput(CMutableTransaction& tx, const std::string& strInpu
     uint256 txid(uint256S(strTxid));
 
     static const unsigned int minTxOutSz = 9;
-    static const unsigned int maxVout = MaxBlockSize() / minTxOutSz;
+    static const unsigned int maxVout = MaxBlockSize(true) / minTxOutSz;
 
     // extract and validate vout
     std::string strVout = vStrInputParts[1];
@@ -307,7 +311,6 @@ static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& str
     if (!pubkey.IsFullyValid())
         throw std::runtime_error("invalid TX output pubkey");
     CScript scriptPubKey = GetScriptForRawPubKey(pubkey);
-    CBitcoinAddress addr(scriptPubKey);
 
     // Extract and validate FLAGS
     bool bScriptHash = false;
@@ -378,7 +381,10 @@ static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& s
     CScript scriptPubKey = GetScriptForMultisig(required, pubkeys);
 
     if (bScriptHash) {
-        // Get the address for the redeem script, then call
+        if (scriptPubKey.size() > MAX_SCRIPT_ELEMENT_SIZE) {
+            throw std::runtime_error(strprintf(
+                        "redeemScript exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_ELEMENT_SIZE));
+        }
         // GetScriptForDestination() to construct a P2SH scriptPubKey.
         CBitcoinAddress addr(scriptPubKey);
         scriptPubKey = GetScriptForDestination(addr.Get());
@@ -438,9 +444,18 @@ static void MutateTxAddOutScript(CMutableTransaction& tx, const std::string& str
         bScriptHash = (flags.find("S") != std::string::npos);
     }
 
+    if (scriptPubKey.size() > MAX_SCRIPT_SIZE) {
+        throw std::runtime_error(strprintf(
+                    "script exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_SIZE));
+    }
+
     if (bScriptHash) {
-      CBitcoinAddress addr(scriptPubKey);
-      scriptPubKey = GetScriptForDestination(addr.Get());
+        if (scriptPubKey.size() > MAX_SCRIPT_ELEMENT_SIZE) {
+            throw std::runtime_error(strprintf(
+                        "redeemScript exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_ELEMENT_SIZE));
+        }
+        CBitcoinAddress addr(scriptPubKey);
+        scriptPubKey = GetScriptForDestination(addr.Get());
     }
 
     // construct TxOut, append to transaction output list
@@ -501,20 +516,16 @@ static bool findSighashFlags(int& flags, const std::string& flagStr)
     return false;
 }
 
-uint256 ParseHashUO(std::map<std::string,UniValue>& o, std::string strKey)
+static CAmount AmountFromValue(const UniValue& value)
 {
-    if (!o.count(strKey))
-        return uint256();
-    return ParseHashUV(o[strKey], strKey);
-}
-
-std::vector<unsigned char> ParseHexUO(std::map<std::string,UniValue>& o, std::string strKey)
-{
-    if (!o.count(strKey)) {
-        std::vector<unsigned char> emptyVec;
-        return emptyVec;
-    }
-    return ParseHexUV(o[strKey], strKey);
+    if (!value.isNum() && !value.isStr())
+        throw std::runtime_error("Amount is not a number or string");
+    CAmount amount;
+    if (!ParseFixedPoint(value.getValStr(), 8, &amount))
+        throw std::runtime_error("Invalid amount");
+    if (!MoneyRange(amount))
+        throw std::runtime_error("Amount out of range");
+    return amount;
 }
 
 static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
@@ -562,7 +573,11 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             if (!prevOut.isObject())
                 throw std::runtime_error("expected prevtxs internal object");
 
-            std::map<std::string,UniValue::VType> types = boost::assign::map_list_of("txid", UniValue::VSTR)("vout",UniValue::VNUM)("scriptPubKey",UniValue::VSTR);
+            std::map<std::string, UniValue::VType> types = {
+                {"txid", UniValue::VSTR},
+                {"vout", UniValue::VNUM},
+                {"scriptPubKey", UniValue::VSTR},
+            };
             if (!prevOut.checkObject(types))
                 throw std::runtime_error("prevtxs internal object typecheck fail");
 
@@ -587,6 +602,9 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
                 Coin newcoin;
                 newcoin.out.scriptPubKey = scriptPubKey;
                 newcoin.out.nValue = 0; // we don't know the actual output value
+                if (prevOut.exists("amount")) {
+                    newcoin.out.nValue = AmountFromValue(prevOut["amount"]);
+                }
                 newcoin.nHeight = 1;
                 view.AddCoin(out, std::move(newcoin), true);
             }
@@ -616,17 +634,18 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             continue;
         }
         const CScript& prevPubKey = coin.out.scriptPubKey;
+        const CAmount& amount = coin.out.nValue;
 
-        txin.scriptSig.clear();
+        SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            SignSignature(keystore, prevPubKey, mergedTx, i, nHashType);
+            ProduceSignature(MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType), prevPubKey, sigdata);
 
         // ... and merge in other signatures:
-        BOOST_FOREACH(const CTransaction& txv, txVariants) {
-            txin.scriptSig = CombineSignatures(prevPubKey, mergedTx, i, txin.scriptSig, txv.vin[i].scriptSig);
-        }
-        if (!VerifyScript(txin.scriptSig, prevPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&mergedTx, i)))
+        for (const CTransaction& txv : txVariants)
+            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(&mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
+        UpdateTransaction(mergedTx, i, sigdata);
+        if (!VerifyScript(txin.scriptSig, prevPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&mergedTx, i, amount)))
             fComplete = false;
     }
 
@@ -670,11 +689,13 @@ static void MutateTx(CMutableTransaction& tx, const std::string& command,
         MutateTxDelOutput(tx, commandVal);
     else if (command == "outaddr")
         MutateTxAddOutAddr(tx, commandVal);
-    else if (command == "outpubkey")
+    else if (command == "outpubkey") {
+        if (!ecc) { ecc.reset(new Secp256k1Init()); }
         MutateTxAddOutPubKey(tx, commandVal);
-    else if (command == "outmultisig")
+    } else if (command == "outmultisig") {
+        if (!ecc) { ecc.reset(new Secp256k1Init()); }
         MutateTxAddOutMultiSig(tx, commandVal);
-    else if (command == "outscript")
+    } else if (command == "outscript")
         MutateTxAddOutScript(tx, commandVal);
     else if (command == "outdata")
         MutateTxAddOutData(tx, commandVal);
@@ -719,9 +740,9 @@ static void OutputTxHex(const CTransaction& tx)
 
 static void OutputTx(const CTransaction& tx)
 {
-    if (GetBoolArg("-json", false))
+    if (gArgs.GetBoolArg("-json", false))
         OutputTxJSON(tx);
-    else if (GetBoolArg("-txid", false))
+    else if (gArgs.GetBoolArg("-txid", false))
         OutputTxHash(tx);
     else
         OutputTxHex(tx);
@@ -804,7 +825,7 @@ static int CommandLineRawTx(int argc, char* argv[])
         nRet = EXIT_FAILURE;
     }
     catch (...) {
-        PrintExceptionContinue(NULL, "CommandLineRawTx()");
+        PrintExceptionContinue(std::current_exception(), "CommandLineRawTx()");
         throw;
     }
 
@@ -816,6 +837,9 @@ static int CommandLineRawTx(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+    RegisterPrettyTerminateHander();
+    RegisterPrettySignalHandlers();
+
     SetupEnvironment();
 
     try {
@@ -824,10 +848,7 @@ int main(int argc, char* argv[])
             return ret;
     }
     catch (const std::exception& e) {
-        PrintExceptionContinue(&e, "AppInitRawTx()");
-        return EXIT_FAILURE;
-    } catch (...) {
-        PrintExceptionContinue(NULL, "AppInitRawTx()");
+        PrintExceptionContinue(std::current_exception(), "AppInitRawTx()");
         return EXIT_FAILURE;
     }
 
@@ -842,11 +863,8 @@ int main(int argc, char* argv[])
     int ret = EXIT_FAILURE;
     try {
         ret = CommandLineRawTx(argc, argv);
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, "CommandLineRawTx()");
     } catch (...) {
-        PrintExceptionContinue(NULL, "CommandLineRawTx()");
+        PrintExceptionContinue(std::current_exception(), "CommandLineRawTx()");
     }
     return ret;
 }

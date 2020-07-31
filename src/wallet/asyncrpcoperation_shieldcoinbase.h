@@ -20,9 +20,6 @@
 
 #include "paymentdisclosure.h"
 
-// Default transaction fee if caller does not specify one.
-#define SHIELD_COINBASE_DEFAULT_MINERS_FEE   10000
-
 using namespace libzcash;
 
 struct ShieldCoinbaseUTXO {
@@ -42,7 +39,7 @@ struct ShieldCoinbaseJSInfo
 
 class AsyncRPCOperation_shieldcoinbase : public AsyncRPCOperation {
 public:
-    AsyncRPCOperation_shieldcoinbase(std::vector<ShieldCoinbaseUTXO> inputs, std::string toAddress, CAmount fee = SHIELD_COINBASE_DEFAULT_MINERS_FEE, UniValue contextInfo = NullUniValue);
+    AsyncRPCOperation_shieldcoinbase(CWallet* pwallet, std::vector<ShieldCoinbaseUTXO> inputs, std::string toAddress, CAmount fee = SHIELD_COINBASE_DEFAULT_MINERS_FEE, UniValue contextInfo = NullUniValue);
     virtual ~AsyncRPCOperation_shieldcoinbase();
 
     // We don't want to be copied or moved around
@@ -79,14 +76,14 @@ private:
     // JoinSplit without any input notes to spend
     UniValue perform_joinsplit(ShieldCoinbaseJSInfo &);
 
-    void sign_send_raw_transaction(UniValue obj);     // throws exception if there was an error
-
     void lock_utxos();
 
     void unlock_utxos();
 
     // payment disclosure!
     std::vector<PaymentDisclosureKeyInfo> paymentDisclosureData_;
+
+    CWallet* pwallet_;
 };
 
 
@@ -113,10 +110,6 @@ public:
 
     UniValue perform_joinsplit(ShieldCoinbaseJSInfo &info) {
         return delegate->perform_joinsplit(info);
-    }
-
-    void sign_send_raw_transaction(UniValue obj) {
-        delegate->sign_send_raw_transaction(obj);
     }
 
     void set_state(OperationStatus state) {

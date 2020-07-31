@@ -11,6 +11,11 @@ src/stashd
 src/stash-cli
 src/stash-tx
 src/test/test_stash
+src/test/test_stash_fuzzy
+
+src/test/test_stash
+src/qt/test/test_stash-qt
+src/bench/bench_stash
 src/qt/test/test_stash-qt
 src/bench/bench_stash
 
@@ -62,6 +67,7 @@ libconftest.dylib*
 *.o
 *.o-*
 *.patch
+!depends/patches/*/*.patch
 *.a
 *.pb.cc
 *.pb.h
@@ -82,11 +88,10 @@ libconftest.dylib*
 Makefile
 stash-qt
 Stash-Qt.app
-
+!/depends/Makefile
 # Unit-tests
 Makefile.test
 stash-qt_test
-src/test/buildenv.py
 
 # Resources cpp
 qrc_*.cpp
@@ -110,8 +115,8 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
-qa/pull-tester/tests_config.py
-qa/cache/*
+test/config.ini
+test/cache/*
 
 !src/leveldb*/Makefile
 

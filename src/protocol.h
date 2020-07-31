@@ -161,16 +161,9 @@ extern const char *PING;
  */
 extern const char *PONG;
 /**
- * The alert message warns nodes of problems that may affect them or the rest
- * of the network.
- * @since protocol version 311.
- * @see https://bitcoin.org/en/developer-reference#alert
- */
-extern const char *ALERT;
-/**
  * The notfound message is a reply to a getdata message which requested an
  * object the receiving node does not have available for relay.
- * @ince protocol version 70001.
+ * @since protocol version 70001.
  * @see https://bitcoin.org/en/developer-reference#notfound
  */
 extern const char *NOTFOUND;
@@ -246,14 +239,9 @@ extern const char *BLOCKTXN;
 // Stash message types
 // NOTE: do NOT declare non-implmented here, we don't want them to be exposed to the outside
 // TODO: add description
-extern const char *TXLOCKREQUEST;
-extern const char *TXLOCKVOTE;
+extern const char *LEGACYTXLOCKREQUEST; // only present for backwards compatibility
 extern const char *SPORK;
 extern const char *GETSPORKS;
-extern const char *MASTERNODEPAYMENTVOTE;
-extern const char *MASTERNODEPAYMENTSYNC;
-extern const char *MNANNOUNCE;
-extern const char *MNPING;
 extern const char *DSACCEPT;
 extern const char *DSVIN;
 extern const char *DSFINALTX;
@@ -262,12 +250,28 @@ extern const char *DSCOMPLETE;
 extern const char *DSSTATUSUPDATE;
 extern const char *DSTX;
 extern const char *DSQUEUE;
-extern const char *DSEG;
+extern const char *SENDDSQUEUE;
 extern const char *SYNCSTATUSCOUNT;
 extern const char *MNGOVERNANCESYNC;
 extern const char *MNGOVERNANCEOBJECT;
 extern const char *MNGOVERNANCEOBJECTVOTE;
-extern const char *MNVERIFY;
+extern const char *GETMNLISTDIFF;
+extern const char *MNLISTDIFF;
+extern const char *QSENDRECSIGS;
+extern const char *QFCOMMITMENT;
+extern const char *QCONTRIB;
+extern const char *QCOMPLAINT;
+extern const char *QJUSTIFICATION;
+extern const char *QPCOMMITMENT;
+extern const char *QWATCH;
+extern const char *QSIGSESANN;
+extern const char *QSIGSHARESINV;
+extern const char *QGETSIGSHARES;
+extern const char *QBSIGSHARES;
+extern const char *QSIGREC;
+extern const char *CLSIG;
+extern const char *ISLOCK;
+extern const char *MNAUTH;
 };
 
 /* Get a vector of all valid message types (see above) */
@@ -301,6 +305,43 @@ enum ServiceFlags : uint64_t {
     // do not actually support. Other service bits should be allocated via the
     // BIP process.
 };
+
+/**
+ * Gets the set of service flags which are "desirable" for a given peer.
+ *
+ * These are the flags which are required for a peer to support for them
+ * to be "interesting" to us, ie for us to wish to use one of our few
+ * outbound connection slots for or for us to wish to prioritize keeping
+ * their connection around.
+ *
+ * Relevant service flags may be peer- and state-specific in that the
+ * version of the peer may determine which flags are required (eg in the
+ * case of NODE_NETWORK_LIMITED where we seek out NODE_NETWORK peers
+ * unless they set NODE_NETWORK_LIMITED and we are out of IBD, in which
+ * case NODE_NETWORK_LIMITED suffices).
+ *
+ * Thus, generally, avoid calling with peerServices == NODE_NONE.
+ */
+static ServiceFlags GetDesirableServiceFlags(ServiceFlags services) {
+    return ServiceFlags(NODE_NETWORK);
+}
+
+/**
+ * A shortcut for (services & GetDesirableServiceFlags(services))
+ * == GetDesirableServiceFlags(services), ie determines whether the given
+ * set of service flags are sufficient for a peer to be "relevant".
+ */
+static inline bool HasAllDesirableServiceFlags(ServiceFlags services) {
+    return !(GetDesirableServiceFlags(services) & (~services));
+}
+
+/**
+ * Checks if a peer with the given service flags may be capable of having a
+ * robust address-storage DB. Currently an alias for checking NODE_NETWORK.
+ */
+static inline bool MayHaveUsefulAddressDB(ServiceFlags services) {
+    return services & NODE_NETWORK;
+}
 
 /** A CService with information about it as peer */
 class CAddress : public CService
@@ -350,25 +391,27 @@ enum GetDataMsg {
     MSG_FILTERED_BLOCK = 3,  //!< Defined in BIP37
     // Stash message types
     // NOTE: declare non-implmented here, we must keep this enum consistent and backwards compatible
-    MSG_TXLOCK_REQUEST = 4,
-    MSG_TXLOCK_VOTE = 5,
+    MSG_LEGACY_TXLOCK_REQUEST = 4,
+    /* MSG_TXLOCK_VOTE = 5, Legacy InstantSend and not used anymore  */
     MSG_SPORK = 6,
-    MSG_MASTERNODE_PAYMENT_VOTE = 7,
-    MSG_MASTERNODE_PAYMENT_BLOCK = 8, // reusing, was MSG_MASTERNODE_SCANNING_ERROR previousely, was NOT used in 12.0
-    MSG_BUDGET_VOTE = 9, // deprecated since 12.1
-    MSG_BUDGET_PROPOSAL = 10, // deprecated since 12.1
-    MSG_BUDGET_FINALIZED = 11, // deprecated since 12.1
-    MSG_BUDGET_FINALIZED_VOTE = 12, // deprecated since 12.1
-    MSG_MASTERNODE_QUORUM = 13, // not implemented
-    MSG_MASTERNODE_ANNOUNCE = 14,
-    MSG_MASTERNODE_PING = 15,
+    /* 7 - 15 were used in old Stash versions and were mainly budget and MN broadcast/ping related*/
     MSG_DSTX = 16,
     MSG_GOVERNANCE_OBJECT = 17,
     MSG_GOVERNANCE_OBJECT_VOTE = 18,
-    MSG_MASTERNODE_VERIFY = 19,
+    /* 19 was used for MSG_MASTERNODE_VERIFY and is not supported anymore */
     // Nodes may always request a MSG_CMPCT_BLOCK in a getdata, however,
     // MSG_CMPCT_BLOCK should not appear in any invs except as a part of getdata.
     MSG_CMPCT_BLOCK = 20, //!< Defined in BIP152
+    MSG_QUORUM_FINAL_COMMITMENT = 21,
+    /* MSG_QUORUM_DUMMY_COMMITMENT = 22, */ // was shortly used on testnet/devnet/regtest
+    MSG_QUORUM_CONTRIB = 23,
+    MSG_QUORUM_COMPLAINT = 24,
+    MSG_QUORUM_JUSTIFICATION = 25,
+    MSG_QUORUM_PREMATURE_COMMITMENT = 26,
+    /* MSG_QUORUM_DEBUG_STATUS = 27, */ // was shortly used on testnet/devnet/regtest
+    MSG_QUORUM_RECOVERED_SIG = 28,
+    MSG_CLSIG = 29,
+    MSG_ISLOCK = 30,
 };
 
 /** inv message data */
@@ -377,7 +420,6 @@ class CInv
 public:
     CInv();
     CInv(int typeIn, const uint256& hashIn);
-    CInv(const std::string& strType, const uint256& hashIn);
 
     ADD_SERIALIZE_METHODS;
 
@@ -391,8 +433,11 @@ public:
     friend bool operator<(const CInv& a, const CInv& b);
 
     bool IsKnownType() const;
-    const char* GetCommand() const;
+    std::string GetCommand() const;
     std::string ToString() const;
+
+private:
+    const char* GetCommandInternal() const;
 
     // TODO: make private (improves encapsulation)
 public:

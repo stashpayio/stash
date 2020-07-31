@@ -22,6 +22,14 @@
         <translation>&amp;Copia</translation>
     </message>
     <message>
+        <source>Show QR code for the currently selected address</source>
+        <translation>Mostra il codice QR per l'indirizzo attualmente selezionato</translation>
+    </message>
+    <message>
+        <source>&amp;Show QR code</source>
+        <translation>&amp;Mostra il codice QR</translation>
+    </message>
+    <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Cancella l'indirizzo selezionato dalla lista</translation>
     </message>
@@ -80,6 +88,14 @@
     <message>
         <source>&amp;Edit</source>
         <translation>&amp;Modifica</translation>
+    </message>
+    <message>
+        <source>&amp;Show address QR code</source>
+        <translation>&amp;Mostra l'indirizzo del codice QR</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>codice QR</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -438,14 +454,6 @@
         <translation>Apri il file di configurazione</translation>
     </message>
     <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Apri il &amp;Configuration File dei Masternode</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Apri il file di configurazione dei Masternode</translation>
-    </message>
-    <message>
         <source>Show Automatic &amp;Backups</source>
         <translation>Mostra Copie Automatiche</translation>
     </message>
@@ -590,6 +598,30 @@
         <translation>Informazioni</translation>
     </message>
     <message>
+        <source>Received and sent multiple transactions</source>
+        <translation>Ricevute ed inviate transazioni multiple</translation>
+    </message>
+    <message>
+        <source>Sent multiple transactions</source>
+        <translation>Inviate transazioni multiple</translation>
+    </message>
+    <message>
+        <source>Received multiple transactions</source>
+        <translation>Ricevute transazioni multiple</translation>
+    </message>
+    <message>
+        <source>Sent Amount: %1
+</source>
+        <translation>Importo inviato: %1
+</translation>
+    </message>
+    <message>
+        <source>Received Amount: %1
+</source>
+        <translation>Importo Ricevuto: %1
+</translation>
+    </message>
+    <message>
         <source>Date: %1
 </source>
         <translation>Data: %1
@@ -649,17 +681,6 @@
     </message>
 </context>
 <context>
-    <name>ClientModel</name>
-    <message>
-        <source>Total: %1 (PS compatible: %2 / Enabled: %3)</source>
-        <translation>Totale: %1 (PS compatibile: %2 / Abilitato: %3)</translation>
-    </message>
-    <message>
-        <source>Network Alert</source>
-        <translation>Avviso di rete</translation>
-    </message>
-</context>
-<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Quantity:</source>
@@ -683,7 +704,7 @@
     </message>
     <message>
         <source>Dust:</source>
-        <translation>Trascurabile:</translation>
+        <translation>Infinitesimale:</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -783,7 +804,7 @@
     </message>
     <message>
         <source>Copy dust</source>
-        <translation>Copia trascurabile</translation>
+        <translation>Copia infinitesimale</translation>
     </message>
     <message>
         <source>Copy change</source>
@@ -794,8 +815,8 @@
         <translation>Passare a "Modalità elenco" per utilizzare questa funzione.</translation>
     </message>
     <message>
-        <source>Non-anonymized input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-nonymized inputs first and then check PrivateSend checkbox again.</source>
-        <translation>Selezionato input non anonimo. &lt;b&gt;PrivateSend sarà disabilitato.&lt;/b&gt;&lt;br&gt;&lt;br&gt;Se vuoi ancora utilizzare PrivateSend, deseleziona prima tutti gli input non anonimi e poi controlla nuovamente la checkbox di PrivateSend.</translation>
+        <source>Non-mixed input selected. &lt;b&gt;PrivateSend will be disabled.&lt;/b&gt;&lt;br&gt;&lt;br&gt;If you still want to use PrivateSend, please deselect all non-mixed inputs first and then check the PrivateSend checkbox again.</source>
+        <translation>Ingresso non mixato selezionato. &lt;b&gt;PrivateSend sarà disabilitato.&lt;/b&gt;&lt;br&gt;&lt;br&gt;Se desideri comunque utilizzare PrivateSend, deseleziona prima tutti gli input non mixati, quindi seleziona nuovamente la casella di controllo PrivateSend.</translation>
     </message>
     <message>
         <source>(%1 locked)</source>
@@ -832,73 +853,6 @@
     <message>
         <source>n/a</source>
         <translation>n/a</translation>
-    </message>
-</context>
-<context>
-    <name>DarksendConfig</name>
-    <message>
-        <source>Configure PrivateSend</source>
-        <translation>Configura il PrivateSend</translation>
-    </message>
-    <message>
-        <source>Basic Privacy</source>
-        <translation>Privacy base</translation>
-    </message>
-    <message>
-        <source>High Privacy</source>
-        <translation>Privacy alta</translation>
-    </message>
-    <message>
-        <source>Maximum Privacy</source>
-        <translation>Privacy massima</translation>
-    </message>
-    <message>
-        <source>Please select a privacy level.</source>
-        <translation>Selezionare il livello di privacy</translation>
-    </message>
-    <message>
-        <source>Use 2 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>Usa 2 masternode separati  per mixare fino al 1000 STASH</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 1000 STASH</source>
-        <translation>Usa 8 masternode separati per mixare fino al 1000 STASH</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Usa 16 masternode separati</translation>
-    </message>
-    <message>
-        <source>This option is the quickest and will cost about ~0.025 STASH to anonymize 1000 STASH</source>
-        <translation>Questa opzione è la più veloce e ti costerà ~0.025STASH circa per anonimizzare 1000STASH</translation>
-    </message>
-    <message>
-        <source>This option is moderately fast and will cost about 0.05 STASH to anonymize 1000 STASH</source>
-        <translation>Questa opzione è moderatamente veloce e costerà 0.05STASH circa per anonimizzare 1000STASH</translation>
-    </message>
-    <message>
-        <source>0.1 STASH per 1000 STASH you anonymize.</source>
-        <translation>0.1 STASH ogni 1000 STASH che anonimizzi.</translation>
-    </message>
-    <message>
-        <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
-        <translation>Questa è l'opzione più lenta ma più sicura . Usare il massimo grado di anonimizzazione costerà</translation>
-    </message>
-    <message>
-        <source>PrivateSend Configuration</source>
-        <translation>Configurazione del PrivateSend</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend è stato impostato correttamente sul basic (%1 e 2 round). Puoi cambiarlo in qualsiasi momento aprendo la schermata di configurazione di Stash.</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend è stato impostato correttamente su high (%1 e 8 round). Puoi cambiarlo in qualsiasi momento aprendo la schermata di configurazione di Stash.</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Stash's configuration screen.</source>
-        <translation>PrivateSend è stato impostato correttamente su maximum (%1 e 16 round). Puoi cambiarlo in qualsiasi momento aprendo la schermata di configurazione di Stash.</translation>
     </message>
 </context>
 <context>
@@ -1038,8 +992,8 @@
         <translation>Informazioni di Private Send</translation>
     </message>
     <message>
-        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be anonymized. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more info see &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;         </source>
-        <translation>&lt;h3&gt;Nozioni di base di PrivateSend&lt;/h3&gt; PrivateSend ti offre una vera privacy finanziaria oscurando le origini dei tuoi fondi. Tutti i Stash nel tuo portafoglio sono costituiti da diversi "input" che puoi pensare come monete separate e discrete. &lt;br&gt;PrivateSend utilizza un processo innovativo per mescolare i tuoi input con gli input di due altre persone, senza che le tue monete lascino mai il tuo portafoglio. Si mantiene il controllo del proprio denaro in ogni momento. &lt;hr&gt;&lt;b&gt;Il processo di PrivateSend funziona in questo modo: &lt;/b&gt;&lt;ol type="1"&gt;&lt;li&gt;PrivateSend inizia dividendo gli input della transazioni in denominazioni standard. Queste denominazioni sono 0,01 STASH, 0,1 STASH, 1 STASH e 10 STASH: una specie di carta moneta che utilizzi ogni giorno.&lt;/li&gt;&lt;li&gt; Il tuo portafoglio quindi invia richieste ai nodi software appositamente configurati sulla rete, chiamati "masternode". Questi masternode vengono informati che sei interessato a mescolare una certa denominazione. Nessuna informazione identificabile viene inviata ai masternodes, quindi non sanno mai "chi" tu sia. &lt;/li&gt;&lt;li&gt;Quando altre due persone inviano messaggi simili, indicando che desiderano mescolare la stessa denominazione, inizia una sessione di mixaggio. Il masternode mescola gli input e incarica i portafogli di tutti e tre gli utenti di pagare a loro stessi l'input trasformato. Il tuo portafoglio paga quella denominazione direttamente a se stessa, ma in un indirizzo diverso (chiamato indirizzo di modifica). &lt;/li&gt;&lt;li&gt;Per oscurare completamente i tuoi fondi, il tuo portafoglio deve ripetere questo processo un certo numero di volte con ogni denominazione. Ogni  processo completato, è chiamato "round". Ogni ciclo di PrivateSend rende esponenzialmente più difficile determinare la provenienza dei fondi. &lt;/li&gt;&lt;li&gt;Questo processo di miscelazione avviene in background senza alcun intervento da parte dell'utente. Quando desideri effettuare una transazione, i tuoi fondi saranno già resi anonimi. Non è richiesta alcuna attesa aggiuntiva.&lt;/li&gt;&lt;/ol&gt;&lt;hr&gt;&lt;b&gt; IMPORTANTE: &lt;/b&gt;il tuo portafoglio contiene solo 1000 di questi "indirizzi di modifica". Ogni volta che si verifica un evento di mixaggio, vengono usati fino a 9 dei tuoi indirizzi. Ciò significa che i 1000 indirizzi durano per circa 100 eventi di mixaggio. Quando vengono utilizzati 900 di questi, il tuo portafoglio deve creare altri indirizzi. Può farlo solo se si dispone dei backup automatici abilitati. &lt;br&gt;Di conseguenza, gli utenti che hanno disabilitato i backup avranno anche PrivateSend disabilitato. &lt;hr&gt;Per maggiori informazioni consulta &lt;a href="https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend"&gt;https://stashpay.atlassian.net/wiki/display/DOC/PrivateSend&lt;/a&gt;</translation>
+        <source>&lt;h3&gt;PrivateSend Basics&lt;/h3&gt; PrivateSend gives you true financial privacy by obscuring the origins of your funds. All the Stash in your wallet is comprised of different "inputs" which you can think of as separate, discrete coins.&lt;br&gt; PrivateSend uses an innovative process to mix your inputs with the inputs of two other people, without having your coins ever leave your wallet. You retain control of your money at all times.&lt;hr&gt; &lt;b&gt;The PrivateSend process works like this:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend begins by breaking your transaction inputs down into standard denominations. These denominations are 0.001 STASH, 0.01 STASH, 0.1 STASH, 1 STASH and 10 STASH -- sort of like the paper money you use every day.&lt;/li&gt; &lt;li&gt;Your wallet then sends requests to specially configured software nodes on the network, called "masternodes." These masternodes are informed then that you are interested in mixing a certain denomination. No identifiable information is sent to the masternodes, so they never know "who" you are.&lt;/li&gt; &lt;li&gt;When two other people send similar messages, indicating that they wish to mix the same denomination, a mixing session begins. The masternode mixes up the inputs and instructs all three users' wallets to pay the now-transformed input back to themselves. Your wallet pays that denomination directly to itself, but in a different address (called a change address).&lt;/li&gt; &lt;li&gt;In order to fully obscure your funds, your wallet must repeat this process a number of times with each denomination. Each time the process is completed, it's called a "round." Each round of PrivateSend makes it exponentially more difficult to determine where your funds originated.&lt;/li&gt; &lt;li&gt;This mixing process happens in the background without any intervention on your part. When you wish to make a transaction, your funds will already be mixed. No additional waiting is required.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; Your wallet only contains 1000 of these "change addresses." Every time a mixing event happens, up to 9 of your addresses are used up. This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. It can only do this, however, if you have automatic backups enabled.&lt;br&gt; Consequently, users who have backups disabled will also have PrivateSend disabled. &lt;hr&gt;For more information, see the &lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;PrivateSend documentation&lt;/a&gt;.</source>
+        <translation>&lt;h3&gt;PrivateSend Nozioni di base&lt;/h3&gt; PrivateSend ti offre una vera privacy oscurando le origini dei tuoi fondi. Il totale dei Stash nel tuo portafoglio è composto da diversi "input" che puoi immaginare come monete separate e discrete.&lt;br&gt; PrivateSend utilizza un processo innovativo per mescolare i tuoi input con quelli di altre due persone, senza che le tue monete lascino mai il tuo portafoglio. Mantenete il controllo dei vostri fondi in ogni momento.&lt;hr&gt; &lt;b&gt;Il processo PrivateSend funziona in questo modo:&lt;/b&gt;&lt;ol type="1"&gt; &lt;li&gt;PrivateSend inizia suddividendo gli input della tua transazione in tagli standard. Queste denominazioni sono 0,001 STASH, 0,01 STASH, 0,1 STASH, 1 STASH e 10 STASH - un po 'come la carta moneta che usi ogni giorno.&lt;/li&gt; &lt;li&gt;Il tuo portafoglio invia quindi richieste a nodi software appositamente configurati sulla rete, chiamati "masternodes". Questi masternode vengono informati che sei interessato a mescolare una determinata denominazione. Nessuna informazione identificabile viene inviata ai masternodes, quindi non sanno mai "chi" sei.&lt;/li&gt; &lt;li&gt;Quando altre due persone inviano messaggi simili, indicando che desiderano mescolare la stessa denominazione, inizia una sessione di miscelazione. Il masternode mescola gli input e indica ai portafogli di tutti e tre gli utenti di restituire gli input ora trasformati a se stessi. Il tuo portafoglio paga quella denominazione direttamente a se stesso, ma in un indirizzo diverso (chiamato cambia indirizzo).&lt;/li&gt; &lt;li&gt;Al fine di oscurare completamente i tuoi fondi, il tuo portafoglio deve ripetere questo processo più volte con ciascuna denominazione. Ogni volta che il processo è completato, viene chiamato "round". Ogni round di PrivateSend rende esponenzialmente più difficile determinare da dove provengono i tuoi fondi.&lt;/li&gt; &lt;li&gt;Questo processo di miscelazione avviene in background senza alcun intervento da parte tua. Quando desideri effettuare una transazione, i tuoi fondi saranno già mescolati. Non è richiesta alcuna ulteriore attesa.&lt;/li&gt; &lt;/ol&gt; &lt;hr&gt;&lt;b&gt;IMPORTANTE:&lt;/b&gt; Il tuo portafoglio contiene solo 1000 di questi "indirizzi di modifica". Ogni volta che si verifica un evento di missaggio, vengono utilizzati fino a 9 indirizzi. Ciò significa che quei 1000 indirizzi durano per circa 100 eventi di missaggio. Quando ne vengono utilizzati 900, il tuo portafoglio deve creare più indirizzi. Può farlo, tuttavia, solo se sono abilitati i backup automatici.&lt;br&gt; Di conseguenza, gli utenti che hanno disattivato i backup avranno anche PrivateSend disabilitato. &lt;hr&gt;Per ulteriori informazioni, consultare il &lt;a href="https://docs.stash.org/en/stable/wallets/stashcore/privatesend-instantsend.html"&gt;documentazione PrivateSend &lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -1057,8 +1011,16 @@
         <translation>Dato che questa è la prima volta che il programma viene lanciato, puoi scegliere dove %1 salverà i suoi dati.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Stash block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 scaricherà e memorizzerà una copia della catena di blocchi di Stash. Almeno %2GB di dati verranno archiviati in questa directory e aumenteranno nel tempo. Anche il portafoglio sarà memorizzato in questa directory.</translation>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Quando fai click su OK, %1 comincerà a scaricare e processare l'intera %4 block chain (%2GB) a partire dalla prime transazioni del %3 quando %4 venne inaugurato.</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>La sincronizzazione iniziale è molto dispendiosa e potrebbe mettere in luce problemi di harware del tuo computer che erano prima passati inosservati. Ogni volta che lanci %1 continuerà a scaricare da dove l'avevi lasciato.</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>Se hai scelto di limitare l'immagazzinamento della block chain (operazione nota come "pruning" o "potatura"), i dati storici devono comunque essere scaricati e processati, ma verranno cancellati in seguito per mantenere basso l'utilizzo del tuo disco.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1067,6 +1029,22 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Usa una cartella dati personalizzata:</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Almeno %1 GB di dati verrà salvato in questa cartella e continuerà ad aumentare col tempo.</translation>
+    </message>
+    <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>Verranno salvati circa %1 GB di dati in questa cartella.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Stash block chain.</source>
+        <translation>%1 scaricherà e salverà una copia della block chain di Stash.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Anche il portafoglio verrà salvato in questa cartella.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1092,76 +1070,12 @@
         <translation>Modulo</translation>
     </message>
     <message>
-        <source>My Masternodes</source>
-        <translation>I miei Masternode</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your masternode should be running but you still do not see "ENABLED" in "Status" field.</source>
-        <translation>Nota: lo stato dei tuoi Masternode nel Portafoglio locale potrebbe presentare un piccolo errore.&lt;br /&gt; Attendi sempre che il wallet sincronizzi i dati aggiuntivi e poi controlla da un altro nodo, &lt;br /&gt;il tuo Masternode potrebbe essere in esecuzione ma potresti non vedere ancora "ENABLED" nel campo "Status". </translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Alias</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Indirizzo</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protocollo</translation>
-    </message>
-    <message>
         <source>Status</source>
         <translation>Stato</translation>
     </message>
     <message>
-        <source>Active</source>
-        <translation>Attivo</translation>
-    </message>
-    <message>
-        <source>Last Seen</source>
-        <translation>Ultima accesso</translation>
-    </message>
-    <message>
-        <source>Payee</source>
-        <translation>Beneficiario</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>&amp;Inizia alias</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>Inizia &amp;tutti</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>Inizia &amp;MISSING</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;Aggiorna stato</translation>
-    </message>
-    <message>
-        <source>Show additional Masternode information</source>
-        <translation>Mostra ulteriori informazioni sul Masternode</translation>
-    </message>
-    <message>
-        <source>Show &amp;Info...</source>
-        <translation>Mostra &amp;info ...</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>Lo stato verrà aggiornato automaticamente in (sec):</translation>
-    </message>
-    <message>
         <source>0</source>
         <translation>0</translation>
-    </message>
-    <message>
-        <source>All Masternodes</source>
-        <translation>Tutti i Masternode</translation>
     </message>
     <message>
         <source>Filter List:</source>
@@ -1176,72 +1090,92 @@
         <translation>Numero dei nodi:</translation>
     </message>
     <message>
-        <source>Start alias</source>
-        <translation>Inizia alias</translation>
+        <source>Show only masternodes this wallet has keys for.</source>
+        <translation>Mostra solo i masternodes per cui questo portafoglio ha le chiavi.</translation>
     </message>
     <message>
-        <source>Confirm masternode start</source>
-        <translation>Conferma avviamento del Masternode</translation>
+        <source>My masternodes only</source>
+        <translation>Solo i miei masternodes</translation>
     </message>
     <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Sei sicuro di voler avviare il Masternode %1?</translation>
+        <source>Service</source>
+        <translation>Assistenza</translation>
     </message>
     <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Confermare l'avviamento di tutti i Masternode</translation>
+        <source>PoSe Score</source>
+        <translation>Punteggio PoSe</translation>
     </message>
     <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Sei sicuro di voler avviare TUTTI i Masternode?</translation>
+        <source>Registered</source>
+        <translation>Registrato</translation>
     </message>
     <message>
-        <source>Command is not available right now</source>
-        <translation>Il comando non è disponibile al momento</translation>
+        <source>Last Paid</source>
+        <translation>Ultimo pagato</translation>
     </message>
     <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>Non è possibile utilizzare questo comando finché l'elenco dei Masternode non viene sincronizzato</translation>
+        <source>Next Payment</source>
+        <translation>Pagamento successivo</translation>
     </message>
     <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Conferma l'avviamento dei Masternode mancanti</translation>
+        <source>Payout Address</source>
+        <translation>Indirizzo di pagamento</translation>
     </message>
     <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Sei sicuro di voler avviare i Masternode mancanti?</translation>
+        <source>Operator Reward</source>
+        <translation>Ricompensa dell'Operatore</translation>
     </message>
     <message>
-        <source>Additional information for Masternode %1</source>
-        <translation>Ulteriori informazioni per il Masternode %1</translation>
+        <source>Collateral Address</source>
+        <translation>Indirizzo collaterale</translation>
     </message>
     <message>
-        <source>Masternode Private Key</source>
-        <translation>Chiave Privata del Masternode</translation>
+        <source>Owner Address</source>
+        <translation>Indirizzo del proprietario</translation>
     </message>
     <message>
-        <source>Private Key</source>
-        <translation>Chiave Privata</translation>
+        <source>Voting Address</source>
+        <translation>Indirizzo di voto</translation>
     </message>
     <message>
-        <source>Collateral</source>
-        <translation>Collaterale</translation>
+        <source>Copy ProTx Hash</source>
+        <translation>Copia ProTx Hash</translation>
     </message>
     <message>
-        <source>IP</source>
-        <translation>IP</translation>
+        <source>Copy Collateral Outpoint</source>
+        <translation>Copia Collateral Outpoint</translation>
     </message>
     <message>
-        <source>Version</source>
-        <translation>Versione</translation>
+        <source>ENABLED</source>
+        <translation>ABILITATO</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Sconosciuto</translation>
+        <source>POSE_BANNED</source>
+        <translation>POSIZIONE_BANNATA</translation>
     </message>
     <message>
-        <source>Sentinel</source>
-        <translation>Sentinel</translation>
+        <source>UNKNOWN</source>
+        <translation>SCONOSCIUTO</translation>
+    </message>
+    <message>
+        <source>to %1</source>
+        <translation>a %1</translation>
+    </message>
+    <message>
+        <source>to UNKNOWN</source>
+        <translation>a SCONOSCIUTO</translation>
+    </message>
+    <message>
+        <source>but not claimed</source>
+        <translation>ma non richiesto</translation>
+    </message>
+    <message>
+        <source>NONE</source>
+        <translation>nessuna</translation>
+    </message>
+    <message>
+        <source>Additional information for DIP3 Masternode %1</source>
+        <translation>Ulteriori informazioni per DIP3 Masternode %1</translation>
     </message>
 </context>
 <context>
@@ -1345,10 +1279,6 @@
         <translation>(0 = automatico, &lt;0 = lascia questo numero di core liberi)</translation>
     </message>
     <message>
-        <source>Amount of Stash to keep anonymized</source>
-        <translation>Quantitá di Stash da mantenere anonima.</translation>
-    </message>
-    <message>
         <source>W&amp;allet</source>
         <translation>Port&amp;afoglio</translation>
     </message>
@@ -1397,16 +1327,12 @@
         <translation>Tale importo si comporta come una soglia, per spegnere PrivateSend, una volta raggiunta.</translation>
     </message>
     <message>
+        <source>Target PrivateSend balance</source>
+        <translation>Saldo target PrivateSend</translation>
+    </message>
+    <message>
         <source>Automatically open the Stash Core client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <translation>Apri automaticamente la porta utilizzata dal client Stash Core nel router. Funziona solo se il router supporta UPnP ed è attivato.</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside</source>
-        <translation>Accetta connessioni dall'esterno</translation>
-    </message>
-    <message>
-        <source>Allow incoming connections</source>
-        <translation>Permetti connessioni in entrata</translation>
     </message>
     <message>
         <source>Connect to the Stash network through a SOCKS5 proxy.</source>
@@ -1415,6 +1341,10 @@
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
         <translation>&amp;Connessione attraverso proxy SOCKS5 (proxy predefinito):</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Mostra se il proxy SOCKS5 di default è utilizzato per raggiungere i peer tramite questo tipo di network.</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1427,10 +1357,6 @@
     <message>
         <source>Expert</source>
         <translation>Esperti</translation>
-    </message>
-    <message>
-        <source>This setting determines the amount of individual masternodes that an input will be anonymized through.&lt;br/&gt;More rounds of anonymization gives a higher degree of privacy, but also costs more in fees.</source>
-        <translation>Questo settaggio determina attraverso quanti Masternode l'input verrà anonimizzato. &lt;br/&gt;Più round di anonimizzazione garantiscono un grado più alto di privacy, ma anche un costo maggiore in termini di commissioni.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1449,8 +1375,20 @@
         <translation>Abilita le funzionalità di coin &amp;control</translation>
     </message>
     <message>
+        <source>Show system popups for PrivateSend mixing transactions&lt;br/&gt;just like for all other transaction types.</source>
+        <translation>Mostra popup di sistema per le transazioni di missaggio PrivateSend&lt;br/&gt;proprio come per tutti gli altri tipi di transazione.</translation>
+    </message>
+    <message>
+        <source>Show popups for PrivateSend transactions</source>
+        <translation>Mostra popup per transazioni PrivateSend</translation>
+    </message>
+    <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Spendere resti non confermati</translation>
+    </message>
+    <message>
+        <source>This setting determines the amount of individual masternodes that an input will be mixed through.&lt;br/&gt;More rounds of mixing gives a higher degree of privacy, but also costs more in fees.</source>
+        <translation>Questa impostazione determina la quantità di singoli nodi master attraverso i quali verrà inserito un input.&lt;br/&gt;Più round di missaggio offrono un livello più elevato di privacy, ma pagano più commissioni.</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1459,6 +1397,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Mappa le porte tramite &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside</source>
+        <translation>Accetta connessioni dall'esterno</translation>
+    </message>
+    <message>
+        <source>Allow incoming connections</source>
+        <translation>Permetti connessioni in entrata</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1479,10 +1425,6 @@
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Utilizzata per connettersi attraverso:</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Mostra, se il proxy SOCKS5 di default è utilizzato per raggiungere i peer tramite questo tipo di network.</translation>
     </message>
     <message>
         <source>IPv4</source>
@@ -1702,22 +1644,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Completamento:</translation>
     </message>
     <message>
-        <source>Try to manually submit a PrivateSend request.</source>
-        <translation>Prova a inviare manualmente una richiesta di PrivateSend.</translation>
-    </message>
-    <message>
-        <source>Reset the current status of PrivateSend (can interrupt PrivateSend if it's in the process of Mixing, which can cost you money!)</source>
-        <translation>Resetta lo stato corrente di PrivateSend (potrebbe interrompere PrivateSend, che se  in fase di mixaggio, potrebbe comportare la perdita dei soldi!)</translation>
-    </message>
-    <message>
-        <source>Information about PrivateSend and Mixing</source>
-        <translation>Informazioni su PrivateSend e Mixing</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Informazioni</translation>
-    </message>
-    <message>
         <source>Amount and Rounds:</source>
         <translation>Ammontare e Round:</translation>
     </message>
@@ -1752,14 +1678,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>(Last Message)</source>
         <translation>(Ultimo messaggio)</translation>
-    </message>
-    <message>
-        <source>Try Mix</source>
-        <translation>Prova il Mix</translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation>Reset</translation>
     </message>
     <message>
         <source>out of sync</source>
@@ -1802,12 +1720,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Denominati</translation>
     </message>
     <message>
-        <source>Mixed</source>
-        <translation>Mixati</translation>
+        <source>Partially mixed</source>
+        <translation>Parzialmente mixato</translation>
     </message>
     <message>
-        <source>Anonymized</source>
-        <translation>Anonimizzati</translation>
+        <source>Mixed</source>
+        <translation>Mixati</translation>
     </message>
     <message numerus="yes">
         <source>Denominated inputs have %5 of %n rounds on average</source>
@@ -1831,7 +1749,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Note: You can turn this message off in options.</source>
-        <translation>Nota: puoi disattivare questo messaggio nelle opzioni.</translation>
+        <translation>Nota: è possibile disattivare questo messaggio nelle opzioni.</translation>
     </message>
     <message>
         <source>WARNING! Something went wrong on automatic backup</source>
@@ -1862,14 +1780,6 @@ https://www.transifex.com/projects/p/stash/</translation>
 </source>
         <translation>Ultimo messaggio di PrivateSend:
 </translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>PrivateSend was successfully reset.</source>
-        <translation>PrivateSend è stato reimpostato correttamente.</translation>
     </message>
     <message>
         <source>If you don't want to see internal PrivateSend fees/transactions select "Most Common" as Type on the "Transactions" tab.</source>
@@ -1944,7 +1854,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Requested payment amount of %1 is too small (considered dust).</source>
-        <translation>L'importo di pagamento richiesto di %1 è troppo basso (considerato come trascurabile).</translation>
+        <translation>L'importo di pagamento richiesto di %1 è troppo basso (considerato come infinitesimale).</translation>
     </message>
     <message>
         <source>Refund from %1</source>
@@ -1997,16 +1907,8 @@ https://www.transifex.com/projects/p/stash/</translation>
 <context>
     <name>QObject</name>
     <message>
-        <source>Stash Core</source>
-        <translation>Stash Core</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 non è ancora stato chiuso in modo sicuro</translation>
-    </message>
-    <message>
-        <source>Error reading masternode configuration file: %1</source>
-        <translation>Errore durante la lettura del file di configurazione del Masternode: %1</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2240,10 +2142,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>&amp;Traffico di Rete</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Cancella</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>Totali</translation>
     </message>
@@ -2308,12 +2206,20 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Apri il file log del debug di %1 dalla cartella dati attuale. Può richiedere alcuni secondi per file di log di grandi dimensioni.</translation>
     </message>
     <message>
+        <source>InstantSend locks</source>
+        <translation>Blocca IstantSend</translation>
+    </message>
+    <message>
         <source>Decrease font size</source>
         <translation>Riduci dimensioni font.</translation>
     </message>
     <message>
         <source>Increase font size</source>
         <translation>Aumenta dimensioni font</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Reset</translation>
     </message>
     <message>
         <source>Services</source>
@@ -2448,15 +2354,15 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Benvenuto nella console RPC di %1.</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Usa le frecce direzionali per navigare nella cronologia, e &lt;b&gt;Ctrl-L&lt;/b&gt; per cancellarla.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Scrivi &lt;b&gt;help&lt;/b&gt; per un riassunto dei comandi disponibili</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Usa le frecce direzionali per navigare nella cronologia, e %1 per cancellarla.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
         <translation>ATTENZIONE: truffatori sono stati attivi, chiedendo agli utenti di digitare comandi qui, rubando il contenuto del loro portafoglio. Non utilizzare questa console senza comprendere appieno la diramazione di un comando.</translation>
     </message>
     <message>
@@ -2470,6 +2376,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Network activity disabled</source>
         <translation>Attività di rete disabilitata</translation>
+    </message>
+    <message>
+        <source>Total: %1 (Enabled: %2)</source>
+        <translation>Totale: %1 (Abilitato: %2)</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -2575,10 +2485,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Cancella</translation>
     </message>
     <message>
-        <source>Request InstantSend</source>
-        <translation>Richiedi l'IstantSend</translation>
-    </message>
-    <message>
         <source>Requested payments history</source>
         <translation>Cronologia pagamenti ricevuti</translation>
     </message>
@@ -2662,18 +2568,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Messaggio</translation>
     </message>
     <message>
-        <source>InstantSend</source>
-        <translation>InstantSend</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Si</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>No</translation>
-    </message>
-    <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>L'URI risultante è troppo lungo, prova a ridurre il testo nell'etichetta / messaggio.</translation>
     </message>
@@ -2753,7 +2647,7 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Dust:</source>
-        <translation>Trascurabile:</translation>
+        <translation>Infinitesimale:</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -2780,14 +2674,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Scegli...</translation>
     </message>
     <message>
-        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
-        <translation>L'utilizzo del fallbackfee può comportare che una transazione richiederà diverse ore o giorni (o molto di  più) per essere confermata. Prendi in considerazione la possibilità di scegliere la tariffa manualmente o attendi fino a quando non avrai convalidato la catena completa.</translation>
-    </message>
-    <message>
-        <source>Warning: Fee estimation is currently not possible.</source>
-        <translation>Attenzione: il calcolo delle commissioni non è attualmente disponibile.</translation>
-    </message>
-    <message>
         <source>collapse fee-settings</source>
         <translation>Abbassare la finestra delle opzioni delle commissioni</translation>
     </message>
@@ -2800,16 +2686,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>PrivateSend</translation>
     </message>
     <message>
-        <source>InstantSend</source>
-        <translation>InstantSend</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <source>If the custom fee is set to 1000 duffs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 duffs in fee,&lt;br /&gt;while "at least" pays 1000 duffs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
         <translation>Se la tariffa personalizzata è impostata su 1000 duff e la transazione è di soli 250 byte, paga solo 250 duff "per kilobyte" di Fee, &lt;br /&gt;mentre paga "almeno"  1000 duff. Per le transazioni più grandi di un kilobyte pagate entrambi per kilobyte.</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 stashees and the transaction is only 250 bytes, then "per kilobyte" only pays 250 stashees in fee,&lt;br /&gt;while "total at least" pays 1000 stashees. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Se la tariffa personalizzata è impostata su 1000 duff e la transazione è di soli 250 byte, paga solo 250 duff "per kilobyte" di Fee, &lt;br /&gt;mentre paga "in totale almeno" 1000 duff. Per le transazioni più grandi di un kilobyte pagate entrambi per kilobyte.</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for stash transactions than the network can process.</source>
@@ -2820,12 +2698,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>Hide</source>
-        <translation>Nascondi</translation>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>L'utilizzo del fallbackfee può comportare che una transazione richiederà diverse ore o giorni (o molto di  più) per essere confermata. Prendi in considerazione la possibilità di scegliere la tariffa manualmente o attendi fino a quando non avrai convalidato la catena completa.</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>totale come minimo</translation>
+        <source>Note: Not enough data for fee estimation, using the fallback fee instead.</source>
+        <translation>Nota: dati insufficienti per la stima della commissione, utilizzando altrimenti la commissione di fallback.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Nascondi</translation>
     </message>
     <message>
         <source>(read the tooltip)</source>
@@ -2842,14 +2724,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(Commissione intelligente non ancora inizializzata. Normalmente richiede un'attesa di alcuni blocchi...)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>normale</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>rapido</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2901,31 +2775,19 @@ https://www.transifex.com/projects/p/stash/</translation>
     </message>
     <message>
         <source>Copy dust</source>
-        <translation>Copia trascurabile</translation>
+        <translation>Copia infinitesimale</translation>
     </message>
     <message>
         <source>Copy change</source>
         <translation>Copia resto</translation>
     </message>
     <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 bloccare)</translation>
+    </message>
+    <message>
         <source>using</source>
         <translation>utilizzando</translation>
-    </message>
-    <message>
-        <source>anonymous funds</source>
-        <translation>fondi anonimi</translation>
-    </message>
-    <message>
-        <source>(privatesend requires this amount to be rounded up to the nearest %1).</source>
-        <translation>(il privatesend richiede che questo importo venga arrotondato al più vicino %1).</translation>
-    </message>
-    <message>
-        <source>any available funds (not anonymous)</source>
-        <translation>eventuali fondi disponibili (non anonimi)</translation>
-    </message>
-    <message>
-        <source>and InstantSend</source>
-        <translation>e InstantSend</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2946,6 +2808,34 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>&lt;b&gt;(%1 of %2 entries displayed)&lt;/b&gt;</source>
         <translation>&lt;b&gt;(%1 of %2 entries displayed)&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>PrivateSend funds only</source>
+        <translation>Solo fondi PrivateSend</translation>
+    </message>
+    <message>
+        <source>any available funds</source>
+        <translation>eventuali fondi disponibili</translation>
+    </message>
+    <message>
+        <source>(PrivateSend transactions have higher fees usually due to no change output being allowed)</source>
+        <translation>(Le transazioni PrivateSend di solito hanno commissioni più elevate a causa della mancanza di output di modifica)</translation>
+    </message>
+    <message>
+        <source>Transaction size: %1</source>
+        <translation>Dimensione della transazione: %1</translation>
+    </message>
+    <message>
+        <source>Fee rate: %1</source>
+        <translation>Tariffa di commissione: %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>This transaction will consume %n input(s)</source>
+        <translation><numerusform>Questa transazione consumerà %n input</numerusform><numerusform>Questa transazione consumerà %n input</numerusform></translation>
+    </message>
+    <message>
+        <source>Warning: Using PrivateSend with %1 or more inputs can harm your privacy and is not recommended</source>
+        <translation>Avviso: l'utilizzo di PrivateSend con %1 o più input può danneggiare la tua privacy e non è raccomandato</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2986,10 +2876,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Payment request expired.</source>
         <translation>Richiesta di pagamento scaduta.</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n blocco</numerusform><numerusform>%n blocchi</numerusform></translation>
     </message>
     <message>
         <source>Pay only the required fee of %1</source>
@@ -3321,16 +3207,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>%1 conferme</translation>
     </message>
     <message>
-        <source>verified via InstantSend</source>
-        <translation>verificato via InstantSend</translation>
+        <source>locked via LLMQ based ChainLocks</source>
+        <translation>bloccato tramite ChainLock basati su LLMQ</translation>
     </message>
     <message>
-        <source>InstantSend verification in progress - %1 of %2 signatures</source>
-        <translation>Verifica IstantSend in corso - %1 of %2 firme</translation>
-    </message>
-    <message>
-        <source>InstantSend verification failed</source>
-        <translation>Verifica InstantSend fallita</translation>
+        <source>verified via LLMQ based InstantSend</source>
+        <translation>verificato tramite InstantSend basato su LLMQ</translation>
     </message>
     <message>
         <source>Status</source>
@@ -3607,6 +3489,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Anche se in questa transazione è coinvolto un indirizzo di sola lettura</translation>
     </message>
     <message>
+        <source>Whether or not this transaction was locked by InstantSend.</source>
+        <translation>Indipendentemente dal fatto che questa transazione sia stata bloccata da InstantSend.</translation>
+    </message>
+    <message>
         <source>User-defined intent/purpose of the transaction.</source>
         <translation>Intento/scopo della transazione definito dall'utente.</translation>
     </message>
@@ -3620,6 +3506,14 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>All</source>
         <translation>Tutti</translation>
+    </message>
+    <message>
+        <source>Locked by InstantSend</source>
+        <translation>Bloccato da InstantSend</translation>
+    </message>
+    <message>
+        <source>Not locked by InstantSend</source>
+        <translation>Non bloccato da InstantSend</translation>
     </message>
     <message>
         <source>Today</source>
@@ -3734,6 +3628,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Mostra i dettagli della transazione</translation>
     </message>
     <message>
+        <source>Show address QR code</source>
+        <translation>Mostra indirizzo del codice QR</translation>
+    </message>
+    <message>
         <source>Export Transaction History</source>
         <translation>Esporta lo storico delle transazioni</translation>
     </message>
@@ -3786,6 +3684,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Lo storico delle transazioni e' stato salvato con successo in %1.</translation>
     </message>
     <message>
+        <source>QR code</source>
+        <translation>codice QR</translation>
+    </message>
+    <message>
         <source>Range:</source>
         <translation>Intervallo:</translation>
     </message>
@@ -3813,14 +3715,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Send Coins</source>
         <translation>Invia Monete</translation>
-    </message>
-    <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>InstantSend non supporta ancora l'invio di transazioni a così alto valore. Le transazioni sono attualmente limitate a %1 STASH.</translation>
-    </message>
-    <message>
-        <source>Used way too many inputs (&gt;%1) for this InstantSend transaction, fees could be huge.</source>
-        <translation>Utilizzati troppi input (&gt;%1) per questa transazione di InstantSend, le commissioni potrebbero essere elevatissime. </translation>
     </message>
 </context>
 <context>
@@ -3889,10 +3783,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Nome per costruire l'url per l'accesso con KeePass che memorizza la passphrase del portafoglio</translation>
     </message>
     <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>Imposta la dimensione massima in byte delle transazioni ad alta-priorità/basse-commissioni (default: %d)</translation>
-    </message>
-    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Imposta il numero di thread per la verifica degli script (da %u a %d, 0 = automatico, &lt;0 = lascia questo numero di core liberi, default: %d)</translation>
     </message>
@@ -3909,16 +3799,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Attenzione: Sembra che non ci sia completo accordo con i nostri peer! Un aggiornamento da parte tua o degli altri nodi potrebbe essere necessario.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Devi specificare una masternodeprivkey nella configurazione. Per favore consulta la documentazione di aiuto.</translation>
-    </message>
-    <message>
         <source>Accept command line and JSON-RPC commands</source>
         <translation>Accetta comandi da riga di comando e JSON-RPC</translation>
-    </message>
-    <message>
-        <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>Aggiunge un nodo a cui connettersi e tenta di tenere aperta la connessione</translation>
     </message>
     <message>
         <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
@@ -4033,10 +3915,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Resta in ascolto sull'indirizzo indicato ed inserisce in whitelist i peer che vi si collegano. Usa la notazione [host]:porta per l'IPv6</translation>
     </message>
     <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>Associare a un dato indirizzo per ascoltare le connessioni JSON-RPC. Usa [host]: notazione della porta per IPv6. Questa opzione può essere specificata più volte (default:  associare  a tutte le interfacce)</translation>
-    </message>
-    <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
         <translation>Crea nuovi file con i permessi di default del sistema, invece che con umask 077 (ha effetto solo con funzionalità di portamonete disabilitate)</translation>
     </message>
@@ -4045,8 +3923,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Cancella tutte le transazioni del portafoglio e sistema solo quelle parti della blockchain mediante -rescan quando apri il portafoglio</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
-        <translation>Errore durante il caricamento di %s: non è possibile abilitare l'HD su un portafoglio non-HD già esistente.</translation>
+        <source>Enable publish raw transactions of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>Abilita le prime transazioni pubblicate del tentativo di doppia spesa di InstantSend in &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish transaction hashes of attempted InstantSend double spend in &lt;address&gt;</source>
+        <translation>Abilita gli hash delle transazioni di pubblicazione del tentativo di doppia spesa di InstantSend in &lt;address&gt;</translation>
     </message>
     <message>
         <source>Found unconfirmed denominated outputs, will wait till they confirm to continue.</source>
@@ -4073,10 +3955,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Mantiene l'indice completo delle transazioni usato dalla chiamata rpc getrawtransaction (default: %u)</translation>
     </message>
     <message>
-        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you verified that wallet works!</source>
-        <translation>Assicurati di crittografare il tuo portafoglio ed eliminare tutti i backup non crittografati dopo aver verificato che il portafoglio funzioni!</translation>
-    </message>
-    <message>
         <source>Maximum size of data in data carrier transactions we relay and mine (default: %u)</source>
         <translation>Dimensione massima dei dati nelle transazioni di trasporto dati che saranno trasmesse ed incluse nei blocchi (predefinito: %u)</translation>
     </message>
@@ -4087,6 +3965,18 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Emette informazioni di debug (default: : %u, fornire &lt;category&gt; è opzionale)</translation>
+    </message>
+    <message>
+        <source>Overrides minimum spork signers to change spork value. Only useful for regtest and devnet. Using this on mainnet or testnet will ban you.</source>
+        <translation>Sovrascrive i segnaposti di spork minimi per modificare il valore di spork. Utile solo per regtest e devnet. Se lo usi su mainnet o testnet  sarai bannato .</translation>
+    </message>
+    <message>
+        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to mix some more coins.</source>
+        <translation>PrivateSend utilizza importi espressi per inviare fondi, potresti semplicemente dover mixare altre monete.</translation>
+    </message>
+    <message>
+        <source>Use N separate masternodes in parallel to mix funds (%u-%u, default: %u)</source>
+        <translation>Usa N masternodes separati in parallelo per mescolare i fondi (%u-%u, predefinito: %u)</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -4103,10 +3993,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
         <translation>I peer inclusi in whitelist non possono subire ban per DoS e le loro transazioni saranno sempre trasmesse, anche nel caso in cui si trovino già nel mempool. Ciò è utile ad es. per i gateway</translation>
-    </message>
-    <message>
-        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation>È necessario ricostruire il database usando -reindex-chainstate per cambiare -txindex</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4137,16 +4023,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Collegare al KeePassHttp sulla porta &lt;port&gt;(default: %u) </translation>
     </message>
     <message>
-        <source>Enable the client to act as a masternode (0-1, default: %u)</source>
-        <translation>Abilita il client ad agire come un masternode (0-1, default: %u)</translation>
-    </message>
-    <message>
         <source>Entry exceeds maximum size.</source>
         <translation>L'ingresso supera la dimensione massima.</translation>
-    </message>
-    <message>
-        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
-        <translation>Errore durante il caricamento di %s: non è possibile disabilitare l'HD su un portafoglio HD già esistente</translation>
     </message>
     <message>
         <source>Failed to load fulfilled requests cache from</source>
@@ -4159,10 +4037,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Failed to load masternode cache from</source>
         <translation>Impossibile caricare la cache del masternode da</translation>
-    </message>
-    <message>
-        <source>Failed to load masternode payments cache from</source>
-        <translation>Impossibile caricare la cache dei pagamenti masternode da</translation>
     </message>
     <message>
         <source>Found enough users, signing ( waiting %s )</source>
@@ -4209,16 +4083,24 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Fondi insufficienti.</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Indirizzo -onion non valido: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Indirizzo -proxy non valido: '%s'</translation>
+        <source>Invalid amount for -discardfee=&lt;amount&gt;: '%s'</source>
+        <translation>Importo non valido per -discardfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
         <translation>Importo non valido per -paytxfee=&lt;amount&gt;: '%s' (deve essere almeno %s)</translation>
+    </message>
+    <message>
+        <source>Invalid minimum number of spork signers specified with -minsporkkeys</source>
+        <translation>Numero minimo non valido di firmatari di spork specificato con -minsporkkeys</translation>
+    </message>
+    <message>
+        <source>Keep N STASH mixed (%u-%u, default: %u)</source>
+        <translation>Mantieni N STASH mixati (%u-%u, default: %u)</translation>
+    </message>
+    <message>
+        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
+        <translation>Mantieni al massimo &lt;n&gt; transazioni non collegabili in memoria (impostazione predefinita: %u)</translation>
     </message>
     <message>
         <source>Keypool ran out, please call keypoolrefill first</source>
@@ -4245,16 +4127,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Caricamento della cache del masternode ...</translation>
     </message>
     <message>
-        <source>Loading masternode payment cache...</source>
-        <translation>Caricamento della cache di pagamento del masternode ...</translation>
-    </message>
-    <message>
         <source>Lock is already in place.</source>
         <translation>Il blocco è già presente.</translation>
-    </message>
-    <message>
-        <source>Lock masternodes from masternode configuration file (default: %u)</source>
-        <translation>Blocca i masternodes  nel file di configurazione del masternode (default: %u)</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
@@ -4285,16 +4159,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Nessun Masternode compatibile trovato.</translation>
     </message>
     <message>
+        <source>Not enough funds to mix.</source>
+        <translation>Non ci sono abbastanza fondi per effettuare il mixaggio.</translation>
+    </message>
+    <message>
         <source>Not in the Masternode list.</source>
         <translation>Non si trova nella  lista dei Masternode.</translation>
     </message>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Connessione ai soli nodi appartenenti alla rete &lt;net&gt; (ipv4, ipv6 o Tor)</translation>
-    </message>
-    <message>
-        <source>Port: %d</source>
-        <translation>Porta: %d</translation>
     </message>
     <message>
         <source>Prepend debug output with timestamp (default: %u)</source>
@@ -4313,10 +4187,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Invia informazioni trace/debug al file debug.log (default: %u)</translation>
     </message>
     <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>Se possibile Invia transazioni come transazioni a zero-fee (default: %u)</translation>
-    </message>
-    <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Imposta la dimensione del pool di chiavi a &lt;n&gt; (default: %u)</translation>
     </message>
@@ -4333,10 +4203,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Specifica il timeout di connessione in millisecondi (minimo: 1, default: %d)</translation>
     </message>
     <message>
-        <source>Specify masternode configuration file (default: %s)</source>
-        <translation>Specifica il file di configurazione del masternode (default: %s)</translation>
-    </message>
-    <message>
         <source>Specify pid file (default: %s)</source>
         <translation>Specifica il file pid (default: %s)</translation>
     </message>
@@ -4345,20 +4211,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Abilita la spesa di resto non confermato quando si inviano transazioni (default: %u)</translation>
     </message>
     <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>Inviate le seguenti voci al masternode: %u / %d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>Inviato al masternode, in attesa di più voci (%u / %d) %s</translation>
-    </message>
-    <message>
         <source>Submitted to masternode, waiting in queue %s</source>
         <translation>Inviato al masternode, attendendo in coda %s</translation>
-    </message>
-    <message>
-        <source>Synchroning blockchain...</source>
-        <translation>Sincronizzando la blockchain...</translation>
     </message>
     <message>
         <source>Synchronization failed</source>
@@ -4369,20 +4223,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Sincronizzazione finita</translation>
     </message>
     <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>Sincronizzando i masternode..</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>Questo non è un Masternode.</translation>
-    </message>
-    <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
         <translation>Soglia di disconnessione per i peer che si comportano in maniera anomala (default: %u)</translation>
     </message>
     <message>
         <source>Too many %f denominations, removing.</source>
         <translation>Troppe denominazioni %f, rimuovendo.</translation>
+    </message>
+    <message>
+        <source>Too many %f denominations, skipping.</source>
+        <translation>Troppe denominazioni %f, saltando.</translation>
     </message>
     <message>
         <source>Tor control port password (default: empty)</source>
@@ -4433,12 +4283,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Il commento del User Agent (%s) contiene caratteri non sicuri.</translation>
     </message>
     <message>
-        <source>Will retry...</source>
-        <translation>Ritenterà ...</translation>
+        <source>Verifying wallet(s)...</source>
+        <translation>Derifica wallet(s)...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>masternodeprivkey non valida. Per favore consulta la documentazione</translation>
+        <source>Will retry...</source>
+        <translation>Ritenterà ...</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>
@@ -4449,16 +4299,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Impossibile fare il mixing quando la sincronizzazione è in corso.</translation>
     </message>
     <message>
-        <source>Could not parse masternode.conf</source>
-        <translation>Impossibile analizzare masternode.conf</translation>
-    </message>
-    <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>Netmask non valida specificata in -whitelist: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid port detected in masternode.conf</source>
-        <translation>Rilevata porta non valida in masternode.conf</translation>
     </message>
     <message>
         <source>Invalid script detected.</source>
@@ -4473,12 +4315,28 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Chiave KeePassHttp per AES, comunicazione criptata con KeePass</translation>
     </message>
     <message>
-        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
-        <translation>Mantenere al massimo &lt;n&gt;  operazioni non collegabili in memoria (default: %u)</translation>
-    </message>
-    <message>
         <source>Disable all Stash specific functionality (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</source>
         <translation>Disabilitare tutte le funzionalità specifiche di Stash (Masternodes, PrivateSend, InstantSend, Governance) (0-1, default: %u)</translation>
+    </message>
+    <message>
+        <source>%s file contains all private keys from this wallet. Do not share it with anyone!</source>
+        <translation>%s il file contiene tutte le chiavi private di questo portafoglio. Non condividerlo con nessuno!</translation>
+    </message>
+    <message>
+        <source>-masternode option is deprecated and ignored, specifying -masternodeblsprivkey is enough to start this node as a masternode.</source>
+        <translation>-L'opzione masternode è deprecata e ignorata, specificare -masternodeblsprivkey è sufficiente per avviare questo nodo come masternode.</translation>
+    </message>
+    <message>
+        <source>Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info)</source>
+        <translation>Aggiungere un nodo a cui connettersi e tentare di mantenere aperta la connessione (consultare la guida del comando RPC `addnode` per maggiori informazioni)</translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. This option is ignored unless -rpcallowip is also passed. Port is optional and overrides -rpcport. Use [host]:port notation for IPv6. This option can be specified multiple times (default: 127.0.0.1 and ::1 i.e., localhost, or if -rpcallowip has been specified, 0.0.0.0 and :: i.e., all addresses)</source>
+        <translation>Associare a un dato indirizzo per ascoltare le connessioni JSON-RPC. Questa opzione viene ignorata a meno che venga passato anche -rpcallowip. La porta è facoltativa e sovrascrive -rpcport. Usa [host]: notazione della porta per IPv6. Questa opzione può essere specificata più volte (default: 127.0.0.1 e :: 1 vale a dire, localhost, o se è stato specificato -rpcallowip, 0.0.0.0 e :: i.e., tutti gli indirizzi)</translation>
+    </message>
+    <message>
+        <source>Connect only to the specified node(s); -connect=0 disables automatic connections (the rules for this peer are the same as for -addnode)</source>
+        <translation>Connetti solo ai nodi specificati node(s); -connect=0 disabilita le connessioni automatiche (le regole per questo peer sono le stesse di -addnode)</translation>
     </message>
     <message>
         <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
@@ -4489,20 +4347,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Non mantenere le transazioni nella mempool più a lungo di &lt;n&gt; ore (default: %u)</translation>
     </message>
     <message>
-        <source>Enable InstantSend, show confirmations for locked transactions (0-1, default: %u)</source>
-        <translation>Abilita l'InstantSend, mostra le conferme per le transazioni bloccate (0-1, default: %u)</translation>
-    </message>
-    <message>
         <source>Enable multiple PrivateSend mixing sessions per block, experimental (0-1, default: %u)</source>
         <translation>Abilita più sessioni di mixaggio PrivateSend per blocco, sperimentale (0-1, predefinito: %u)</translation>
     </message>
     <message>
-        <source>Enable use of automated PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
-        <translation>Abilita l'uso di PrivateSend automatizzato per i fondi memorizzati in questo portafoglio (0-1, predefinito: %u)</translation>
-    </message>
-    <message>
         <source>Execute command when a wallet InstantSend transaction is successfully locked (%s in cmd is replaced by TxID)</source>
         <translation>Esegui comando quando una transazione InstantSend del portafoglio è bloccata correttamente (%s in cmd è sostituito da TxID)</translation>
+    </message>
+    <message>
+        <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
+        <translation>Transazioni aggiuntive da tenere in memoria per ricostruzioni di blocchi compatti (default: %u)</translation>
     </message>
     <message>
         <source>Failed to create backup, file already exists! This could happen if you restarted wallet in less than 60 seconds. You can continue if you are ok with this.</source>
@@ -4521,14 +4375,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Se &lt;category&gt; non è specificato oppure se &lt;category&gt; = 1, mostra tutte le informazioni di debug.</translation>
     </message>
     <message>
-        <source>InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 STASH.</source>
-        <translation>InstantSend non supporta ancora l'invio un valore così elevato. Le transazioni sono attualmente limitate a %1 STASH.</translation>
-    </message>
-    <message>
-        <source>InstantSend requires inputs with at least %d confirmations, you might need to wait a few minutes and try again.</source>
-        <translation>InstantSend richiede input con almeno %d conferme, potrebbe essere necessario attendere alcuni minuti e riprovare.</translation>
-    </message>
-    <message>
         <source>Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)</source>
         <translation>Mantenere un indice dell'indirizzo completo, utilizzato per richiedere il saldo, i txid e gli output non spesi per gli indirizzi (default: %u)</translation>
     </message>
@@ -4545,8 +4391,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Mantenere la maggior parte delle connessioni ai peer (connessioni di servizi temporanei escluse) (default: %u)</translation>
     </message>
     <message>
-        <source>PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.</source>
-        <translation>PrivateSend utilizza gli importi esatti denominati per inviare fondi, potrebbe essere necessario che anonimizziate alcune monete in più.</translation>
+        <source>Make sure to encrypt your wallet and delete all non-encrypted backups after you have verified that the wallet works!</source>
+        <translation>Assicurati di crittografare il tuo portafoglio ed eliminare tutti i backup non crittografati dopo aver verificato che il portafoglio funzioni!</translation>
+    </message>
+    <message>
+        <source>Maximum total size of all orphan transactions in megabytes (default: %u)</source>
+        <translation>Dimensione totale massima di tutte le transazioni orfane in megabyte (impostazione predefinita: %u)</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -4557,12 +4407,20 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Prune: l'ultima sincronizzazione del portafoglio risulta essere oltre la riduzione dei dati. È necessario eseguire un -reindex (scaricare nuovamente la blockchain in caso di nodo pruned)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>Richiesta di indirizzi peer tramite la ricerca DNS, se gli indirizzi sono bassi (impostazione predefinita: 1 a meno che non venga utilizzato -connect)</translation>
+    </message>
+    <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
         <translation>Randomizza le credenziali per ogni connessione proxy. Permette la Tor stream isolation (default: %u)</translation>
     </message>
     <message>
         <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
         <translation>Non è possibile un Rescan in modalità pruned. Sarà necessario utilizzare -reindex che farà scaricare nuovamente tutta la blockchain.</translation>
+    </message>
+    <message>
+        <source>Set the masternode BLS private key and enable the client to act as a masternode</source>
+        <translation>Impostare la chiave privata BLS del nodo principale e abilitare il client a fungere da nodo principale</translation>
     </message>
     <message>
         <source>Specify full path to directory for automatic wallet backups (must exist)</source>
@@ -4583,6 +4441,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
         <translation>La lunghezza totale della stringa di network version (%i) eccede la lunghezza massima (%i). Ridurre il numero o la dimensione di uacomments.</translation>
+    </message>
+    <message>
+        <source>Transaction index can't be disabled in full mode. Either start with -litemode command line switch or enable transaction index.</source>
+        <translation>L'indice di transazione non può essere disabilitato in modalità completa. Iniziare con l'opzione della riga di comando -litemode o abilitare l'indice delle transazioni.</translation>
     </message>
     <message>
         <source>Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)</source>
@@ -4617,20 +4479,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Attenzione: si stanno minando versioni sconocsiute di blocchi! E' possibile che siano attive regole sconosciute</translation>
     </message>
     <message>
+        <source>You need to rebuild the database using -reindex to change -timestampindex</source>
+        <translation>È necessario ricostruire il database usando -reindex per cambiare -timestampindex</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>Per ritornare alla modalità unpruned sarà necessario ricostruire il database utilizzando l'opzione -reindex. L'intera blockchain sarà riscaricata.</translation>
     </message>
     <message>
-        <source>(%d could be used only on mainnet)</source>
-        <translation>(%d potrebbe essere utilizzato solo su mainnet)</translation>
-    </message>
-    <message>
         <source>(default: %u)</source>
         <translation>(default: %u)</translation>
-    </message>
-    <message>
-        <source>(must be %d for mainnet)</source>
-        <translation>(deve essere %d per mainnet)</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -4661,6 +4519,14 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Abilita pubblicazione hash blocco in &lt;address&gt;</translation>
     </message>
     <message>
+        <source>Enable publish hash of governance objects (like proposals) in &lt;address&gt;</source>
+        <translation>Abilita l'hash di pubblicazione degli oggetti di governance (come le proposte) in &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish hash of governance votes in &lt;address&gt;</source>
+        <translation>Abilita l'hash di pubblicazione dei voti di governance in &lt;address&gt;</translation>
+    </message>
+    <message>
         <source>Enable publish hash transaction (locked via InstantSend) in &lt;address&gt;</source>
         <translation>Abilita la pubblicazione della hash della transazione (bloccata tramite InstantSend) in &lt;address&gt;</translation>
     </message>
@@ -4681,10 +4547,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Abilita la pubblicazione delle transazione raw in &lt;address&gt;</translation>
     </message>
     <message>
-        <source>Enable transaction replacement in the memory pool (default: %u)</source>
-        <translation>Abilita la sostituzione della transazione nel pool della memoria (default: %u)</translation>
-    </message>
-    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation>Errore: si è presentato un errore interno fatale, consulta il file debug.log per maggiori dettagli</translation>
     </message>
@@ -4701,8 +4563,8 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Impossibile eliminare il backup, errore: %s</translation>
     </message>
     <message>
-        <source>Failed to parse host:port string</source>
-        <translation>Impossibile analizzare l'host: port string</translation>
+        <source>Failed to load sporks cache from</source>
+        <translation>Impossibile caricare la cache degli sporks da</translation>
     </message>
     <message>
         <source>Fee (in %s/kB) to add to transactions you send (default: %s)</source>
@@ -4721,6 +4583,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Importo non valido per -fallbackfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
+        <source>Invalid masternodeblsprivkey. Please see documentation.</source>
+        <translation>Invalid masternodeblsprivkey. Per favore vedi documentazione.</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Mantieni la memory pool delle transazioni al di sotto di &lt;n&gt; megabyte (default: %u)</translation>
     </message>
@@ -4733,20 +4599,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>L'ultimo uso con successo di PrivateSend è troppo recente</translation>
     </message>
     <message>
-        <source>Line: %d</source>
-        <translation>Riga: %d</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>Caricamento indirizzi...</translation>
-    </message>
-    <message>
         <source>Loading block index...</source>
         <translation>Caricamento dell'indice del blocco...</translation>
     </message>
     <message>
         <source>Loading governance cache...</source>
         <translation>Caricamento della cache di governance ...</translation>
+    </message>
+    <message>
+        <source>Loading sporks cache...</source>
+        <translation>Caricamento della cache degli sporks ...</translation>
     </message>
     <message>
         <source>Loading wallet... (%3.2f %%)</source>
@@ -4763,10 +4625,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Make the wallet broadcast transactions</source>
         <translation>Configura il portafolgio per la trasmissione di transazioni</translation>
-    </message>
-    <message>
-        <source>Masternode cache is empty, skipping payments and governance cache...</source>
-        <translation>La cache del Masternode è vuota, si stanno saltando i pagamenti e la cache di governance ...</translation>
     </message>
     <message>
         <source>Masternode options:</source>
@@ -4811,10 +4669,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Not enough file descriptors available.</source>
         <translation>Non ci sono abbastanza descrittori di file disponibili.</translation>
-    </message>
-    <message>
-        <source>Not enough funds to anonymize.</source>
-        <translation>Non ci sono abbastanza fondi per anonimizzare.</translation>
     </message>
     <message>
         <source>Number of automatic wallet backups (default: %u)</source>
@@ -4866,6 +4720,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>All'avvio ripete la scansione della blockchain per individuare le transazioni che mancano dal portafoglio</translation>
     </message>
     <message>
+        <source>Synchronizing blockchain...</source>
+        <translation>Sincronizzazione blockchain...</translation>
+    </message>
+    <message>
         <source>The wallet will avoid paying less than the minimum relay fee.</source>
         <translation>Il portafoglio eviterà di pagare meno della tariffa minima di trasmissione.</translation>
     </message>
@@ -4888,6 +4746,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Transaction must have at least one recipient</source>
         <translation>La transazione deve avere almeno un destinatario</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>Transazione troppo grande</translation>
     </message>
     <message>
         <source>Trying to connect...</source>
@@ -4926,6 +4788,27 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Imposta se operare in modalità solo blocchi (default: %u)</translation>
     </message>
     <message>
+        <source>You can not start a masternode in lite mode.</source>
+        <translation>
+Non è possibile avviare un masternode in modalità lite</translation>
+    </message>
+    <message>
+        <source>You can not start a masternode with wallet enabled.</source>
+        <translation>Non è possibile avviare un nodo principale con il wallet abilitato.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -addressindex</source>
+        <translation>È necessario ricostruire il database usando -reindex per cambiare -addressindex</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -spentindex</source>
+        <translation>È necessario ricostruire il database usando -reindex per cambiare -spentindex</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>È necessario ricostruire il database usando -reindex per cambiare -txindex</translation>
+    </message>
+    <message>
         <source>ZeroMQ notification options:</source>
         <translation>Opzioni di notifica ZeroMQ</translation>
     </message>
@@ -4950,24 +4833,32 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Sviluppatori di %s</translation>
     </message>
     <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
-        <translation>Accetta connessioni dall'esterno (default: 1 se non -proxy o -connect /-noconnect)</translation>
-    </message>
-    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Non è possibile ottenere i dati sulla cartella %s. Probabilmente %s è già in esecuzione.</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s); -noconnect or -connect=0 alone to disable automatic connections</source>
-        <translation>Connetti solo ai nodi(o) specificati; -noconnect o -connect = 0 da solo per disabilitare le connessioni automatiche</translation>
     </message>
     <message>
         <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
         <translation>Distribuito sotto licenza MIT del software, si veda il file %s o %s incluso</translation>
     </message>
     <message>
+        <source>Enable use of PrivateSend for funds stored in this wallet (0-1, default: %u)</source>
+        <translation>Abilita l'uso di PrivateSend per i fondi memorizzati in questo portafoglio (0-1, valore predefinito: %u)</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on an already existing non-HD wallet</source>
+        <translation>Errore durante il caricamento di %s: non è possibile abilitare l'HD su un portafoglio non-HD già esistente.</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet parameter must only specify a filename (not a path).</source>
+        <translation>Errore durante il caricamento del portafoglio%s. Il parametro -wallet deve solo specificare un nome file (non un percorso).</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Errore lettura %s! Tutte le chiavi sono state lette correttamente, ma i dati delle transazioni o della rubrica potrebbero essere mancanti o non corretti.</translation>
+    </message>
+    <message>
+        <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
+        <translation>Escludere le informazioni di debug per una categoria. Può essere usato insieme a -debug=1 per generare log di debug per tutte le categorie tranne una o più categorie specificate.</translation>
     </message>
     <message>
         <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
@@ -4998,14 +4889,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Per favore contribuite se ritenete %s utile. Visitate %s per maggiori informazioni riguardo il software.</translation>
     </message>
     <message>
-        <source>Provide liquidity to PrivateSend by infrequently mixing coins on a continual basis (%u-%u, default: %u, 1=very frequent, high fees, %u=very infrequent, low fees)</source>
-        <translation>Fornire liquidità a PrivateSend mescolando ogni tanto le monete su base continua (%u-%u, default: %u, 1 = molto frequenti, commissioni elevate, %u = molto poco frequenti, commissioni basse)</translation>
-    </message>
-    <message>
-        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
-        <translation>Query per gli indirizzi peer tramite ricerca DNS, se bassa sugli indirizzi (default: 1 a meno che -connect / -noconnect)</translation>
-    </message>
-    <message>
         <source>Reduce storage requirements by enabling pruning (deleting) of old blocks. This allows the pruneblockchain RPC to be called to delete specific blocks, and enables automatic pruning of old blocks if a target size in MiB is provided. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, 1 = allow manual pruning via RPC, &gt;%u = automatically prune block files to stay under the specified target size in MiB)</source>
         <translation>Riduce i requisiti di spazio di archiviazione abilitando la cancellazione dei vecchi blocchi ("pruning" o potatura). Questo consente di richiedere alla pruneblockchain RPC di cancellare specifici blocchi e abilita il pruning automatico dei vecchi blocchi se viene fornita una dimensione specifica in MiB. Questa modalità è incompatibile con -txindex e -rescan. Attenzione: Per ripristinare questa impostazione è necessario riscaricare l'intera blockchain. (predefinito: 0 = disabilita il pruning dei blocchi, 1 = permetti il pruning manuale tramite RPC, &gt;%u = pota automaticamente i file di blocco per stare sotto una dimensione specifica in MiB)</translation>
     </message>
@@ -5014,8 +4897,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Imposta la tariffa di commissione più bassa (in %s/kB) per transazioni da includere nella creazione del blocco. (default:  %s)</translation>
     </message>
     <message>
-        <source>Show N confirmations for a successfully locked transaction (%u-%u, default: %u)</source>
-        <translation>Mostra N conferme per una transazione bloccata con successo (%u-%u, default: %u)</translation>
+        <source>The fee rate (in %s/kB) that indicates your tolerance for discarding change by adding it to the fee (default: %s). Note: An output is discarded if it is dust at this rate, but we will always discard up to the dust relay fee and a discard fee above that is limited by the fee estimate for the longest target</source>
+        <translation>La tariffa (in %s/kB) che indica la tua tolleranza per scartare la modifica aggiungendola alla tariffa (impostazione predefinita: %s). Nota: un'uscita viene scartata se è estremamente piccola , ma scarteremo sempre fino a quando la tariffa di scarto non è superiore a quella limitata dalla stima della tariffa per l'obiettivo maggiore</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>Questa è la commissione di transazione che puoi scartare se il cambio è inferiore alla piccolissima parte del livello</translation>
     </message>
     <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
@@ -5028,6 +4915,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Unable to locate enough PrivateSend non-denominated funds for this transaction.</source>
         <translation>Impossibile trovare abbastanza fondi PrivateSend non denominati per questa transazione.</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>Impossibile riprodurre i blocchi. Dovrai ricostruire il database usando -reindex-chainstate.</translation>
     </message>
     <message>
         <source>Use N separate masternodes for each denominated input to mix funds (%u-%u, default: %u)</source>
@@ -5050,20 +4941,24 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Il portafoglio non creerà transazioni che violino i limiti della mempool chain (default: %u)</translation>
     </message>
     <message>
-        <source>Warning: At least %d of %d masternodes are running on a newer software version. Please check latest releases, you might need to update too.</source>
-        <translation>Attenzione: almeno %d di %d masternode sono in esecuzione su una versione più recente del software. Si prega di controllare le ultime versioni, potrebbe anche essere necessario fare un aggiornamento.</translation>
-    </message>
-    <message>
-        <source>Warning: Every masternode (out of %d known ones) is running on a newer software version. Please check latest releases, it's very likely that you missed a major/critical update.</source>
-        <translation>Attenzione: ogni masternode (fuori da %d noti) è in esecuzione su una versione più recente del software. Controlla le ultime versioni, è molto probabile che tu abbia perso un aggiornamento importante/critico.</translation>
-    </message>
-    <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Attenzione: file del Portafoglio corrotto, dati recuperati! %s originale salvato come %s in %s; se il saldo o le transazioni non sono corrette effettua un ripristino da un backup.</translation>
     </message>
     <message>
+        <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
+        <translation>Se salvare il mempool allo spegnimento e caricare al riavvio (impostazione predefinita: %u)</translation>
+    </message>
+    <message>
         <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
         <translation>I peer in whitelist che si connettono dal dato indirizzo IP (es. 1.2.3.4) o dalla rete annotata CIDR (es. 1.2.3.0/24). Può essere specificato più volte.</translation>
+    </message>
+    <message>
+        <source>You are starting in lite mode, most Stash-specific functionality is disabled.</source>
+        <translation>Stai iniziando in modalità Lite, la maggior parte delle funzionalità specifiche di Stash è disabilitata.</translation>
+    </message>
+    <message>
+        <source>%d of last 100 blocks have unexpected version</source>
+        <translation>%d degli ultimi 100 blocchi ha una versione inattesa</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -5094,6 +4989,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>-rpcport deve essere specificato quando -devnet e -server sono specificati</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Accetta connessioni dall'esterno (predefinito: 1 se no -proxy o -connect)</translation>
+    </message>
+    <message>
         <source>Allow RFC1918 addresses to be relayed and connected to (default: %u)</source>
         <translation>Consenti agli indirizzi RFC1918 di essere inoltrati e connessi a (default: %u)</translation>
     </message>
@@ -5114,6 +5013,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Copyright (C)</translation>
     </message>
     <message>
+        <source>Create up to N inputs of each denominated amount (%u-%u, default: %u)</source>
+        <translation>Crea  fino a  N inputs per ciascun importo denominato (%u-%u, default: %u)</translation>
+    </message>
+    <message>
         <source>Error loading %s</source>
         <translation>Errore caricamento %s</translation>
     </message>
@@ -5124,6 +5027,22 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Error loading %s: Wallet requires newer version of %s</source>
         <translation>Errore caricamento %s: il Portafoglio richiede una versione aggiornata di %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't disable HD on an already existing HD wallet</source>
+        <translation>Errore durante il caricamento di %s: non è possibile disabilitare l'HD su un portafoglio HD già esistente</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. -wallet filename must be a regular file.</source>
+        <translation>Errore durante il caricamento del portafoglio %s. il nome del  -wallet filename deve essere un file normale</translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
+        <translation>Errore durante il caricamento del portafoglio%s. Il Nome -wallet filename  specificato è duplicato </translation>
+    </message>
+    <message>
+        <source>Error loading wallet %s. Invalid characters in -wallet filename.</source>
+        <translation>Errore durante il caricamento del portafoglio %s. Caratteri non validi nel nome file  -wallet filename.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
@@ -5142,6 +5061,18 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Test di integrità iniziale fallito. %s si arresterà.</translation>
     </message>
     <message>
+        <source>Inputs vs outputs size mismatch.</source>
+        <translation>Mancata corrispondenza della dimensione degli ingressi e delle uscite.</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>Indirizzo -onion o hostname non valido: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Indirizzo -proxy o hostname non valido: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Importo non valido per -%s=&lt;amount&gt;: '%s'</translation>
     </message>
@@ -5150,16 +5081,12 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Indirizzo di spork non valido specificato con -sporkaddr</translation>
     </message>
     <message>
-        <source>Keep N STASH anonymized (%u-%u, default: %u)</source>
-        <translation>Mantieni N STASH anonimizzati (%u-%u, default: %u)</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>Caricamento indirizzi P2P...</translation>
     </message>
     <message>
         <source>Print this help message and exit</source>
         <translation>Mostra questo messaggio di aiuto ed esci</translation>
-    </message>
-    <message>
-        <source>Receive and display P2P network alerts (default: %u)</source>
-        <translation>Ricevi e visualizza avvisi di rete P2P (default: %u)</translation>
     </message>
     <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
@@ -5172,6 +5099,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Relay non-P2SH multisig (default: %u)</source>
         <translation>Trasmetti transazioni non-P2SH multisig (predefinito: %u)</translation>
+    </message>
+    <message>
+        <source>Replaying blocks...</source>
+        <translation>Riproduzione di blocchi ...</translation>
     </message>
     <message>
         <source>Rescanning...</source>
@@ -5202,10 +5133,6 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Imposta la dimensione massima del blocco in byte (predefinita: %d)</translation>
     </message>
     <message>
-        <source>Set the masternode private key</source>
-        <translation>Configura la chiave privata del Masternode</translation>
-    </message>
-    <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
         <translation>Mostra tutte le opzioni di debug (utilizzo: --help -help-debug)</translation>
     </message>
@@ -5230,6 +5157,10 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Specifica il tuo indirizzo pubblico</translation>
     </message>
     <message>
+        <source>Start PrivateSend automatically (0-1, default: %u)</source>
+        <translation>Avvia PrivateSend automaticamente (0-1, predefinita: %u)</translation>
+    </message>
+    <message>
         <source>Starting network threads...</source>
         <translation>Inizializzazione dei thread di rete...</translation>
     </message>
@@ -5240,10 +5171,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Synchronizing governance objects...</source>
         <translation>Sincronizzazione degli oggetti di governance ...</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternode payments...</source>
-        <translation>Sincronizzazione dei pagamenti dei masternode ...</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
@@ -5264,6 +5191,10 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Transaction created successfully.</source>
         <translation>Transazione creata con successo.</translation>
+    </message>
+    <message>
+        <source>Transaction fee and change calculation failed</source>
+        <translation>Commissione di transazione e calcolo delle modifiche non riusciti</translation>
     </message>
     <message>
         <source>Transaction fees are too high.</source>
@@ -5294,16 +5225,16 @@ https://www.transifex.com/projects/p/stash/</translation>
         <translation>Stato sconosciuto: id =%u</translation>
     </message>
     <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>Categoria di registrazione non supportata %s=%s.</translation>
+    </message>
+    <message>
         <source>Username for JSON-RPC connections</source>
         <translation>Nome utente per connessioni JSON-RP</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
         <translation>Verifica blocchi...</translation>
-    </message>
-    <message>
-        <source>Verifying wallet...</source>
-        <translation>Verifica portafoglio...</translation>
     </message>
     <message>
         <source>Very low number of keys left: %d</source>
@@ -5332,10 +5263,6 @@ https://www.transifex.com/projects/p/stash/</translation>
     <message>
         <source>Your entries added successfully.</source>
         <translation>Le tue voci sono state aggiunte con successo.</translation>
-    </message>
-    <message>
-        <source>Your transaction was accepted into the pool!</source>
-        <translation>La tua transazione è stata accettata nella pool!</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>

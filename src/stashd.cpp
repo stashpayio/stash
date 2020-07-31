@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The Dash Core developers
+// Copyright (c) 2014-2019 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,18 +11,17 @@
 #include "chainparams.h"
 #include "clientversion.h"
 #include "compat.h"
+#include "fs.h"
 #include "rpc/server.h"
 #include "init.h"
 #include "noui.h"
 #include "scheduler.h"
 #include "util.h"
-#include "masternodeconfig.h"
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#include "stacktraces.h"
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
 #include <stdio.h>
@@ -74,14 +73,19 @@ bool AppInit(int argc, char* argv[])
     // Parameters
     //
     // If Qt is used, parameters/stash.conf are parsed in qt/stash.cpp's main()
-    ParseParameters(argc, argv);
+    gArgs.ParseParameters(argc, argv);
+
+    if (gArgs.IsArgSet("-printcrashinfo")) {
+        std::cout << GetCrashInfoStrFromSerializedStr(gArgs.GetArg("-printcrashinfo", "")) << std::endl;
+        return true;
+    }
 
     // Process help and version before taking care about datadir
-    if (IsArgSet("-?") || IsArgSet("-h") ||  IsArgSet("-help") || IsArgSet("-version"))
+    if (gArgs.IsArgSet("-?") || gArgs.IsArgSet("-h") ||  gArgs.IsArgSet("-help") || gArgs.IsArgSet("-version"))
     {
         std::string strUsage = strprintf(_("%s Daemon"), _(PACKAGE_NAME)) + " " + _("version") + " " + FormatFullVersion() + "\n";
 
-        if (IsArgSet("-version"))
+        if (gArgs.IsArgSet("-version"))
         {
             strUsage += FormatParagraph(LicenseInfo());
         }
@@ -99,22 +103,22 @@ bool AppInit(int argc, char* argv[])
 
     try
     {
-        bool datadirFromCmdLine = IsArgSet("-datadir");
-        if (datadirFromCmdLine && !boost::filesystem::is_directory(GetDataDir(false)))
+        bool datadirFromCmdLine = gArgs.IsArgSet("-datadir");
+        if (datadirFromCmdLine && !fs::is_directory(GetDataDir(false)))
         {
-            fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", GetArg("-datadir", "").c_str());
+            fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", gArgs.GetArg("-datadir", "").c_str());
             return false;
         }
         try
         {
-            ReadConfigFile(GetArg("-conf", BITCOIN_CONF_FILENAME));
+            gArgs.ReadConfigFile(gArgs.GetArg("-conf", BITCOIN_CONF_FILENAME));
         } catch (const std::exception& e) {
             fprintf(stderr,"Error reading configuration file: %s\n", e.what());
             return false;
         }
-        if (!datadirFromCmdLine && !boost::filesystem::is_directory(GetDataDir(false)))
+        if (!datadirFromCmdLine && !fs::is_directory(GetDataDir(false)))
         {
-            fprintf(stderr, "Error: Specified data directory \"%s\" from config file does not exist.\n", GetArg("-datadir", "").c_str());
+            fprintf(stderr, "Error: Specified data directory \"%s\" from config file does not exist.\n", gArgs.GetArg("-datadir", "").c_str());
             return EXIT_FAILURE;
         }
         // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)
@@ -125,26 +129,16 @@ bool AppInit(int argc, char* argv[])
             return false;
         }
 
-        // parse masternode.conf
-        std::string strErr;
-        if(!masternodeConfig.read(strErr)) {
-            fprintf(stderr,"Error reading masternode configuration file: %s\n", strErr.c_str());
-            return false;
+        // Error out when loose non-argument tokens are encountered on command line
+        for (int i = 1; i < argc; i++) {
+            if (!IsSwitchChar(argv[i][0])) {
+                fprintf(stderr, "Error: Command line contains unexpected token '%s', see stashd -h for a list of options.\n", argv[i]);
+                exit(EXIT_FAILURE);
+            }
         }
 
-        // Command-line RPC
-        bool fCommandLine = false;
-        for (int i = 1; i < argc; i++)
-            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "stash:"))
-                fCommandLine = true;
-
-        if (fCommandLine)
-        {
-            fprintf(stderr, "Error: There is no RPC client functionality in stashd anymore. Use the stash-cli utility instead.\n");
-            exit(EXIT_FAILURE);
-        }
         // -server defaults to true for bitcoind but not for the GUI so do this here
-        SoftSetBoolArg("-server", true);
+        gArgs.SoftSetBoolArg("-server", true);
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
@@ -163,7 +157,7 @@ bool AppInit(int argc, char* argv[])
             // InitError will have been called with detailed error, which ends up on console
             exit(EXIT_FAILURE);
         }
-        if (GetBoolArg("-daemon", false))
+        if (gArgs.GetBoolArg("-daemon", false))
         {
 #if HAVE_DECL_DAEMON
             fprintf(stdout, "Stash Core server starting\n");
@@ -178,21 +172,21 @@ bool AppInit(int argc, char* argv[])
             return false;
 #endif // HAVE_DECL_DAEMON
         }
-
+        // Lock data directory after daemonization
+        if (!AppInitLockDataDirectory())
+        {
+            // If locking the data directory failed, exit immediately
+            exit(EXIT_FAILURE);
+        }
         fRet = AppInitMain(threadGroup, scheduler);
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, "AppInit()");
     } catch (...) {
-        PrintExceptionContinue(NULL, "AppInit()");
+        PrintExceptionContinue(std::current_exception(), "AppInit()");
     }
 
     if (!fRet)
     {
         Interrupt(threadGroup);
-        // threadGroup.join_all(); was left out intentionally here, because we didn't re-test all of
-        // the startup-failure cases to make sure they don't result in a hang due to some
-        // thread-blocking-waiting-for-another-thread-during-startup case
+        threadGroup.join_all();
     } else {
         WaitForShutdown(&threadGroup);
     }
@@ -203,6 +197,9 @@ bool AppInit(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+    RegisterPrettyTerminateHander();
+    RegisterPrettySignalHandlers();
+
     SetupEnvironment();
 
     // Connect stashd signal handlers

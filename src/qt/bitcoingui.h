@@ -19,6 +19,10 @@
 #include <QPushButton>
 #include <QSystemTrayIcon>
 
+#ifdef Q_OS_MAC
+#include <qt/macos_appnap.h>
+#endif
+
 class ClientModel;
 class NetworkStyle;
 class Notificator;
@@ -31,9 +35,6 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
-class MasternodeList;
-
-class CWallet;
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -121,7 +122,6 @@ private:
     QAction *openPeersAction;
     QAction *openRepairAction;
     QAction *openConfEditorAction;
-    QAction *openMNConfEditorAction;
     QAction *showBackupsAction;
     QAction *openAction;
     QAction *showHelpMessageAction;
@@ -135,11 +135,26 @@ private:
     HelpMessageDialog *helpMessageDialog;
     ModalOverlay *modalOverlay;
 
+#ifdef Q_OS_MAC
+    CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
+#endif
+
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
     int spinnerFrame;
 
     const PlatformStyle *platformStyle;
+
+    struct IncomingTransactionMessage {
+        QString date;
+        int unit;
+        CAmount amount;
+        QString type;
+        QString address;
+        QString label;
+    };
+    std::list<IncomingTransactionMessage> incomingTransactions;
+    QTimer* incomingTransactionsTimer;
 
     /** Create the main UI actions. */
     void createActions();
@@ -190,7 +205,7 @@ public Q_SLOTS:
                             @see CClientUIInterface::MessageBoxFlags
        @param[in] ret       pointer to a bool that will be modified to whether Ok was clicked (modal only)
     */
-    void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
+    void message(const QString &title, const QString &message, unsigned int style, bool *ret = nullptr);
 
 #ifdef ENABLE_WALLET
     /** Set the hd-enabled status as shown in the UI.
@@ -209,6 +224,7 @@ public Q_SLOTS:
 
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label);
+    void showIncomingTransactions();
 #endif // ENABLE_WALLET
 
 private Q_SLOTS:
@@ -248,8 +264,6 @@ private Q_SLOTS:
 
     /** Open external (default) editor with stash.conf */
     void showConfEditor();
-    /** Open external (default) editor with masternode.conf */
-    void showMNConfEditor();
     /** Show folder with wallet backups in default file browser */
     void showBackups();
 

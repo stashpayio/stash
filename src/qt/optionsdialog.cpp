@@ -20,10 +20,8 @@
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // for CWallet::GetRequiredFee()
 
-#include "privatesend-client.h"
+#include "privatesend/privatesend-client.h"
 #endif // ENABLE_WALLET
-
-#include <boost/thread.hpp>
 
 #include <QDataWidgetMapper>
 #include <QDir>
@@ -33,8 +31,9 @@
 #include <QTimer>
 
 #ifdef ENABLE_WALLET
-extern CWallet* pwalletMain;
-#endif // ENABLE_WALLET
+typedef CWallet* CWalletRef;
+extern std::vector<CWalletRef> vpwallets;
+#endif //ENABLE_WALLET
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -48,16 +47,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);
     ui->threadsScriptVerif->setMinimum(-GetNumCores());
-    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);    
-
-    // STASH disabled for initial release
-    ui->showAdvancedPSUI->setVisible(false);
-    ui->lowKeysWarning->setVisible(false);
-    ui->privateSendMultiSession->setVisible(false);
-    ui->privateSendAmount->setVisible(false);
-    ui->privateSendRounds->setVisible(false);
-    ui->labelPrivateSendRounds->setVisible(false);
-    ui->labelPrivateSendAmount->setVisible(false);    
+    ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
 
     /* Network elements init */
 #ifndef USE_UPNP
@@ -101,9 +91,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    ui->theme->addItem(QString("STASH-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("STASH-traditional"), QVariant("trad"));    
-    
+    QDir themes(":themes");
+    for (const QString &entry : themes.entryList()) {
+        ui->theme->addItem(entry, QVariant(entry));
+    }
+
     /* Language selector */
     QDir translations(":translations");
 
@@ -112,7 +104,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     ui->lang->setToolTip(ui->lang->toolTip().arg(tr(PACKAGE_NAME)));
     ui->lang->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
-    Q_FOREACH(const QString &langStr, translations.entryList())
+    for (const QString &langStr : translations.entryList())
     {
         QLocale locale(langStr);
 
@@ -215,6 +207,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
     mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
     mapper->addMapping(ui->showAdvancedPSUI, OptionsModel::ShowAdvancedPSUI);
+    mapper->addMapping(ui->showPrivateSendPopups, OptionsModel::ShowPrivateSendPopups);
     mapper->addMapping(ui->lowKeysWarning, OptionsModel::LowKeysWarning);
     mapper->addMapping(ui->privateSendMultiSession, OptionsModel::PrivateSendMultiSession);
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
@@ -277,8 +270,8 @@ void OptionsDialog::on_okButton_clicked()
     mapper->submit();
 #ifdef ENABLE_WALLET
     privateSendClient.nCachedNumBlocks = std::numeric_limits<int>::max();
-    if(pwalletMain)
-        pwalletMain->MarkDirty();
+    if(!vpwallets.empty())
+        vpwallets[0]->MarkDirty();
 #endif // ENABLE_WALLET
     accept();
     updateDefaultProxyNets();
@@ -304,7 +297,7 @@ void OptionsDialog::on_hideTrayIcon_stateChanged(int fState)
 
 void OptionsDialog::showRestartWarning(bool fPersistent)
 {
-    ui->statusLabel->setStyleSheet("QLabel { color: red; }");
+    ui->statusLabel->setStyleSheet(GUIUtil::getThemedStyleQString(GUIUtil::ThemedStyle::TS_ERROR));
 
     if(fPersistent)
     {
@@ -339,7 +332,7 @@ void OptionsDialog::updateProxyValidationState()
     else
     {
         setOkButtonState(false);
-        ui->statusLabel->setStyleSheet("QLabel { color: red; }");
+        ui->statusLabel->setStyleSheet(GUIUtil::getThemedStyleQString(GUIUtil::ThemedStyle::TS_ERROR));
         ui->statusLabel->setText(tr("The supplied proxy address is invalid."));
     }
 }

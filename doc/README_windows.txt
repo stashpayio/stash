@@ -1,5 +1,6 @@
-Stash Core 0.12.7
-=====================
+=======
+Stash Core
+==========
 
 Intro
 -----
@@ -18,6 +19,6 @@ However, it downloads and stores the entire history of Stash transactions;
 depending on the speed of your computer and network connection, the synchronization
 process can take anywhere from a few hours to a day or more.
 
-See the stash wiki at:
-  https://github.com/stashpayio
+See the Stash documentation at:
+  https://docs.stash.org
 for more help and information.

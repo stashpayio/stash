@@ -1,5 +1,8 @@
 Mac OS X Build Instructions and Notes
 ====================================
+
+      Note the below instructions have been superseded. Please run ./build-osx.sh from the root directory
+
 The commands in this guide should be executed in a Terminal application.
 The built-in one is located in `/Applications/Utilities/Terminal.app`.
 
@@ -22,7 +25,7 @@ brew install automake libtool pkg-config
 
 If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG
 ```bash
-    brew install librsvg
+brew install librsvg
 ```
 
 Building
@@ -70,4 +73,3 @@ Uncheck everything except Qt Creator during the installation process.
 8. Select the default "Desktop" kit and select "Clang (x86 64bit in /usr/bin)" as compiler
 9. Select LLDB as debugger (you might need to set the path to your installation)
 10. Start debugging with Qt Creator
-

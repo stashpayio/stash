@@ -12,7 +12,6 @@ Tool to verify that every merge commit was signed by a developer using the above
 Construct a linear, no-fork, best version of the blockchain.
 
 ### [Qos](/contrib/qos) ###
-
 A Linux bash script that will set up traffic control (tc) to limit the outgoing bandwidth for connections to the Stash network. This means one can have an always-on stashd instance running, and another local stashd/stash-qt instance which connects to this node and receives blocks from it.
 
 ### [Seeds](/contrib/seeds) ###
@@ -29,12 +28,12 @@ for Debian-based Linux systems. If you compile stashd/stash-qt yourself, there a
 Notes on getting Gitian builds up and running using KVM.
 
 ### [Gitian-keys](/contrib/gitian-keys)
-PGP keys used for signing Bitcoin Core [Gitian release](/doc/release-process.md) results.
+PGP keys used for signing Stash Core [Gitian release](/doc/release-process.md) results.
 
 ### [MacDeploy](/contrib/macdeploy) ###
 Scripts and notes for Mac builds. 
 
-### [Gitian-build](/contrib/gitian-build.sh) ###
+### [Gitian-build](/contrib/gitian-build.py) ###
 Script for running full Gitian builds.
 
 Test and Verify Tools 

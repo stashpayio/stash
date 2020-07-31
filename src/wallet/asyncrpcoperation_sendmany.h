@@ -18,14 +18,13 @@
 #include <tuple>
 
 #include <univalue.h>
-
-// Default transaction fee if caller does not specify one.
-#define ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE   10000
+#include <array>
 
 using namespace libzcash;
 
 // A recipient is a tuple of address, amount, memo (optional if zaddr)
-typedef std::tuple<std::string, CAmount, std::string> SendManyRecipient;
+// typedef std::tuple<std::string, CAmount, std::string> SendManyRecipient;
+typedef CWallet::ShieldedRecipient SendManyRecipient;
 
 // Input UTXO is a tuple (quadruple) of txid, vout, amount, coinbase)
 typedef std::tuple<uint256, int, CAmount, bool> SendManyInputUTXO;
@@ -51,7 +50,7 @@ struct WitnessAnchorData {
 
 class AsyncRPCOperation_sendmany : public AsyncRPCOperation {
 public:
-    AsyncRPCOperation_sendmany(std::string fromAddress, std::vector<SendManyRecipient> tOutputs, std::vector<SendManyRecipient> zOutputs, int minDepth, CAmount fee = ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE, UniValue contextInfo = NullUniValue);
+    AsyncRPCOperation_sendmany(CWallet* pwallet, std::string fromAddress, std::vector<SendManyRecipient> tOutputs, std::vector<SendManyRecipient> zOutputs, int minDepth, CAmount fee = ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE, UniValue contextInfo = NullUniValue);
     virtual ~AsyncRPCOperation_sendmany();
     
     // We don't want to be copied or moved around
@@ -81,6 +80,7 @@ private:
     CBitcoinAddress fromtaddr_;
     PaymentAddress frompaymentaddress_;
     SpendingKey spendingkey_;
+    CWallet* pwallet_;
     
     uint256 joinSplitPubKey_;
     unsigned char joinSplitPrivKey_[crypto_sign_SECRETKEYBYTES];
@@ -95,7 +95,7 @@ private:
     
     CTransaction tx_;
    
-    void add_taddr_change_output_to_tx(CAmount amount);
+    void add_taddr_change_output_to_tx(CReserveKey& keyChange, CAmount amount);
     void add_taddr_outputs_to_tx();
     bool find_unspent_notes();
     bool find_utxos(bool fAcceptCoinbase);
@@ -113,8 +113,6 @@ private:
         AsyncJoinSplitInfo & info,
         std::vector<boost::optional < ZCIncrementalWitness>> witnesses,
         uint256 anchor);
-
-    void sign_send_raw_transaction(UniValue obj);     // throws exception if there was an error
 
     // payment disclosure!
     std::vector<PaymentDisclosureKeyInfo> paymentDisclosureData_;
@@ -138,8 +136,8 @@ public:
     
     // Delegated methods
     
-    void add_taddr_change_output_to_tx(CAmount amount) {
-        delegate->add_taddr_change_output_to_tx(amount);
+    void add_taddr_change_output_to_tx(CReserveKey& keyChange, CAmount amount) {
+        delegate->add_taddr_change_output_to_tx(keyChange, amount);
     }
     
     void add_taddr_outputs_to_tx() {
@@ -178,10 +176,6 @@ public:
         return delegate->perform_joinsplit(info, witnesses, anchor);
     }
 
-    void sign_send_raw_transaction(UniValue obj) {
-        delegate->sign_send_raw_transaction(obj);
-    }
-    
     void set_state(OperationStatus state) {
         delegate->state_.store(state);
     }

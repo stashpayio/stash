@@ -5,6 +5,7 @@
 #include "asyncrpcqueue.h"
 #include "amount.h"
 #include "core_io.h"
+#include "asyncrpcoperation_common.h"
 #include "init.h"
 #include "validation.h"
 #include "net.h"
@@ -53,12 +54,15 @@ static int find_output(UniValue obj, int n) {
 }
 
 AsyncRPCOperation_shieldcoinbase::AsyncRPCOperation_shieldcoinbase(
+        CWallet* pwallet,
         std::vector<ShieldCoinbaseUTXO> inputs,
         std::string toAddress,
         CAmount fee,
         UniValue contextInfo) :
-        inputs_(inputs), fee_(fee), contextinfo_(contextInfo)
+        pwallet_(pwallet), inputs_(inputs), fee_(fee), contextinfo_(contextInfo)
 {
+    assert(pwallet != nullptr);
+
     if (fee < 0 || fee > MAX_MONEY) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Fee is out of range");
     }
@@ -68,25 +72,25 @@ AsyncRPCOperation_shieldcoinbase::AsyncRPCOperation_shieldcoinbase(
     }
 
     //  Check the destination address is valid for this network i.e. not testnet being used on mainnet
-    CZCPaymentAddress address(toAddress);
-    try {
-        tozaddr_ = address.Get();
-    } catch (const std::runtime_error& e) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("runtime error: ") + e.what());
+    auto address = DecodePaymentAddress(toAddress);
+    if (address) {
+        tozaddr_ = *address;
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid to address");
     }
 
     // Log the context info
-    if (LogAcceptCategory("zrpcunsafe")) {
-        LogPrint("zrpcunsafe", "%s: z_shieldcoinbase initialized (context=%s)\n", getId(), contextInfo.write());
+    if (LogAcceptCategory(BCLog::ZRPCUNSAFE)) {
+        LogPrint(BCLog::ZRPCUNSAFE, "%s: z_shieldcoinbase initialized (context=%s)\n", getId(), contextInfo.write());
     } else {
-        LogPrint("zrpc", "%s: z_shieldcoinbase initialized\n", getId());
+        LogPrint(BCLog::ZRPC, "%s: z_shieldcoinbase initialized\n", getId());
     }
 
     // Lock UTXOs
     lock_utxos();
 
     // Enable payment disclosure if requested
-    paymentDisclosureMode = fExperimentalMode && GetBoolArg("-paymentdisclosure", false);
+    paymentDisclosureMode = gArgs.GetBoolArg("-paymentdisclosure", true);
 }
 
 AsyncRPCOperation_shieldcoinbase::~AsyncRPCOperation_shieldcoinbase() {
@@ -105,7 +109,7 @@ void AsyncRPCOperation_shieldcoinbase::main() {
 
 #ifdef ENABLE_MINING
   #ifdef ENABLE_WALLET
-    GenerateBitcoins(false, NULL, 0);
+    GenerateBitcoins(false, nullptr, 0);
   #else
     GenerateBitcoins(false, 0);
   #endif
@@ -134,9 +138,9 @@ void AsyncRPCOperation_shieldcoinbase::main() {
 
 #ifdef ENABLE_MINING
   #ifdef ENABLE_WALLET
-    GenerateBitcoins(GetBoolArg("-gen",false), pwalletMain, GetArg("-genproclimit", 1));
+    GenerateBitcoins(GetBoolArg("-gen",false), pwallet_, gArgs.GetArgs("-genproclimit", 1));
   #else
-    GenerateBitcoins(GetBoolArg("-gen",false), GetArg("-genproclimit", 1));
+    GenerateBitcoins(GetBoolArg("-gen",false), gArgs.GetArgs("-genproclimit", 1));
   #endif
 #endif
 
@@ -165,9 +169,9 @@ void AsyncRPCOperation_shieldcoinbase::main() {
         for (PaymentDisclosureKeyInfo p : paymentDisclosureData_) {
             p.first.hash = txidhash;
             if (!db->Put(p.first, p.second)) {
-                LogPrint("paymentdisclosure", "%s: Payment Disclosure: Error writing entry to database for key %s\n", getId(), p.first.ToString());
+                LogPrint(BCLog::ZRPC, "%s: Payment Disclosure: Error writing entry to database for key %s\n", getId(), p.first.ToString());
             } else {
-                LogPrint("paymentdisclosure", "%s: Payment Disclosure: Successfully added entry to database for key %s\n", getId(), p.first.ToString());
+                LogPrint(BCLog::ZRPC, "%s: Payment Disclosure: Successfully added entry to database for key %s\n", getId(), p.first.ToString());
             }
         }
     }
@@ -182,7 +186,7 @@ bool AsyncRPCOperation_shieldcoinbase::main_impl() {
     size_t numInputs = inputs_.size();
 
     // Check mempooltxinputlimit to avoid creating a transaction which the local mempool rejects
-    size_t limit = (size_t)GetArg("-mempooltxinputlimit", 0);
+    size_t limit = (size_t)gArgs.GetArg("-mempooltxinputlimit", 0);
     if (limit>0 && numInputs > limit) {
         throw JSONRPCError(RPC_WALLET_ERROR,
             strprintf("Number of inputs %d is greater than mempooltxinputlimit of %d",
@@ -201,7 +205,7 @@ bool AsyncRPCOperation_shieldcoinbase::main_impl() {
     }
 
     CAmount sendAmount = targetAmount - minersFee;
-    LogPrint("zrpc", "%s: spending %s to shield %s with fee %s\n",
+    LogPrint(BCLog::ZRPC, "%s: spending %s to shield %s with fee %s\n",
             getId(), FormatMoney(targetAmount), FormatMoney(sendAmount), FormatMoney(minersFee));
 
     // update the transaction with these inputs
@@ -228,75 +232,10 @@ bool AsyncRPCOperation_shieldcoinbase::main_impl() {
     info.vjsout.push_back(jso);
     obj = perform_joinsplit(info);
 
-    sign_send_raw_transaction(obj);
+    auto txAndResult = SignSendRawTransaction(pwallet_, obj, boost::none, testmode);
+    tx_ = txAndResult.first;
+    set_result(txAndResult.second);
     return true;
-}
-
-
-/**
- * Sign and send a raw transaction.
- * Raw transaction as hex string should be in object field "rawtxn"
- */
-void AsyncRPCOperation_shieldcoinbase::sign_send_raw_transaction(UniValue obj)
-{
-    // Sign the raw transaction
-    UniValue rawtxnValue = find_value(obj, "rawtxn");
-    if (rawtxnValue.isNull()) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Missing hex data for raw transaction");
-    }
-    std::string rawtxn = rawtxnValue.get_str();
-
-    UniValue params = UniValue(UniValue::VARR);
-    params.push_back(rawtxn);
-    UniValue signResultValue = signrawtransaction(params);
-    UniValue signResultObject = signResultValue.get_obj();
-    UniValue completeValue = find_value(signResultObject, "complete");
-    bool complete = completeValue.get_bool();
-    if (!complete) {
-        // TODO: #1366 Maybe get "errors" and print array vErrors into a string
-        throw JSONRPCError(RPC_WALLET_ENCRYPTION_FAILED, "Failed to sign transaction");
-    }
-
-    UniValue hexValue = find_value(signResultObject, "hex");
-    if (hexValue.isNull()) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Missing hex data for signed transaction");
-    }
-    std::string signedtxn = hexValue.get_str();
-
-    // Send the signed transaction
-    if (!testmode) {
-        params.clear();
-        params.setArray();
-        params.push_back(signedtxn);
-        UniValue sendResultValue = sendrawtransaction(params);
-        if (sendResultValue.isNull()) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Send raw transaction did not return an error or a txid.");
-        }
-
-        std::string txid = sendResultValue.get_str();
-
-        UniValue o(UniValue::VOBJ);
-        o.push_back(Pair("txid", txid));
-        set_result(o);
-    } else {
-        // Test mode does not send the transaction to the network.
-
-        CDataStream stream(ParseHex(signedtxn), SER_NETWORK, PROTOCOL_VERSION);
-        CTransaction tx;
-        stream >> tx;
-
-        UniValue o(UniValue::VOBJ);
-        o.push_back(Pair("test", 1));
-        o.push_back(Pair("txid", tx.GetHash().ToString()));
-        o.push_back(Pair("hex", signedtxn));
-        set_result(o);
-    }
-
-    // Keep the signed transaction so we can hash to the same txid
-    CDataStream stream(ParseHex(signedtxn), SER_NETWORK, PROTOCOL_VERSION);
-    CTransaction tx;
-    stream >> tx;
-    tx_ = tx;
 }
 
 
@@ -326,7 +265,7 @@ UniValue AsyncRPCOperation_shieldcoinbase::perform_joinsplit(ShieldCoinbaseJSInf
 
     CMutableTransaction mtx(tx_);
 
-    LogPrint("zrpcunsafe", "%s: creating joinsplit at index %d (vpub_old=%s, vpub_new=%s, in[0]=%s, in[1]=%s, out[0]=%s, out[1]=%s)\n",
+    LogPrint(BCLog::ZRPCUNSAFE, "%s: creating joinsplit at index %d (vpub_old=%s, vpub_new=%s, in[0]=%s, in[1]=%s, out[0]=%s, out[1]=%s)\n",
             getId(),
             tx_.vjoinsplit.size(),
             FormatMoney(info.vpub_old), FormatMoney(info.vpub_new),
@@ -368,10 +307,10 @@ UniValue AsyncRPCOperation_shieldcoinbase::perform_joinsplit(ShieldCoinbaseJSInf
     // Empty output script.
     CScript scriptCode;
     CTransaction signTx(mtx);
-    uint256 dataToBeSigned = SignatureHash(scriptCode, signTx, NOT_AN_INPUT, SIGHASH_ALL);
+    uint256 dataToBeSigned = SignatureHash(scriptCode, signTx, NOT_AN_INPUT, SIGHASH_ALL, 0, SIGVERSION_BASE);
 
     // Add the signature
-    if (!(crypto_sign_detached(&mtx.joinSplitSig[0], NULL,
+    if (!(crypto_sign_detached(&mtx.joinSplitSig[0], nullptr,
             dataToBeSigned.begin(), 32,
             joinSplitPrivKey_
             ) == 0))
@@ -440,8 +379,7 @@ UniValue AsyncRPCOperation_shieldcoinbase::perform_joinsplit(ShieldCoinbaseJSInf
         PaymentDisclosureInfo pdInfo = {PAYMENT_DISCLOSURE_VERSION_EXPERIMENTAL, esk, joinSplitPrivKey, zaddr};
         paymentDisclosureData_.push_back(PaymentDisclosureKeyInfo(pdKey, pdInfo));
 
-        CZCPaymentAddress address(zaddr);
-        LogPrint("paymentdisclosure", "%s: Payment Disclosure: js=%d, n=%d, zaddr=%s\n", getId(), js_index, int(mapped_index), address.ToString());
+        LogPrint(BCLog::ZRPC, "%s: Payment Disclosure: js=%d, n=%d, zaddr=%s\n", getId(), js_index, int(mapped_index), EncodePaymentAddress(zaddr));
     }
     // !!! Payment disclosure END
 
@@ -473,10 +411,10 @@ UniValue AsyncRPCOperation_shieldcoinbase::getStatus() const {
  * Lock input utxos
  */
  void AsyncRPCOperation_shieldcoinbase::lock_utxos() {
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet_->cs_wallet);
     for (auto utxo : inputs_) {
         COutPoint outpt(utxo.txid, utxo.vout);
-        pwalletMain->LockCoin(outpt);
+        pwallet_->LockCoin(outpt);
     }
 }
 
@@ -484,9 +422,9 @@ UniValue AsyncRPCOperation_shieldcoinbase::getStatus() const {
  * Unlock input utxos
  */
 void AsyncRPCOperation_shieldcoinbase::unlock_utxos() {
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet_->cs_wallet);
     for (auto utxo : inputs_) {
         COutPoint outpt(utxo.txid, utxo.vout);
-        pwalletMain->UnlockCoin(outpt);
+        pwallet_->UnlockCoin(outpt);
     }
 }
